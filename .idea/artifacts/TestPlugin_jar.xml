@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="TestPlugin:jar">
+    <output-path>$PROJECT_DIR$/target/TestPlugin_jar</output-path>
+    <root id="archive" name="TestPlugin.jar">
+      <element id="module-output" name="TestPlugin" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/bstats/bstats-bukkit/1.4/bstats-bukkit-1.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/yaml/snakeyaml/1.26/snakeyaml-1.26.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/resources/HempfestEssentials-1.0.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/ElgarL/groupmanager/2.5/groupmanager-2.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/intellij/annotations/9.0.4/annotations-9.0.4.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

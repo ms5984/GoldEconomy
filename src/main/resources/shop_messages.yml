@@ -1,0 +1,38 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# O]===============================================[O #
+# |                  Change languages               | #
+# O]===============================================[O #
+# O]===============================================[O #
+# |    Turn in files for future auto-generation :)  | #
+# O]===============================================[O #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+invalid-double: '&c&oInvalid amount response. Format: ?#.##'
+invalid-integer: '&c&oInvalid amount response. Format: ?#'
+not-enough-money: '&c&oYou don''t have enough money here in %world%'
+not-enough-space: '&c&oYou don''t have enough inventory space, dropping items at feet.'
+amount-too-large: 'There was a problem with the integer you''ve chosen'
+name-unknown: 'Unknown item: %args%'
+name-needed: '&c&oYou must enter a valid item name'
+money: 'Your balance in &a%world% &fis &6%amount% &f%currency%'
+money-sent: '&a&oYou sent "%amount%" to player: &e&o%player%'
+money-set: '&a&oYour account balance was set to: &e&o%amount%'
+money-recieved: '&a&oPlayer %player% just sent you: &e&o&n%amount%'
+money-taken: '&c&oYou were charged &7%amount% &c&ogold and now have &7%balance%'
+money-given: '&a&oYou were given &7%amount% &a&ogold and now have &7%balance%'
+money-deposited: '&a&oYou deposited "%amount%" into your account'
+money-withdrawn: '&a&oYou withdrew "%amount%" from your account'
+player-not-found: '&c&oThe player was not found. You can only pay online players.'
+max-withdraw-reached: 'You cannot withdraw more than 10 stacks at a time.'
+account-made: '&a&oYou just created the account &7#&b%account% &a&oin world &7%account_world%'
+account-deposit: '&a&oYou deposited "%amount%" into your account "%account%"'
+account-withdraw: '&a&oYou withdrew "%amount%" from your account "%account%"'
+account-already-made: '&c&oYou already have an account made in this world!'
+account-not-allowed: '&c&oYou are not allowed to make accounts in non-existing worlds!'
+account-balance-set: 'Your account %account% balance was set to: %balance%'
+staff-account-set: '&a&oYou set the balance of account %account% to: &e&o&l%amount%'
+staff-money-set: '&a&oYou set the balance of player %player% to: &e&o&l%amount%'
+staff-money-given: '&a&oYou gave %amount% to player: &e&o%player%'
+staff-money-taken: '&4&oYou just took %amount% from player: &e&o%player%'
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+

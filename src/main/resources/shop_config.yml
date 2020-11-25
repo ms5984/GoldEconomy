@@ -1,0 +1,71 @@
+Economy:
+##### [ CONFIGURATION ] #####
+# Bypass vault check & allow the use of dual economies.
+  check-for-vault: true
+  ## Change the main world used for offline-players.
+  main-world: 'world'
+  ## Allow or deny the use of multi-world banks.
+  using-banks: true
+  ## Allow or disable the use of the provided item shop.
+  using-shop: true
+  ## Change the starting balance for player accounts.
+  starting-balance: 500.00
+
+##### [ SECTION 0 ] #####
+  world-list:
+    - world
+    - world_nether
+    - world_the_end
+
+##### [ SECTION 1 ] #####
+# Change the currency types
+  currency-items:
+    - GOLD_INGOT
+    - GOLD_NUGGET
+    - GOLD_BLOCK
+# Now change the worth of the currency (don't change for equivalency)
+  # print specified items from above (don't use TAB only spaces)
+  currency-worth:
+    GOLD_INGOT: 1
+    GOLD_NUGGET: 0.11
+    GOLD_BLOCK: 9
+
+##### [ SECTION 2 ] #####
+# Turn on custom currency. (Don't use yet. Not done)
+  custom-currency:
+    status: 'off'
+    name-item: GOLD_INGOT
+    name: 'Dollar'
+    name-value: 2.5
+    change-item: GOLD_NUGGET
+    change: 'Coin'
+    change-value: 0.55
+
+##### [ SECTION 3 ] #####
+# Toggle/Modify the use of entity death currency rewards
+  monster-rewards:
+    ## Delivery methods can consist of these types: [drop, digital]
+    ## If the type selected is "drop" you MUST have custom-currency status set to off
+    delivery: 'drop'
+    multiplier: 1.2
+    ## SET IGNORED MONSTER TYPES
+    ## Entity monster types: [ZOMBIE, SKELETON, SPIDER, CAVE_SPIDER, PHANTOM, PIGLIN, ENDERMAN, ZOMBIE_PIGMAN, EVOKER, VINDICATOR
+    ## PILLAGER, RAVAGER, VEX, CHICKEN_JOCKEY, ENDERMITE, GUARDIAN, ELDER GUARDIAN, SHULKER, SKELETON_HORSEMAN, HUSK, STRAY, BLAZE,
+    ## CREEPER, GHAST, MAGMA_CUBE, SILVERFISH, SLIME, SPIDER_JOCKEY, ZOMBIE, ZOMBIE_VILLAGER, DROWNED, WITHER_SKELETON, WITCH, HOGLIN, PIGLIN, ENDERDRAGON]
+    ignored-types: []
+
+  mob-rewards:
+    ## Refer to the above section when setting the "delivery" value here as-well.
+    delivery: 'drop'
+    multiplier: 0.6
+    ## SET IGNORED MOB TYPES
+    ## Entity mob types: [DOLPHIN, POLAR_BEAR, TRADER_LLAMA, PANDA, WOLF, BEE, IRON_GOLEM, DONKEY, HORSE, CAT, PARROT, MULE, SKELETON_HORSE
+    ## SHEEP, FOX, BAT, COD, OCELOT, PIG, RABBIT, SALMON, MOOSHROOM, SQUID, TROPICAL_FISH, TURTLE, VILLAGER, WANDERING_TRADER, PUFFERFISH]
+    ignored-types:
+      - PIG
+      - COW
+      - CHICKEN
+
+## DO NOT EDIT BELOW
+Version: 1.0.10
+
