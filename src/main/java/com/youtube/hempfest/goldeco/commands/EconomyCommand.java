@@ -11,6 +11,7 @@ import com.youtube.hempfest.goldeco.util.libraries.ItemLibrary;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
+import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -177,7 +178,7 @@ public class EconomyCommand extends BukkitCommand {
             if (length == 1) {
                 if (args[0].equalsIgnoreCase("fix") || args[0].equalsIgnoreCase("update")) {
                     if (main.exists()) {
-                        if (fc.getString("Version").equals(GoldEconomy.getInstance().getDescription().getVersion().toString())) {
+                        if (Objects.equals(fc.getString("Version"), GoldEconomy.getInstance().getDescription().getVersion())) {
                             sendMessage(commandSender, "&3&oThe configuration is already up to date.");
                             return true;
                         }
@@ -324,8 +325,23 @@ public class EconomyCommand extends BukkitCommand {
         Player p = (Player) commandSender;
         Config main = new Config("shop_config");
         FileConfiguration fc = main.getConfig();
-        String currency = getPrimaryDollar();
         StringLibrary me = new StringLibrary(p);
+        String withdrawType = "";
+        try {
+            switch (fc.getString("Economy.drop-type")) {
+                case "dollar":
+                    withdrawType = "dollar";
+                    break;
+
+                case "change":
+                    withdrawType = "change";
+                    break;
+            }
+        } catch (NullPointerException e) {
+            me.msg("&c&oA newer feature is available and needed to further use the plugin. Copy your current configuration settings and delete the old file before restarting. This will generate a new config with the correct format to which you can copy over old settings.");
+        }
+        String currency = getPrimaryDollar();
+
         /*
         //  /\ /\ /\ /\ /\ /\
         //
@@ -377,7 +393,7 @@ public class EconomyCommand extends BukkitCommand {
                     return true;
                 }
                 if (main.exists()) {
-                    if (fc.getString("Version").equals(GoldEconomy.getInstance().getDescription().getVersion().toString())) {
+                    if (Objects.equals(fc.getString("Version"), GoldEconomy.getInstance().getDescription().getVersion())) {
                         me.msg("&3&oThe configuration is already up to date.");
                         return true;
                     }
@@ -385,6 +401,19 @@ public class EconomyCommand extends BukkitCommand {
                     InputStream m1 = GoldEconomy.getInstance().getResource("shop_config.yml");
                     Config.copy(m1, main.getFile());
                     me.msg("&3&oReloaded and updated configuration &b&o" + '"' + main.getName() + '"');
+                return true;
+            }
+            if (args[0].equalsIgnoreCase("ru")) {
+                if (!p.hasPermission(this.getPermission() + ".update")) {
+                    me.msg(noPermission(this.getPermission() + ".update"));
+                    return true;
+                }
+                Config message = new Config("shop_messages");
+                InputStream m1 = GoldEconomy.getInstance().getResource("shop_config_ru.yml");
+                InputStream m2 = GoldEconomy.getInstance().getResource("shop_messages_ru.yml");
+                Config.copy(m1, main.getFile());
+                Config.copy(m2, message.getFile());
+                me.msg("&3&oЯзык был изменён на &b&o" + '"' + "русский" + '"');
                 return true;
             }
             if (args[0].equalsIgnoreCase("reload")) {
@@ -501,11 +530,15 @@ public class EconomyCommand extends BukkitCommand {
                 }
                 if (im.transactionSuccess) {
                     double value = fc.getDouble("Economy.currency-worth." + getCurrency().name()) * amount;
+                    if (String.valueOf(value).contains("-")) {
+                        me.msg("There was a problem with the amount you've chosen");
+                        return true;
+                    }
                     el.add(value);
                 }
                 return true;
                 } catch (NumberFormatException e) {
-                    me.msg("There was a problem with the integer you've chosen");
+                    me.msg("There was a problem with the amount you've chosen");
                 }
             }
             if (args[0].equalsIgnoreCase("withdraw")) {
@@ -517,17 +550,29 @@ public class EconomyCommand extends BukkitCommand {
                         me.msg(me.maxWithdrawReached());
                         return true;
                     }
-                    List<String> items = new ArrayList<>(fc.getStringList("Economy.currency-items"));
+                    List<String> items = fc.getStringList("Economy.currency-items");
                     double cost = fc.getDouble("Economy.currency-worth." + items.get(0)) * amount;
-
-                    if (cost > Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", ""))) {
+                    if (!withdrawType.equals("dollar")) {
+                        cost = fc.getDouble("Economy.currency-worth." + items.get(1)) * amount;
+                    }
+                    if (cost > Double.parseDouble(el.get(Utility.BALANCE).replace(",", ""))) {
                         me.msg(me.notEnoughMoney().replaceAll("%world%", p.getWorld().getName()));
                         return true;
                     }
                     double worth = fc.getInt("Economy.currency-worth." + items.get(0));
+                    if (!withdrawType.equals("dollar")) {
+                        worth = fc.getDouble("Economy.currency-worth." + items.get(1));
+                    }
                     double result = worth * amount;
+                    if (String.valueOf(result).contains("-")) {
+                        me.msg("There was a problem with the amount you've chosen");
+                        return true;
+                    }
                     el.remove(result);
                     ItemStack item = new ItemStack(ItemLibrary.getMaterial(items.get(0)));
+                    if (!withdrawType.equals("dollar")) {
+                        item = new ItemStack(ItemLibrary.getMaterial(items.get(1)));
+                    }
                     if (usingCustomCurrency()) {
                         item = new ItemStack(ItemLibrary.getMaterial(getPrimaryDollarItem()));
                         ItemMeta meta = item.getItemMeta();

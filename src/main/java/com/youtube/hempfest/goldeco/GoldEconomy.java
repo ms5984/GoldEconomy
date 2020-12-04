@@ -9,6 +9,7 @@ import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.listeners.bukkit.EventListener;
 import com.youtube.hempfest.goldeco.listeners.vault.VaultEconomy;
 import com.youtube.hempfest.goldeco.listeners.vault.VaultListener;
+import com.youtube.hempfest.goldeco.structure.EconomyStructure;
 import com.youtube.hempfest.goldeco.util.Metrics;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
 import com.youtube.hempfest.goldeco.util.libraries.MaterialList;
@@ -257,11 +258,11 @@ public class GoldEconomy extends JavaPlugin {
 		return result;
 	}
 
-	public static PlayerListener getPlayerAccount(OfflinePlayer p) {
+	public static EconomyStructure getPlayerAccount(OfflinePlayer p) {
 		return new PlayerListener(p);
 	}
 
-	public static BankListener getBankAccount(OfflinePlayer p, String accountID) {
+	public static EconomyStructure getBankAccount(OfflinePlayer p, String accountID) {
 		return new BankListener(p);
 	}
 

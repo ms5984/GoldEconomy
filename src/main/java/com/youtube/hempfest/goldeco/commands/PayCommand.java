@@ -97,6 +97,10 @@ public class PayCommand extends BukkitCommand {
                 me.msg(me.playerNotFound());
                 return true;
             }
+            if (tar.getName().equals(p.getName())) {
+                me.msg("&c&oYou cannot pay yourself your own wages...");
+                return true;
+            }
             if (!isDouble(args[1])) {
                 me.msg(me.invalidDouble());
                 return true;
@@ -113,7 +117,7 @@ public class PayCommand extends BukkitCommand {
             target.set(tCurrent + Double.parseDouble(args[1]));
             me.msg(me.moneySent().replaceAll("%amount%", args[1]).replaceAll("%player%", tar.getName()));
             StringLibrary them = new StringLibrary(tar);
-            them.msg(me.moneyReceived().replaceAll("%amount%", args[1]).replaceAll("%player%", p.getName()));
+            them.msg(them.moneyReceived().replaceAll("%amount%", args[1]).replaceAll("%player%", p.getName()));
             return true;
         }
 

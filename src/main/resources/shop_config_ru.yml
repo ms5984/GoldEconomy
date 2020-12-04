@@ -1,0 +1,74 @@
+Economy:
+  ##### [ КОНФИГУРАЦИЯ ] #####
+  # Обойди проверку плагина Vault и разреши использование 2 валюты сразу.
+  check-for-vault: true
+  ## Конфиг мира для игроков, которые оффлайн.
+  main-world: 'world'
+  ## Использование мультимирового банка.
+  using-banks: true
+  ## Использование внутриплагинового магазина.
+  using-shop: true
+  ## Стартовый баланс.
+  starting-balance: 500.00
+  ## Изменить /withdraw выбор валюты
+  ## Типы: {dollar, change}
+  drop-type: dollar
+
+  ##### [ СЕКЦИЯ 0 ] #####
+  world-list:
+    - world
+    - world_nether
+    - world_the_end
+
+  ##### [ СЕКЦИЯ 1 ] #####
+  # Типы валют в виде вещей.
+  currency-items:
+    - GOLD_INGOT
+    - GOLD_NUGGET
+    - GOLD_BLOCK
+  # Настройка ценности валюты (Не меняйте, чтобы не сбилось равенство)
+  # Тут должны быть написаны вещи, вставленные выше (don't use TAB only spaces)
+  currency-worth:
+    GOLD_INGOT: 1
+    GOLD_NUGGET: 0.11
+    GOLD_BLOCK: 9
+
+  ##### [ СЕКЦИЯ 2 ] #####
+  # Конфигурация кастомной валюты. (Пока не юзай, недоработана)
+  custom-currency:
+    status: 'off'
+    name-item: GOLD_INGOT
+    name: 'Dollar'
+    name-value: 2.5
+    change-item: GOLD_NUGGET
+    change: 'Coin'
+    change-value: 0.55
+
+  ##### [ СЕКЦИЯ 3 ] #####
+  # Переключение/Модификация функции вознаграждения за мобов
+  monster-rewards:
+    ## Методы доставки могут варьироваться от выбора: [drop, digital]
+    ## Если вы выбрали "drop" Вы должны статус custom-currency(кастомная валюта) переключить на off.
+    delivery: 'drop'
+    multiplier: 1.2
+    ## УСТАНОВКА ИГНОРИРУЕМЫХ ТИПОВ МОНСТРОВ
+    ## Типы монстров: [ZOMBIE, SKELETON, SPIDER, CAVE_SPIDER, PHANTOM, PIGLIN, ENDERMAN, ZOMBIE_PIGMAN, EVOKER, VINDICATOR
+    ## PILLAGER, RAVAGER, VEX, CHICKEN_JOCKEY, ENDERMITE, GUARDIAN, ELDER GUARDIAN, SHULKER, SKELETON_HORSEMAN, HUSK, STRAY, BLAZE,
+    ## CREEPER, GHAST, MAGMA_CUBE, SILVERFISH, SLIME, SPIDER_JOCKEY, ZOMBIE, ZOMBIE_VILLAGER, DROWNED, WITHER_SKELETON, WITCH, HOGLIN, PIGLIN, ENDERDRAGON]
+    ignored-types: []
+
+  mob-rewards:
+    ## Смотри выше, какое значение в "delivery"(доставка) ты поставил и поставь тоже самое тут.
+    delivery: 'drop'
+    multiplier: 0.6
+    ## ИГНОРИРУЕМЫЕ МОБЫ
+    ## Типы мобов: [DOLPHIN, POLAR_BEAR, TRADER_LLAMA, PANDA, WOLF, BEE, IRON_GOLEM, DONKEY, HORSE, CAT, PARROT, MULE, SKELETON_HORSE
+    ## SHEEP, FOX, BAT, COD, OCELOT, PIG, RABBIT, SALMON, MOOSHROOM, SQUID, TROPICAL_FISH, TURTLE, VILLAGER, WANDERING_TRADER, PUFFERFISH]
+    ignored-types:
+      - PIG
+      - COW
+      - CHICKEN
+
+## НЕ РЕДАКТИРОВАТЬ
+Version: 1.1.0
+

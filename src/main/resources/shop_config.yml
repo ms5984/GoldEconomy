@@ -10,6 +10,9 @@ Economy:
   using-shop: true
   ## Change the starting balance for player accounts.
   starting-balance: 500.00
+  ## Change the /withdraw currency selection.
+  ## Types: {dollar, change}
+  drop-type: dollar
 
 ##### [ SECTION 0 ] #####
   world-list:
@@ -67,5 +70,5 @@ Economy:
       - CHICKEN
 
 ## DO NOT EDIT BELOW
-Version: 1.0.10
+Version: 1.1.0
 

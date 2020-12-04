@@ -1,0 +1,36 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# O]===============================================[O #
+# |                  Change languages               | #
+# O]===============================================[O #
+# O]===============================================[O #
+# |    Turn in files for future auto-generation :)  | #
+# O]===============================================[O #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+invalid-double: '&c&oНеверное значение количества. Формат: ?#.##'
+invalid-integer: '&c&oНеверное значение количества. Формат: ?#'
+not-enough-money: '&c&oУ вас недостаточно денег в мире %world%'
+not-enough-space: '&c&oУ вас недостаточно места в инвентаре, вещь упала на пол.'
+amount-too-large: 'Произошла проблема с числом, которое вы выбрали'
+name-unknown: 'Неизвестная вещь: %args%'
+name-needed: '&c&oНеобходимо вписать верное имя вещи'
+money: 'Баланс в мире &a%world% &fсоставляет &6%amount% &f%currency%'
+money-sent: '&a&oОтправлено "%amount%" игроку: &e&o%player%'
+money-set: '&a&oВаш баланс был установлен на значение: &e&o%amount%'
+money-recieved: '&a&oИгрок %player% только что отправил вам: &e&o&n%amount%'
+money-taken: '&c&oВы взяли &7%amount% &fgold &c&oи сейчас у вас &7%balance%'
+money-given: '&a&oВам дали &7%amount% &fgold &c&oи сейчас у вас &7%balance%'
+money-deposited: '&a&oВы положили "%amount%" на ваш счет'
+money-withdrawn: '&a&oВы вывели "%amount%" с вашего счета'
+player-not-found: '&c&oИгрок не был найден онлайн. Вы можете заплатить только игрокам, которые онлайн.'
+max-withdraw-reached: 'Вы не можете вывести больше чем 10 стаков за раз.'
+account-made: '&a&oВы только что создали счет &7#&b%account% &a&oв мире &7%account_world%'
+account-deposit: '&a&oВы положили "%amount%" на счет "%account%"'
+account-withdraw: '&a&oВы вывели "%amount%" со счета "%account%"'
+account-already-made: '&c&oУ вас уже есть счет, созданный в этом мире!'
+account-not-allowed: '&c&oНельзя создавать счета в несуществующих мирах!'
+account-balance-set: 'Ваш баланс счета %account% был установлен на значение: %balance%'
+staff-account-set: '&a&oВы установили баланс счета %account% на значение: &e&o&l%amount%'
+staff-money-set: '&a&oВы установили баланс игрока %player% на значение: &e&o&l%amount%'
+staff-money-given: '&a&oВы дали %amount% игроку: &e&o%player%'
+staff-money-taken: '&4&oВы взяли %amount% у игрока: &e&o%player%'
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

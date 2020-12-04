@@ -5,6 +5,11 @@ import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.gui.MenuPaginated;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryBankModify;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryStaff;
+import com.youtube.hempfest.goldeco.listeners.BankAccount;
+import com.youtube.hempfest.goldeco.listeners.BankListener;
+import com.youtube.hempfest.goldeco.listeners.PlayerListener;
+import com.youtube.hempfest.goldeco.structure.EconomyStructure;
+import java.util.UUID;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -88,7 +93,9 @@ public class InventoryBanks extends MenuPaginated {
                 if (items.get(index) != null) {
                     ///////////////////////////
                     // Create an item from our collection and place it into the inventory
-                    ItemStack playerIcon = makeItem(Material.CHEST, "&7#&3&l" + items.get(index), PersistentDataType.STRING, "account", items.get(index)," ", "&6&oOwner: &f&n" + GoldEconomy.getBankOwner(items.get(index)), "", "&6&oWorld: &f&n" + GoldEconomy.getBankWorld(items.get(index)));
+                    BankAccount bank = new BankAccount(items.get(index)).queryWorld();
+                    PlayerListener listener = new PlayerListener();
+                    ItemStack playerIcon = makeItem(Material.CHEST, "&7#&3&l" + items.get(index), PersistentDataType.STRING, "account", items.get(index)," ", "&6&oOwner: &f&n" + GoldEconomy.getBankOwner(items.get(index)), "", "&6&oWorld: &f&n" + GoldEconomy.getBankWorld(items.get(index)), "", "&6&lBalance: &f&n" + listener.format(bank.getBalance()));
                     inventory.addItem(playerIcon);
 
                     ////////////////////////
