@@ -41,6 +41,11 @@
 			<version>1.7</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.github.Hempfest</groupId>
+			<artifactId>HempCore</artifactId>
+			<version>1.0.5</version>
+		</dependency>
 	</dependencies>
 
 </project>
