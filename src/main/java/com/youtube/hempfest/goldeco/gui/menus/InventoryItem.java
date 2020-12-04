@@ -1,18 +1,17 @@
 package com.youtube.hempfest.goldeco.gui.menus;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
-import com.youtube.hempfest.goldeco.gui.Menu;
+import com.youtube.hempfest.goldeco.gui.EcoMenu;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
-import com.youtube.hempfest.goldeco.gui.MenuPaginated;
 import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryBrowse;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryItem extends Menu {
+public class InventoryItem extends EcoMenu {
     public InventoryItem(MenuManager manager) {
         super(manager);
     }
@@ -69,7 +68,8 @@ public class InventoryItem extends Menu {
 
     @Override
     public void setMenuItems() {
-        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, this.color("&a&oGo back."), "");
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         inventory.setItem(4, back);
         ItemStack s1 = makeItem(Material.matchMaterial(manager.getItemToEdit()), "&b&l" + manager.getItemToEdit() + " &r| &fSELL &7x1", "Click to sell in quantities of 1.");
         s1.setAmount(1);

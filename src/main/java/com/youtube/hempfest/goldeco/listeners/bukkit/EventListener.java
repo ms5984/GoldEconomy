@@ -3,7 +3,7 @@ package com.youtube.hempfest.goldeco.listeners.bukkit;
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.BankData;
 import com.youtube.hempfest.goldeco.data.PlayerData;
-import com.youtube.hempfest.goldeco.gui.Menu;
+import com.youtube.hempfest.goldeco.gui.EcoMenu;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.util.Utility;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -47,16 +47,16 @@ public class EventListener implements Listener {
         // is an instance of Menu, then gg. The reason that
         // an InventoryHolder can be a Menu is because our Menu
         // class implements InventoryHolder!!
-        if (holder instanceof Menu) {
+        if (holder instanceof EcoMenu) {
             e.setCancelled(true); // prevent them from fucking with the inventory
             if (e.getCurrentItem() == null) { // deal with null exceptions
                 return;
             }
             // Since we know our inventoryholder is a menu, get the Menu Object representing
             // the menu we clicked on
-            Menu menu = (Menu) holder;
+            EcoMenu ecoMenu = (EcoMenu) holder;
             // Call the handleMenu object which takes the event and processes it
-            menu.handleMenu(e);
+            ecoMenu.handleMenu(e);
         }
 
     }

@@ -1,25 +1,26 @@
 package com.youtube.hempfest.goldeco.gui.menus;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
-import com.youtube.hempfest.goldeco.gui.Menu;
+import com.youtube.hempfest.goldeco.gui.EcoMenu;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryBanks;
-import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryWallets;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryBankModify extends Menu {
+public class InventoryBankModify extends EcoMenu {
     public InventoryBankModify(MenuManager manager) {
         super(manager);
     }
 
     @Override
     public String getMenuName() {
-        return color("&6&l&m▬▬▬▬▬▬▬▬▬▬▬▬&7[&3&l" + manager.getAccountID() + "&7]&6&l&m▬▬▬▬▬▬▬▬▬▬▬▬");
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        return new ColoredString("&6&l&m▬▬▬▬▬▬▬▬▬▬▬▬&7[&3&l" + manager.getAccountID() + "&7]&6&l&m▬▬▬▬▬▬▬▬▬▬▬▬", ColoredString.ColorType.MC).toString();
     }
 
     @Override

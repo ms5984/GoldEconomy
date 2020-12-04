@@ -11,7 +11,7 @@ This pagination system was made from Jer's code sample. <3
 
  */
 
-public abstract class MenuPaginated extends Menu {
+public abstract class EcoMenuPaginated extends EcoMenu {
 
 	// Keep track of what page the menu is on
 	protected int page = 0;
@@ -22,7 +22,7 @@ public abstract class MenuPaginated extends Menu {
 	// that the loop is on
 	protected int index = 0;
 
-	public MenuPaginated(MenuManager manager) {
+	public EcoMenuPaginated(MenuManager manager) {
 		super(manager);
 	}
 

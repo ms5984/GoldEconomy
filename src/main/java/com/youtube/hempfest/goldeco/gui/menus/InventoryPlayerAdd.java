@@ -1,9 +1,10 @@
 package com.youtube.hempfest.goldeco.gui.menus;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
-import com.youtube.hempfest.goldeco.gui.Menu;
+import com.youtube.hempfest.goldeco.gui.EcoMenu;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -13,14 +14,15 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-public class InventoryPlayerAdd extends Menu {
+public class InventoryPlayerAdd extends EcoMenu {
     public InventoryPlayerAdd(MenuManager manager) {
         super(manager);
     }
 
     @Override
     public String getMenuName() {
-        return color("&6&l&m▬▬▬▬▬▬▬▬▬▬&7[&3&l" + nameByUUID(UUID.fromString(manager.getPlayerName())) + "&7]&6&l&m▬▬▬▬▬▬▬▬▬▬");
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        return new ColoredString("&6&l&m▬▬▬▬▬▬▬▬▬▬&7[&3&l" + nameByUUID(UUID.fromString(manager.getPlayerName())) + "&7]&6&l&m▬▬▬▬▬▬▬▬▬▬", ColoredString.ColorType.MC).toString();
     }
 
     private String nameByUUID(UUID id) {
