@@ -12,8 +12,8 @@ import com.youtube.hempfest.goldeco.listeners.vault.VaultListener;
 import com.youtube.hempfest.goldeco.structure.EconomyStructure;
 import com.youtube.hempfest.goldeco.util.Metrics;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
-import com.youtube.hempfest.goldeco.util.libraries.MaterialList;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.InputStream;
@@ -30,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 public class GoldEconomy extends JavaPlugin {
@@ -229,10 +232,11 @@ public class GoldEconomy extends JavaPlugin {
 
 	private void loadDefaults() {
 		Config shop_items = new Config("shop_items");
-		MaterialList list = new MaterialList();
+		final List<String> itemList = CompletableFuture.supplyAsync(() -> Arrays.stream(Material.values())
+			.filter(Material::isItem).filter(m -> m != Material.AIR).map(Enum::name).collect(Collectors.toList())).join();
 		if (!shop_items.exists()) {
 			FileConfiguration fc = shop_items.getConfig();
-			for (String item : list.getMaterialNames()) {
+			for (String item : itemList) {
 				fc.set("Items." + item + ".purchase-price", purchaseDefault(item));
 				fc.set("Items." + item + ".sell-price", sellDefault(item));
 			}
