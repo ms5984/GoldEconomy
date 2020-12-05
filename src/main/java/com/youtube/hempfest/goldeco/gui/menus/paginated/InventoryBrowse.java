@@ -31,8 +31,7 @@ public class InventoryBrowse extends EcoMenuPaginated {
             page = menu.getPage();
             menu.setPage(0);
         }
-        ItemManager man = GoldEconomy.getInstance().itemManager(GoldEconomy.getInstance(), manager.getOwner());
-        int pgCount = man.getShopContents().size() / getMaxItemsPerPage();
+        int pgCount = ItemManager.getShopContents().size() / getMaxItemsPerPage();
         return "▬▬▬▬▬▬▬▬▬▬▬(PAGE #" + page + " / " + pgCount + ")▬▬▬▬▬▬▬▬▬▬▬";
     }
 
@@ -44,13 +43,12 @@ public class InventoryBrowse extends EcoMenuPaginated {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        ItemManager man = GoldEconomy.getInstance().itemManager(GoldEconomy.getInstance(), manager.getOwner());
-        ArrayList<String> items = new ArrayList<String>(man.getShopContents());
+//        ItemManager man = GoldEconomy.getItemManager();
+        ArrayList<String> items = new ArrayList<>(ItemManager.getShopContents());
         Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
-        ItemManager im = new ItemManager(GoldEconomy.getInstance());
 
-        for (String item : im.getShopContents()) {
+        for (String item : ItemManager.getShopContents()) {
             if (mat.equals(ItemLibrary.getMaterial(item))) {
                     if (mat.equals(Material.TOTEM_OF_UNDYING)) {
                         break;
@@ -115,8 +113,8 @@ public class InventoryBrowse extends EcoMenuPaginated {
             mang.setPage(0);
         }
         plugin = GoldEconomy.getInstance();
-        ItemManager man = GoldEconomy.itemManager(plugin, manager.getOwner());
-        ArrayList<String> items = new ArrayList<String>(man.getShopContents());
+//        ItemManager man = GoldEconomy.getItemManager();
+        ArrayList<String> items = new ArrayList<>(ItemManager.getShopContents());
         //		return ChatColor.translateAlternateColorCodes('&', text);
         ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         inventory.setItem(45, back);
@@ -134,7 +132,7 @@ public class InventoryBrowse extends EcoMenuPaginated {
                     // Create an item from our collection and place it into the inventory
                     Material it = ItemLibrary.getMaterial(items.get(index));
                     if (it != null) {
-                        ItemStack item = makePersistentItem(it, "&6&l&oITEM: &f&o&n" + items.get(index), "shop-item", items.get(index), " ", "&f&oBuy Price (&a&n" + man.getItemPrice(ItemManager.indexPrice.PURCHASE, items.get(index)) + "&f&o)", " ", "&c&oSell Price &f&o[" + man.getItemPrice(ItemManager.indexPrice.SELL, items.get(index)) + "&f&o]", " ", "&a&l&oClick to buy or sell.");
+                        ItemStack item = makePersistentItem(it, "&6&l&oITEM: &f&o&n" + items.get(index), "shop-item", items.get(index), " ", "&f&oBuy Price (&a&n" + ItemManager.getItemPrice(ItemManager.indexPrice.PURCHASE, items.get(index)) + "&f&o)", " ", "&c&oSell Price &f&o[" + ItemManager.getItemPrice(ItemManager.indexPrice.SELL, items.get(index)) + "&f&o]", " ", "&a&l&oClick to buy or sell.");
                         inventory.addItem(item);
                     }
                     ////////////////////////
