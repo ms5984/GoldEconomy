@@ -20,10 +20,11 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class TopCommand extends BukkitCommand {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("richest"));
 
-    public TopCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public TopCommand() {
+        super("top", "GoldEconomy richest player list", "/top", ALIASES);
+        setPermission("goldeconomy.use.top");
     }
 
     private void sendMessage(CommandSender player, String message) {

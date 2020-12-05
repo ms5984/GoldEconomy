@@ -9,13 +9,16 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SelllistCommand extends BukkitCommand {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("selll"));
 
-    public SelllistCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public SelllistCommand() {
+        super("selllist", "GoldEconomy item sell list", "/selllist", ALIASES);
+        setPermission("goldeconomy.use.selllist");
     }
 
     private void sendMessage(CommandSender player, String message) {
