@@ -199,8 +199,8 @@ public class StringLibrary {
         HashMap<String, Double> players = new HashMap<String, Double>();
 
         // Filling the hashMap
-        for (String itemName : GoldEconomy.itemManager(GoldEconomy.getInstance(), p).getShopContents()) {
-            players.put(itemName, GoldEconomy.itemManager(GoldEconomy.getInstance(), p).getItemPrice(ItemManager.indexPrice.PURCHASE, itemName));
+        for (String itemName : ItemManager.getShopContents()) {
+            players.put(itemName, ItemManager.getItemPrice(ItemManager.indexPrice.PURCHASE, itemName));
         }
 
         sendMessage(p, "&7&m------------&7&l[&6&oPage &l" + page + " &7: &6&oBuylist&7&l]&7&m------------");
@@ -297,8 +297,8 @@ public class StringLibrary {
         HashMap<String, Double> players = new HashMap<String, Double>();
 
         // Filling the hashMap
-        for (String itemName : GoldEconomy.itemManager(GoldEconomy.getInstance(), p).getShopContents()) {
-            players.put(itemName, GoldEconomy.itemManager(GoldEconomy.getInstance(), p).getItemPrice(ItemManager.indexPrice.SELL, itemName));
+        for (String itemName : ItemManager.getShopContents()) {
+            players.put(itemName, ItemManager.getItemPrice(ItemManager.indexPrice.SELL, itemName));
         }
 
         sendMessage(p, "&7&m------------&7&l[&6&oPage &l" + page + " &7: &6&oSellList&7&l]&7&m------------");

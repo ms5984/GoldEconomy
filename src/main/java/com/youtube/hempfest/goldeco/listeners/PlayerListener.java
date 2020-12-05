@@ -233,12 +233,10 @@ public class PlayerListener implements EconomyStructure {
         Config main = new Config("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
-        ItemManager im = GoldEconomy.itemManager(plugin, op.getPlayer());
+//        ItemManager im = GoldEconomy.getItemManager();
         Material mat = ItemLibrary.getMaterial(item);
         double itemCost = items.getConfig().getDouble("Items." + ItemLibrary.getMaterial(item).name() + ".purchase-price") * amount;
-        if (Double.parseDouble(get(Utility.BALANCE).replaceAll(",", "")) >= itemCost)
-            im.transactionSuccess = true;
-        if (im.transactionSuccess) {
+        if (Double.parseDouble(get(Utility.BALANCE).replaceAll(",", "")) >= itemCost) {
             remove(itemCost);
             ItemStack material = new ItemStack(mat);
             for (int i = 0; i < amount; i++) {
@@ -260,16 +258,13 @@ public class PlayerListener implements EconomyStructure {
     @Override
     public void sell(String item, int amount) {
         StringLibrary me = new StringLibrary(op.getPlayer());
-        GoldEconomy plugin = GoldEconomy.getInstance();
         Config items = new Config("shop_items");
         Config main = new Config("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
-        ItemManager im = GoldEconomy.itemManager(plugin, op.getPlayer());
         Material mat = ItemLibrary.getMaterial(item.toUpperCase());
         double itemCost = items.getConfig().getDouble("Items." + ItemLibrary.getMaterial(item).name() + ".sell-price") * amount;
-        im.removeItem(mat, amount);
-        if (im.transactionSuccess) {
+        if (ItemManager.removeItem(op.getPlayer(), mat, amount).transactionSuccess) {
             add(itemCost);
             me.msg("You sold " + '"' + amount + '"' + " " + "&7&o" + item + "&r for " + '"' + itemCost + '"' + " " + currency);
         }

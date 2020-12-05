@@ -305,11 +305,4 @@ public class GoldEconomy extends JavaPlugin {
 		return accounts;
 	}
 
-
-
-	public static ItemManager itemManager(GoldEconomy economy, Player p) {
-		economy = GoldEconomy.getInstance();
-		return new ItemManager(economy, p);
-	}
-
 }
