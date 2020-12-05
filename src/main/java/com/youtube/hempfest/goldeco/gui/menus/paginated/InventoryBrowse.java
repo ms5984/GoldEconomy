@@ -7,6 +7,7 @@ import com.youtube.hempfest.goldeco.gui.menus.InventoryItem;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryShop;
 import com.youtube.hempfest.goldeco.util.libraries.ItemLibrary;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
+import com.youtube.hempfest.hempcore.HempCore;
 import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -69,7 +70,7 @@ public class InventoryBrowse extends EcoMenuPaginated {
                     break;
                 }
                         menu.setItemToEdit(e.getCurrentItem().getItemMeta().getPersistentDataContainer()
-                                .get(new NamespacedKey(GoldEconomy.getInstance(), "shop-item"), PersistentDataType.STRING));
+                                .get(new NamespacedKey(HempCore.getInstance(), "shop-item"), PersistentDataType.STRING));
                         menu.setPage(page);
                         new InventoryItem(menu).open();
                         break;
