@@ -10,13 +10,16 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BalanceCommand extends BukkitCommand {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("bal"));
 
-    public BalanceCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public BalanceCommand() {
+        super("balance", "GoldEconomy player balance", "/balance", ALIASES);
+        setPermission("goldeconomy.use.balance");
     }
 
     private void sendMessage(CommandSender player, String message) {

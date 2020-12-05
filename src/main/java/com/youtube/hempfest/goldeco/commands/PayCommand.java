@@ -12,13 +12,16 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PayCommand extends BukkitCommand {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("transfer"));
 
-    public PayCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public PayCommand() {
+        super("pay", "GoldEconomy item purchasing", "/pay player", ALIASES);
+        setPermission("goldeconomy.use.pay");
     }
 
     private void sendMessage(CommandSender player, String message) {

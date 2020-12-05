@@ -10,13 +10,16 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ShopCommand extends BukkitCommand {
+    private static final List<String> ALIASES = new ArrayList<>(Arrays.asList("menu", "gui"));
 
-    public ShopCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public ShopCommand() {
+        super("shop", "GoldEconomy gui shop", "/shop", ALIASES);
+        setPermission("goldeconomy.use.shop");
     }
 
     private void sendMessage(CommandSender player, String message) {

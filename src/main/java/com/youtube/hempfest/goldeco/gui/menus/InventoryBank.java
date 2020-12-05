@@ -3,11 +3,12 @@ package com.youtube.hempfest.goldeco.gui.menus;
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.BankData;
 import com.youtube.hempfest.goldeco.data.independant.Config;
-import com.youtube.hempfest.goldeco.gui.Menu;
+import com.youtube.hempfest.goldeco.gui.EcoMenu;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.util.Utility;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,14 +19,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InventoryBank extends Menu {
+public class InventoryBank extends EcoMenu {
     public InventoryBank(MenuManager manager) {
         super(manager);
     }
 
     @Override
     public String getMenuName() {
-        return color("&5&l&m▬▬▬▬▬▬▬▬▬&7[&6&lPlayer Bank&7]&5&l&m▬▬▬▬▬▬▬▬▬");
+        return new ColoredString("&5&l&m▬▬▬▬▬▬▬▬▬&7[&6&lPlayer Bank&7]&5&l&m▬▬▬▬▬▬▬▬▬", ColoredString.ColorType.MC).toString();
     }
 
     @Override
@@ -92,9 +93,9 @@ public class InventoryBank extends Menu {
     @Override
     public void setMenuItems() {
         PlayerListener el = new PlayerListener(manager.getOwner());
-        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, this.color("&a&oGo back."), "");
+        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, "&a&oGo back.");
         ItemStack chest = makeItem(Material.CHEST, "&7[&6&lCREATE&7]", "", "Description: &a&oClick to open an account", "&a&oin the world you stand.");
-        ItemStack lava = makeItem(Material.LAVA_BUCKET, "&7[&6&lRESET&7]", "", "Description: &a&oClick to delete an open account", "&a&oin your world..");
+        ItemStack lava = makeItem(Material.LAVA_BUCKET, "&7[&6&lRESET&7]", "", "Description: &a&oClick to delete an open account", "&a&oin your world.");
         ItemStack nugg = makeItem(Material.GOLD_NUGGET, "&7[&6&lOPEN&7]", "", "Description: &a&oClick to deposit/withdraw", "&a&ointo your account.");
         inventory.setItem(10, chest);
         inventory.setItem(12, lava);

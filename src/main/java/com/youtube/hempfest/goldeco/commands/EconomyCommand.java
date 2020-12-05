@@ -25,17 +25,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class EconomyCommand extends BukkitCommand {
+    private static final List<String> ALIASES = new ArrayList<>(Arrays.asList("eco", "geco"));
 
     Material currency;
     ItemStack currenc;
 
-    public EconomyCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public EconomyCommand() {
+        super("economy", "GoldEconomy help", "/economy", ALIASES);
+        setPermission("goldeconomy.use");
     }
 
     private void sendMessage(CommandSender player, String message) {
@@ -472,7 +474,7 @@ public class EconomyCommand extends BukkitCommand {
                     me.msg("&c&oUse of the &6&oGoldEconomy &c&oitem shop is disabled on this server.");
                     return true;
                 }
-                if (!new ItemManager(GoldEconomy.getInstance()).getShopContents().contains(args[1])) {
+                if (!ItemManager.getShopContents().contains(args[1])) {
                     me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
                     return true;
                 }
@@ -491,7 +493,7 @@ public class EconomyCommand extends BukkitCommand {
                     me.msg("&c&oUse of the &6&oGoldEconomy &c&oitem shop is disabled on this server.");
                     return true;
                 }
-                if (!new ItemManager(GoldEconomy.getInstance()).getShopContents().contains(args[1])) {
+                if (!ItemManager.getShopContents().contains(args[1])) {
                     me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
                     return true;
                 }
@@ -503,7 +505,7 @@ public class EconomyCommand extends BukkitCommand {
                 try {
                 int amount = Integer.parseInt(args[1]);
                 PlayerListener el = new PlayerListener(p);
-                ItemManager im = GoldEconomy.itemManager(GoldEconomy.getInstance(), p);
+//                ItemManager im = GoldEconomy.getItemManager();
                 ArrayList<Material> mats = new ArrayList<>();
                 ArrayList<String> names = new ArrayList<>();
                 boolean hasAny = false;
@@ -523,12 +525,13 @@ public class EconomyCommand extends BukkitCommand {
                     break;
                     }
                 }
+                boolean transactionSuccess = false;
                 if (hasAny) {
-                    im.removeItem(getCurrency(), amount);
+                    transactionSuccess = ItemManager.removeItem(p, getCurrency(), amount).transactionSuccess;
                 } else {
                     me.msg(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', "&c&oYou have no money to deposit. &fValid types: " + names.toString()));
                 }
-                if (im.transactionSuccess) {
+                if (transactionSuccess) {
                     double value = fc.getDouble("Economy.currency-worth." + getCurrency().name()) * amount;
                     if (String.valueOf(value).contains("-")) {
                         me.msg("There was a problem with the amount you've chosen");
@@ -545,7 +548,7 @@ public class EconomyCommand extends BukkitCommand {
                 try {
                     int amount = Integer.parseInt(args[1]);
                     PlayerListener el = new PlayerListener(p);
-                    ItemManager im = GoldEconomy.itemManager(GoldEconomy.getInstance(), p);
+//                    ItemManager im = GoldEconomy.getItemManager();
                     if (amount > 640) {
                         me.msg(me.maxWithdrawReached());
                         return true;
@@ -739,7 +742,7 @@ public class EconomyCommand extends BukkitCommand {
                     me.msg("&c&oUse of the &6&oGoldEconomy &c&oitem shop is disabled on this server.");
                     return true;
                 }
-                if (!new ItemManager(GoldEconomy.getInstance()).getShopContents().contains(args[1])) {
+                if (!ItemManager.getShopContents().contains(args[1])) {
                     me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
                     return true;
                 }
@@ -762,7 +765,7 @@ public class EconomyCommand extends BukkitCommand {
                     me.msg("&c&oUse of the &6&oGoldEconomy &c&oitem shop is disabled on this server.");
                     return true;
                 }
-                if (!new ItemManager(GoldEconomy.getInstance()).getShopContents().contains(args[1])) {
+                if (!ItemManager.getShopContents().contains(args[1])) {
                     me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
                     return true;
                 }
@@ -785,7 +788,7 @@ public class EconomyCommand extends BukkitCommand {
 
                     int amount = Integer.parseInt(args[1]);
                     PlayerListener el = new PlayerListener(p);
-                    ItemManager im = GoldEconomy.itemManager(GoldEconomy.getInstance(), p);
+//                    ItemManager im = GoldEconomy.getItemManager();
                    if (amount > Double.valueOf(el.get(Utility.BALANCE))) {
                        me.msg(me.notEnoughMoney().replaceAll("%world%", p.getWorld().getName()));
                        return true;
@@ -811,7 +814,7 @@ public class EconomyCommand extends BukkitCommand {
 
                     int amount = Integer.parseInt(args[1]);
                     PlayerListener el = new PlayerListener(p);
-                    ItemManager im = GoldEconomy.itemManager(GoldEconomy.getInstance(), p);
+//                    ItemManager im = GoldEconomy.getItemManager();
                     if (amount > Double.valueOf(el.get(Utility.BALANCE))) {
                         me.msg(me.notEnoughMoney().replaceAll("%world%", p.getWorld().getName()));
                         return true;
@@ -840,7 +843,7 @@ public class EconomyCommand extends BukkitCommand {
 
                 int amount = Integer.parseInt(args[1]);
                 PlayerListener el = new PlayerListener(p);
-                ItemManager im = GoldEconomy.itemManager(GoldEconomy.getInstance(), p);
+//                ItemManager im = GoldEconomy.getItemManager();
                 ArrayList<Material> mats = new ArrayList<>();
                 ArrayList<String> names = new ArrayList<>();
                 boolean hasAny = false;
@@ -850,8 +853,7 @@ public class EconomyCommand extends BukkitCommand {
                     ItemMeta meta = item.getItemMeta();
                     meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&o" + getPrimaryDollar()));
                     item.setItemMeta(meta);
-                    im.removeItem(item, amount);
-                if (im.transactionSuccess) {
+                if (ItemManager.removeItem(p, item, amount).transactionSuccess) {
                     double value = fc.getDouble("Economy.currency-worth." + getCurrency().name()) * amount;
                     if (usingCustomCurrency()) {
                         value = fc.getDouble("Economy.custom-currency.name-value");
@@ -864,7 +866,7 @@ public class EconomyCommand extends BukkitCommand {
 
                     int amount = Integer.parseInt(args[1]);
                     PlayerListener el = new PlayerListener(p);
-                    ItemManager im = GoldEconomy.itemManager(GoldEconomy.getInstance(), p);
+//                    ItemManager im = GoldEconomy.getItemManager();
                     ArrayList<Material> mats = new ArrayList<>();
                     ArrayList<String> names = new ArrayList<>();
                     boolean hasAny = false;
@@ -884,12 +886,13 @@ public class EconomyCommand extends BukkitCommand {
 
                         }
                     }
+                    boolean transactionSuccess = false;
                     if (hasAny) {
-                        im.removeItem(getCurrency(), amount);
+                        transactionSuccess = ItemManager.removeItem(p, getCurrency(), amount).transactionSuccess;
                     } else {
                         me.msg(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', "&c&oYou have no money to deposit. &fValid types: " + names.toString()));
                     }
-                    if (im.transactionSuccess) {
+                    if (transactionSuccess) {
                         double value = fc.getDouble("Economy.currency-worth." + getCurrency().name()) * amount;
                         if (usingCustomCurrency()) {
                             value = fc.getDouble("Economy.custom-currency.change-value");

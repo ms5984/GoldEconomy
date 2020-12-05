@@ -10,13 +10,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BankCommand extends BukkitCommand {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("account"));
 
-    public BankCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public BankCommand() {
+        super("bank", "GoldEconomy bank account system", "/bank", ALIASES);
+        setPermission("goldeconomy.use.bank");
     }
 
     private void sendMessage(CommandSender player, String message) {

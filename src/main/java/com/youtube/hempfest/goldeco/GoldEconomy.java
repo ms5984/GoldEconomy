@@ -1,6 +1,6 @@
 package com.youtube.hempfest.goldeco;
 
-import com.youtube.hempfest.goldeco.commands.*;
+//import com.youtube.hempfest.goldeco.commands.*;
 import com.youtube.hempfest.goldeco.data.BankData;
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
@@ -11,12 +11,12 @@ import com.youtube.hempfest.goldeco.listeners.vault.VaultEconomy;
 import com.youtube.hempfest.goldeco.listeners.vault.VaultListener;
 import com.youtube.hempfest.goldeco.structure.EconomyStructure;
 import com.youtube.hempfest.goldeco.util.Metrics;
-import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
+import com.youtube.hempfest.hempcore.command.CommandBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.defaults.BukkitCommand;
+//import org.bukkit.command.CommandMap;
+//import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -26,7 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Field;
+//import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,7 +49,8 @@ public class GoldEconomy extends JavaPlugin {
 	//Start server
 	public void onEnable() {
 		log.info(String.format("[%s] - Loading economy files.", getDescription().getName()));
-		registerCommands();
+//		registerCommands();
+		new CommandBuilder(this).compileFields("com.youtube.hempfest.goldeco.commands");
 		registerMetrics(9063);
 		toRegister.add(new EventListener());
 		registerEvents(toRegister);
@@ -95,7 +96,7 @@ public class GoldEconomy extends JavaPlugin {
 		}
 	}
 
-	private void registerCommand(BukkitCommand command) {
+/*	private void registerCommand(BukkitCommand command) {
 		try {
 
 			final Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
@@ -107,7 +108,7 @@ public class GoldEconomy extends JavaPlugin {
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	private void registerMetrics(int ID) {
 		Metrics metrics = new Metrics(this, ID);
@@ -131,44 +132,20 @@ public class GoldEconomy extends JavaPlugin {
 	}
 
 
-	private void registerCommands() {
-		List<String> aliases = new ArrayList<>();
-		List<String> aliasesBuy = new ArrayList<>();
-		List<String> aliasesSell = new ArrayList<>();
-		List<String> aliasesShop = new ArrayList<>();
-		List<String> aliasesBal = new ArrayList<>();
-		List<String> aliasesBank = new ArrayList<>();
-		List<String> aliasesDeposit = new ArrayList<>();
-		List<String> aliasesWithdraw = new ArrayList<>();
-		List<String> aliasesPay = new ArrayList<>();
-		List<String> aliasesTop = new ArrayList<>();
-		List<String> aliasesBuylist = new ArrayList<>();
-		List<String> aliasesSelllist = new ArrayList<>();
-		aliases.addAll(Arrays.asList("eco", "geco"));
-		aliasesBuy.addAll(Arrays.asList("purchase"));
-		aliasesSell.addAll(Arrays.asList("flip"));
-		aliasesShop.addAll(Arrays.asList("menu", "gui"));
-		aliasesBal.addAll(Arrays.asList("bal"));
-		aliasesBank.addAll(Arrays.asList("account"));
-		aliasesDeposit.addAll(Arrays.asList("d"));
-		aliasesWithdraw.addAll(Arrays.asList("w"));
-		aliasesPay.addAll(Arrays.asList("transfer"));
-		aliasesTop.addAll(Arrays.asList("richest"));
-		aliasesBuylist.addAll(Arrays.asList("buyl"));
-		aliasesSelllist.addAll(Arrays.asList("selll"));
-		registerCommand(new BuyCommand("buy", "GoldEconomy item purchasing", "goldeconomy.use.buy", "/buy item", aliasesBuy));
-		registerCommand(new DepositCommand("deposit", "GoldEconomy deposit money", "goldeconomy.use.deposit", "/deposit amount", aliasesDeposit));
-		registerCommand(new WithdrawCommand("withdraw", "GoldEconomy withdraw money", "goldeconomy.use.withdraw", "/withdraw amount", aliasesWithdraw));
-		registerCommand(new PayCommand("pay", "GoldEconomy item purchasing", "goldeconomy.use.pay", "/pay player", aliasesPay));
-		registerCommand(new ShopCommand("shop", "GoldEconomy gui shop", "goldeconomy.use.shop", "/shop", aliasesShop));
-		registerCommand(new BalanceCommand("balance", "GoldEconomy player balance", "goldeconomy.use.balance", "/balance", aliasesBal));
-		registerCommand(new BankCommand("bank", "GoldEconomy bank account system", "goldeconomy.use.bank", "/bank", aliasesBank));
-		registerCommand(new SellCommand("sell", "GoldEconomy item selling", "goldeconomy.use.sell", "/sell item", aliasesSell));
-		registerCommand(new EconomyCommand("economy", "GoldEconomy help", "goldeconomy.use", "/economy", aliases));
-		registerCommand(new TopCommand("top", "GoldEconomy richest player list", "goldeconomy.use.top", "/top", aliasesTop));
-		registerCommand(new BuylistCommand("buylist", "GoldEconomy item buy list", "goldeconomy.use.buylist", "/buylist", aliasesTop));
-		registerCommand(new SelllistCommand("selllist", "GoldEconomy item sell list", "goldeconomy.use.selllist", "/selllist", aliasesTop));
-	}
+/*	private void registerCommands() {
+//		registerCommand(new BuyCommand("buy", "GoldEconomy item purchasing", "goldeconomy.use.buy", "/buy item", aliasesBuy));
+//		registerCommand(new DepositCommand("deposit", "GoldEconomy deposit money", "goldeconomy.use.deposit", "/deposit amount", aliasesDeposit));
+//		registerCommand(new WithdrawCommand("withdraw", "GoldEconomy withdraw money", "goldeconomy.use.withdraw", "/withdraw amount", aliasesWithdraw));
+//		registerCommand(new PayCommand("pay", "GoldEconomy item purchasing", "goldeconomy.use.pay", "/pay player", aliasesPay));
+//		registerCommand(new ShopCommand("shop", "GoldEconomy gui shop", "goldeconomy.use.shop", "/shop", aliasesShop));
+//		registerCommand(new BalanceCommand("balance", "GoldEconomy player balance", "goldeconomy.use.balance", "/balance", aliasesBal));
+//		registerCommand(new BankCommand("bank", "GoldEconomy bank account system", "goldeconomy.use.bank", "/bank", aliasesBank));
+//		registerCommand(new SellCommand("sell", "GoldEconomy item selling", "goldeconomy.use.sell", "/sell item", aliasesSell));
+//		registerCommand(new EconomyCommand("economy", "GoldEconomy help", "goldeconomy.use", "/economy", aliases));
+//		registerCommand(new TopCommand("top", "GoldEconomy richest player list", "goldeconomy.use.top", "/top", aliasesTop));
+//		registerCommand(new BuylistCommand("buylist", "GoldEconomy item buy list", "goldeconomy.use.buylist", "/buylist", aliasesBuylist));
+//		registerCommand(new SelllistCommand("selllist", "GoldEconomy item sell list", "goldeconomy.use.selllist", "/selllist", aliasesSelllist));
+	}*/
 
 	public static MenuManager menuViewer(Player p) {
 		MenuManager manager;
@@ -325,13 +302,6 @@ public class GoldEconomy extends JavaPlugin {
 			}
 		}
 		return accounts;
-	}
-
-
-
-	public static ItemManager itemManager(GoldEconomy economy, Player p) {
-		economy = GoldEconomy.getInstance();
-		return new ItemManager(economy, p);
 	}
 
 }

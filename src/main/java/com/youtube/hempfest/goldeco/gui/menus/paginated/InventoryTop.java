@@ -2,10 +2,12 @@ package com.youtube.hempfest.goldeco.gui.menus.paginated;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
-import com.youtube.hempfest.goldeco.gui.MenuPaginated;
+import com.youtube.hempfest.goldeco.gui.EcoMenuPaginated;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryShop;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.util.Utility;
+import com.youtube.hempfest.hempcore.HempCore;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,7 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class InventoryTop extends MenuPaginated {
+public class InventoryTop extends EcoMenuPaginated {
     GoldEconomy plugin;
     public InventoryTop(MenuManager manager) {
         super(manager);
@@ -39,7 +41,7 @@ public class InventoryTop extends MenuPaginated {
         Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
         String player = e.getCurrentItem().getItemMeta().getPersistentDataContainer()
-                .get(new NamespacedKey(GoldEconomy.getInstance(), "player"), PersistentDataType.STRING);
+                .get(new NamespacedKey(HempCore.getInstance(), "player"), PersistentDataType.STRING);
         switch (mat) {
             case TOTEM_OF_UNDYING:
                 new InventoryShop(menu).open();
@@ -77,7 +79,8 @@ public class InventoryTop extends MenuPaginated {
     public void setMenuItems() {
         PlayerListener el = new PlayerListener();
         ArrayList<String> items = new ArrayList<String>(el.getLeaderboard(manager.getOwner()));
-        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, this.color("&a&oGo back."), "");
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         inventory.setItem(45, back);
         addMenuBorder();
         // The thing you will be looping through to place items
@@ -93,7 +96,7 @@ public class InventoryTop extends MenuPaginated {
                     // Create an item from our collection and place it into the inventory
                     OfflinePlayer p = Bukkit.getOfflinePlayer(UUID.fromString(items.get(index)));
                     PlayerListener e = new PlayerListener(p);
-                    ItemStack playerIcon = makeItem(Material.PLAYER_HEAD, "Player : &b&o&l" + p.getName(), PersistentDataType.STRING, "player", items.get(index), " ", "&6&oBalance: &f" + e.get(Utility.BALANCE));
+                    ItemStack playerIcon = makePersistentItem(Material.PLAYER_HEAD, "Player : &b&o&l" + p.getName(), "player", items.get(index), " ", "&6&oBalance: &f" + e.get(Utility.BALANCE));
                     inventory.addItem(playerIcon);
 
                     ////////////////////////
