@@ -6,6 +6,7 @@ import com.youtube.hempfest.goldeco.gui.EcoMenuPaginated;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryPlayerModify;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryStaff;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
+import com.youtube.hempfest.hempcore.HempCore;
 import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -40,7 +41,7 @@ public class InventoryWallets extends EcoMenuPaginated {
         Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
         String player = e.getCurrentItem().getItemMeta().getPersistentDataContainer()
-                .get(new NamespacedKey(GoldEconomy.getInstance(), "player"), PersistentDataType.STRING);
+                .get(new NamespacedKey(HempCore.getInstance(), "player"), PersistentDataType.STRING);
         switch (mat) {
             case TOTEM_OF_UNDYING:
                 new InventoryStaff(menu).open();
