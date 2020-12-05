@@ -25,17 +25,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class EconomyCommand extends BukkitCommand {
+    private static final List<String> ALIASES = new ArrayList<>(Arrays.asList("eco", "geco"));
 
     Material currency;
     ItemStack currenc;
 
-    public EconomyCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public EconomyCommand() {
+        super("economy", "GoldEconomy help", "/economy", ALIASES);
+        setPermission("goldeconomy.use");
     }
 
     private void sendMessage(CommandSender player, String message) {

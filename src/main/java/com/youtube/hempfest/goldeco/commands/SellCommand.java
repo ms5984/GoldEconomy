@@ -10,13 +10,16 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SellCommand extends BukkitCommand {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("flip"));
 
-    public SellCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public SellCommand() {
+        super("sell", "GoldEconomy item selling", "/sell item", ALIASES);
+        setPermission("goldeconomy.use.sell");
     }
 
     private void sendMessage(CommandSender player, String message) {

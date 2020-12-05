@@ -10,13 +10,17 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BuyCommand extends BukkitCommand {
 
-    public BuyCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("purchase"));
+
+    public BuyCommand() {
+        super("buy", "GoldEconomy item purchasing", "/buy item", ALIASES);
+        setPermission("goldeconomy.use.buy");
     }
 
     private void sendMessage(CommandSender player, String message) {
