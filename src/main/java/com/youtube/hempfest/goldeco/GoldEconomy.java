@@ -1,6 +1,6 @@
 package com.youtube.hempfest.goldeco;
 
-import com.youtube.hempfest.goldeco.commands.*;
+//import com.youtube.hempfest.goldeco.commands.*;
 import com.youtube.hempfest.goldeco.data.BankData;
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
