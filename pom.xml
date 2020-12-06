@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>com.github.Hempfest</groupId>
 			<artifactId>HempCore</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6_1</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
