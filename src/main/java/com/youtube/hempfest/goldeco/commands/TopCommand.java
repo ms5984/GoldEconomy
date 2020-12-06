@@ -1,9 +1,9 @@
 package com.youtube.hempfest.goldeco.commands;
 
-import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.PlayerData;
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
+import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
 import com.youtube.hempfest.goldeco.util.versions.ComponentR1_16;
 import com.youtube.hempfest.goldeco.util.versions.ComponentR1_8_1;
 import com.youtube.hempfest.goldeco.util.HighestValue;
@@ -13,34 +13,25 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class TopCommand extends BukkitCommand {
+public class TopCommand extends GoldEconomyCommandBase {
     private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("richest"));
 
     public TopCommand() {
         super("top", "GoldEconomy richest player list", "/top", ALIASES);
-        setPermission("goldeconomy.use.top");
     }
 
-    private void sendMessage(CommandSender player, String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
-
-    private String notPlayer() {
-        return String.format("[%s] - You aren't a player..", GoldEconomy.getInstance().getDescription().getName());
+    @Override
+    protected String permissionNode() {
+        return "goldeconomy.use.top";
     }
 
     private void sendComponent(Player player, TextComponent text) {
         player.spigot().sendMessage((BaseComponent) text);
-    }
-
-    private String noPermission(String permission) {
-        return "You don't have permission " + '"' + permission + '"';
     }
 
     private void getLeaderboard(Player p, int page) {
@@ -145,15 +136,6 @@ public class TopCommand extends BukkitCommand {
 
             }
         return;
-    }
-
-    private boolean isInt(String text) {
-        try {
-            Integer.parseInt(text);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
 
     @Override
