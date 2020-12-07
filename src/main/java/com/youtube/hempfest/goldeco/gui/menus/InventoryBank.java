@@ -51,7 +51,7 @@ public class InventoryBank extends EcoMenu {
             break;
         case GOLD_NUGGET:
             menu.setAccountID(bl.get(Utility.NAME));
-            Config main = new Config("shop_config");
+            Config main = Config.get("shop_config");
             FileConfiguration fc = main.getConfig();
             List<String> items = new ArrayList<>(fc.getStringList("Economy.currency-items"));
             if (usingCustomCurrency()) {
@@ -70,19 +70,19 @@ public class InventoryBank extends EcoMenu {
     }
 
     private String getPrimaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
             return fc.getString("Economy.custom-currency.name-item");
     }
 
     private String getSecondaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.change-item");
     }
 
     private boolean usingCustomCurrency() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return true;

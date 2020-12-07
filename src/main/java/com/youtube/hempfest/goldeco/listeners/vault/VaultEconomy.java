@@ -55,14 +55,14 @@ public class VaultEconomy implements Economy {
 
     @Override
     public String currencyNamePlural() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name") + "'s";
     }
 
     @Override
     public String currencyNameSingular() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name");
     }

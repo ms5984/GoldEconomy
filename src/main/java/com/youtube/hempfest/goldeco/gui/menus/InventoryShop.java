@@ -76,7 +76,7 @@ public class InventoryShop extends EcoMenu {
                 menu.setItemToEdit(getPrimaryDollarItem());
                 menu.setItemTooEdit(getSecondaryDollarItem());
             } else {
-                Config main = new Config("shop_config");
+                Config main = Config.get("shop_config");
                 FileConfiguration fc = main.getConfig();
                 List<String> items = new ArrayList<>(fc.getStringList("Economy.currency-items"));
                 menu.setItemToEdit(items.get(0));
@@ -88,19 +88,19 @@ public class InventoryShop extends EcoMenu {
     }
 
     private String getPrimaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name-item");
     }
 
     private String getSecondaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.change-item");
     }
 
     private boolean usingCustomCurrency() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return true;
