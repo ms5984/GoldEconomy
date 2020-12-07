@@ -37,7 +37,7 @@ public class BuylistCommand extends GoldEconomyCommandBase {
          */
         int length = args.length;
         Player p = (Player) commandSender;
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
         StringLibrary me = new StringLibrary(p);

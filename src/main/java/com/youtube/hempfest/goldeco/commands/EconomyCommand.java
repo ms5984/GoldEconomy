@@ -83,7 +83,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
     }
 
     private String getPrimaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return fc.getString("Economy.custom-currency.name");
@@ -92,7 +92,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
     }
 
     private String getSecondaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return fc.getString("Economy.custom-currency.change");
@@ -101,19 +101,19 @@ public class EconomyCommand extends GoldEconomyCommandBase {
     }
 
     private String getPrimaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name-item");
     }
 
     private String getSecondaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.change-item");
     }
 
     private boolean usingCustomCurrency() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return true;
@@ -134,7 +134,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
         if (!(commandSender instanceof Player)) {
             int length = args.length;
             StringLibrary me = new StringLibrary(null);
-            Config main = new Config("shop_config");
+            Config main = Config.get("shop_config");
             FileConfiguration fc = main.getConfig();
             if (length == 0) {
                 ArrayList<String> help = new ArrayList<>();
@@ -169,13 +169,13 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         }
                     }
                     InputStream m1 = GoldEconomy.getInstance().getResource("shop_config.yml");
-                    Config.copy(m1, main.getFile());
+                    Config.copyTo(m1, main);
                     sendPrefixedMessage(commandSender, "&3&oReloaded and updated configuration &b&o" + '"' + main.getName() + '"');
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("reload")) {
                     main.reload();
-                    Config lang = new Config("shop_messages");
+                    Config lang = Config.get("shop_messages");
                     lang.reload();
                     if (GoldEconomy.usingVault()) {
                         VaultListener listener = new VaultListener(GoldEconomy.getInstance());
@@ -308,7 +308,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
          */
         int length = args.length;
         Player p = (Player) commandSender;
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         StringLibrary me = new StringLibrary(p);
         String withdrawType = "";
@@ -384,7 +384,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     }
                 }
                     InputStream m1 = GoldEconomy.getInstance().getResource("shop_config.yml");
-                    Config.copy(m1, main.getFile());
+                    Config.copyTo(m1, main);
                     me.msg("&3&oReloaded and updated configuration &b&o" + '"' + main.getName() + '"');
                 return true;
             }
@@ -393,11 +393,11 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     me.msg(noPermission(this.getPermission() + ".update"));
                     return true;
                 }
-                Config message = new Config("shop_messages");
+                Config message = Config.get("shop_messages");
                 InputStream m1 = GoldEconomy.getInstance().getResource("shop_config_ru.yml");
                 InputStream m2 = GoldEconomy.getInstance().getResource("shop_messages_ru.yml");
-                Config.copy(m1, main.getFile());
-                Config.copy(m2, message.getFile());
+                Config.copyTo(m1, main);
+                Config.copyTo(m2, message);
                 me.msg("&3&oЯзык был изменён на &b&o" + '"' + "русский" + '"');
                 return true;
             }
@@ -407,7 +407,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     return true;
                 }
                 main.reload();
-                Config lang = new Config("shop_messages");
+                Config lang = Config.get("shop_messages");
                 lang.reload();
                 if (GoldEconomy.usingVault()) {
                     VaultListener listener = new VaultListener(GoldEconomy.getInstance());

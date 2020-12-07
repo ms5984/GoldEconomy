@@ -9,26 +9,26 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Config {
-    private final String n;
+    private final String n; // strings are immutable; we could sanitize in constructor and make this public
     private FileConfiguration fc;
     private File file;
     private static final JavaPlugin PLUGIN = JavaPlugin.getProvidingPlugin(Config.class);
     private static final ArrayList<Config> CONFIGS = new ArrayList<>();
 
-    public Config(@NotNull final String n) {
+    private Config(@NotNull final String n) {
         this.n = n;
         CONFIGS.add(this);
     }
 
-    public static void copy(InputStream in, File file) {
+    public static void copyTo(InputStream in, Config out) {
         try {
-            OutputStream out = new FileOutputStream(file);
+            final OutputStream outputStream = new FileOutputStream(out.getFile());
             byte[] buf = new byte[1024];
             int len;
             while((len=in.read(buf))>0){
-                out.write(buf,0,len);
+                outputStream.write(buf,0,len);
             }
-            out.close();
+            outputStream.close();
             in.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,7 +59,7 @@ public class Config {
     }*/
 
 
-    public static Config getConfig(final String n) {
+    public static Config get(final String n) {
         for(final Config c: Config.CONFIGS) {
             if(c.getName().equals(n)) {
                 return c;
@@ -84,7 +84,7 @@ public class Config {
         return true;
     }
 
-    public File getFile() {
+    private File getFile() { // better encapsulation
         if(file == null) {
             file = new File(getDataFolder(), getName() + ".yml"); //create method get data folder
             if(!file.exists()) {

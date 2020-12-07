@@ -211,7 +211,7 @@ public class PlayerListener implements EconomyStructure {
     @Override
     public double get(Utility type, String item) {
         double result = 0.0;
-        Config items = new Config("shop_items");
+        Config items = Config.get("shop_items");
         switch (type) {
             case BUY_PRICE:
             result = items.getConfig().getDouble("Items." + item + ".purchase-price");
@@ -229,8 +229,8 @@ public class PlayerListener implements EconomyStructure {
     public void buy(String item, int amount) {
         StringLibrary me = new StringLibrary(op.getPlayer());
         GoldEconomy plugin = GoldEconomy.getInstance();
-        Config items = new Config("shop_items");
-        Config main = new Config("shop_config");
+        Config items = Config.get("shop_items");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
 //        ItemManager im = GoldEconomy.getItemManager();
@@ -258,8 +258,8 @@ public class PlayerListener implements EconomyStructure {
     @Override
     public void sell(String item, int amount) {
         StringLibrary me = new StringLibrary(op.getPlayer());
-        Config items = new Config("shop_items");
-        Config main = new Config("shop_config");
+        Config items = Config.get("shop_items");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
         Material mat = ItemLibrary.getMaterial(item.toUpperCase());
@@ -271,7 +271,7 @@ public class PlayerListener implements EconomyStructure {
     }
 
     private String getPrimaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return fc.getString("Economy.custom-currency.name");
@@ -280,7 +280,7 @@ public class PlayerListener implements EconomyStructure {
     }
 
     private String getSecondaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return fc.getString("Economy.custom-currency.change");

@@ -19,7 +19,7 @@ public class StringLibrary {
     Player p;
     String text;
     public String prefix = "&7[&6&lEconomy&7]&r -";
-    private Config lang = new Config("shop_messages");
+    private Config lang = Config.get("shop_messages");
     private FileConfiguration fc = lang.getConfig();
 
     public StringLibrary(Player p) {
@@ -189,7 +189,7 @@ public class StringLibrary {
     public void run(Config c) {
         if (!c.exists()) {
             InputStream i = GoldEconomy.getInstance().getResource("shop_messages.yml");
-            Config.copy(i, lang.getFile());
+            Config.copyTo(i, lang);
         }
     }
 

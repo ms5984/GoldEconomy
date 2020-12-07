@@ -22,7 +22,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.InputStream;
@@ -175,22 +174,22 @@ public class GoldEconomy extends JavaPlugin {
 	}
 
 	public static double startingBalance() {
-		Config main = new Config("shop_config");
+		Config main = Config.get("shop_config");
 		FileConfiguration fc = main.getConfig();
 		return fc.getDouble("Economy.starting-balance");
 	}
 
 	public static String getMainWorld() {
-		Config main = new Config("shop_config");
+		Config main = Config.get("shop_config");
 		FileConfiguration fc = main.getConfig();
 		return fc.getString("Economy.main-world");
 	}
 
 	public static boolean usingVault() {
-		Config main = new Config("shop_config");
+		Config main = Config.get("shop_config");
 		if (!main.exists()) {
 			InputStream m1 = GoldEconomy.getInstance().getResource("shop_config.yml");
-			Config.copy(m1, main.getFile());
+			Config.copyTo(m1, main);
 		}
 		FileConfiguration fc = main.getConfig();
 		if (fc.getBoolean("Economy.check-for-vault") == Boolean.valueOf(true)) {
@@ -200,15 +199,15 @@ public class GoldEconomy extends JavaPlugin {
 	}
 
 	private void loadConfiguration() {
-		Config main = new Config("shop_messages");
+		Config main = Config.get("shop_messages");
 		if (!main.exists()) {
 			InputStream m1 = getResource("shop_messages.yml");
-			Config.copy(m1, main.getFile());
+			Config.copyTo(m1, main);
 		}
 	}
 
 	private void loadDefaults() {
-		Config shop_items = new Config("shop_items");
+		Config shop_items = Config.get("shop_items");
 		final List<String> itemList = CompletableFuture.supplyAsync(() -> Arrays.stream(Material.values())
 			.filter(Material::isItem).filter(m -> m != Material.AIR).map(Enum::name).collect(Collectors.toList())).join();
 		if (!shop_items.exists()) {
@@ -222,7 +221,7 @@ public class GoldEconomy extends JavaPlugin {
 	}
 
 	public static boolean usingBanks() {
-		Config main = new Config("shop_config");
+		Config main = Config.get("shop_config");
 		boolean result = false;
 		if (main.exists()) {
 			result = main.getConfig().getBoolean("Economy.using-banks");
@@ -231,7 +230,7 @@ public class GoldEconomy extends JavaPlugin {
 	}
 
 	public static boolean usingShop() {
-		Config main = new Config("shop_config");
+		Config main = Config.get("shop_config");
 		boolean result = false;
 		if (main.exists()) {
 			result = main.getConfig().getBoolean("Economy.using-shop");
@@ -248,7 +247,7 @@ public class GoldEconomy extends JavaPlugin {
 	}
 
 	public static List<String> getWorlds() throws NullPointerException {
-		Config main = new Config("shop_config");
+		Config main = Config.get("shop_config");
 		if (main.exists()) {
 			return main.getConfig().getStringList("Economy.world-list");
 		}

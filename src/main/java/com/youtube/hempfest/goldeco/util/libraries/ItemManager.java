@@ -34,7 +34,7 @@ public class ItemManager {
 
     public static List<String> getShopContents() {
         List<String> array = new ArrayList<>();
-        Config items = new Config("shop_items");
+        Config items = Config.get("shop_items");
         FileConfiguration fc = items.getConfig();
         for (String item : fc.getConfigurationSection("Items").getKeys(false)) {
             array.add(item);
@@ -44,7 +44,7 @@ public class ItemManager {
 
     public List<String> getShopContentss() {
         List<String> array = new ArrayList<>();
-        Config items = new Config("shop_items");
+        Config items = Config.get("shop_items");
         FileConfiguration fc = items.getConfig();
         for (Material mat : Material.values()) {
             array.add(mat.name());
@@ -54,7 +54,7 @@ public class ItemManager {
 
     public static double getItemPrice(indexPrice price, String item) {
         double result = 0.0;
-        Config items = new Config("shop_items");
+        Config items = Config.get("shop_items");
         switch (price) {
             case PURCHASE:
                 result = items.getConfig().getDouble("Items." + item + ".purchase-price");

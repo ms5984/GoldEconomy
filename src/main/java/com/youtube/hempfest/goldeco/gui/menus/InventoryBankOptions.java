@@ -39,7 +39,7 @@ public class InventoryBankOptions extends EcoMenu {
     Material mat = e.getCurrentItem().getType();
     MenuManager menu = GoldEconomy.menuViewer(p);
         BankListener bl = new BankListener(p, "", p.getWorld().getName());
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         List<String> items = new ArrayList<>(fc.getStringList("Economy.currency-items"));
         if (mat.equals(ItemLibrary.getMaterial(items.get(0)))) {
@@ -156,25 +156,25 @@ public class InventoryBankOptions extends EcoMenu {
     }
 
     private String getPrimaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name-item");
     }
 
     private String getSecondaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.change-item");
     }
 
     private String getPrimaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
             return fc.getString("Economy.custom-currency.name");
     }
 
     private boolean usingCustomCurrency() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return true;
@@ -183,7 +183,7 @@ public class InventoryBankOptions extends EcoMenu {
     }
 
     private String getSecondaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
             return fc.getString("Economy.custom-currency.change");
     }
