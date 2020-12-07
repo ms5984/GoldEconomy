@@ -7,6 +7,7 @@ import com.youtube.hempfest.goldeco.gui.menus.InventoryShop;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.listeners.vault.VaultListener;
+import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
 import com.youtube.hempfest.goldeco.util.libraries.ItemLibrary;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
@@ -17,7 +18,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class EconomyCommand extends BukkitCommand {
+public class EconomyCommand extends GoldEconomyCommandBase {
     private static final List<String> ALIASES = new ArrayList<>(Arrays.asList("eco", "geco"));
 
     Material currency;
@@ -37,20 +37,16 @@ public class EconomyCommand extends BukkitCommand {
 
     public EconomyCommand() {
         super("economy", "GoldEconomy help", "/economy", ALIASES);
-        setPermission("goldeconomy.use");
     }
 
-    private void sendMessage(CommandSender player, String message) {
+    @Override
+    protected String permissionNode() {
+        return "goldeconomy.use";
+    }
+
+    private void sendPrefixedMessage(CommandSender player, String message) {
         StringLibrary lib = new StringLibrary(null);
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', lib.prefix + " " + message));
-    }
-
-    private void send(CommandSender player, String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
-
-    private String notPlayer() {
-        return String.format("[%s] - You aren't a player..", GoldEconomy.getInstance().getDescription().getName());
     }
 
     private String format(double amount) {
@@ -87,7 +83,7 @@ public class EconomyCommand extends BukkitCommand {
     }
 
     private String getPrimaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return fc.getString("Economy.custom-currency.name");
@@ -96,7 +92,7 @@ public class EconomyCommand extends BukkitCommand {
     }
 
     private String getSecondaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return fc.getString("Economy.custom-currency.change");
@@ -105,19 +101,19 @@ public class EconomyCommand extends BukkitCommand {
     }
 
     private String getPrimaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name-item");
     }
 
     private String getSecondaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.change-item");
     }
 
     private boolean usingCustomCurrency() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return true;
@@ -131,19 +127,6 @@ public class EconomyCommand extends BukkitCommand {
         return player.getName();
     }
 
-    private String noPermission(String permission) {
-        return "You don't have permission " + '"' + permission + '"';
-    }
-
-    private boolean isDouble(String text) {
-        try {
-            Double.parseDouble(text);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
     private boolean isInventoryFull(Player p) { return (p.getInventory().firstEmpty() == -1); }
 
     @Override
@@ -151,11 +134,11 @@ public class EconomyCommand extends BukkitCommand {
         if (!(commandSender instanceof Player)) {
             int length = args.length;
             StringLibrary me = new StringLibrary(null);
-            Config main = new Config("shop_config");
+            Config main = Config.get("shop_config");
             FileConfiguration fc = main.getConfig();
             if (length == 0) {
                 ArrayList<String> help = new ArrayList<>();
-                sendMessage(commandSender, me.prefix + " Command list");
+                sendPrefixedMessage(commandSender, me.prefix + " Command list");
                 help.add("&m-------------------------------");
                 help.add(" &7/shop&f,&7menu&f,&7gui&f - &oOpens the economy GUI.");
                 help.add(" &7/buy&f - &oBuy an item from the shop");
@@ -171,7 +154,7 @@ public class EconomyCommand extends BukkitCommand {
                 help.add("&m-------------------------------");
                 help.add(" ");
                 for (String list : help) {
-                    send(commandSender, list);
+                    sendMessage(commandSender, list);
                 }
                 return true;
             }
@@ -181,38 +164,38 @@ public class EconomyCommand extends BukkitCommand {
                 if (args[0].equalsIgnoreCase("fix") || args[0].equalsIgnoreCase("update")) {
                     if (main.exists()) {
                         if (Objects.equals(fc.getString("Version"), GoldEconomy.getInstance().getDescription().getVersion())) {
-                            sendMessage(commandSender, "&3&oThe configuration is already up to date.");
+                            sendPrefixedMessage(commandSender, "&3&oThe configuration is already up to date.");
                             return true;
                         }
                     }
                     InputStream m1 = GoldEconomy.getInstance().getResource("shop_config.yml");
-                    Config.copy(m1, main.getFile());
-                    sendMessage(commandSender, "&3&oReloaded and updated configuration &b&o" + '"' + main.getName() + '"');
+                    Config.copyTo(m1, main);
+                    sendPrefixedMessage(commandSender, "&3&oReloaded and updated configuration &b&o" + '"' + main.getName() + '"');
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("reload")) {
                     main.reload();
-                    Config lang = new Config("shop_messages");
+                    Config lang = Config.get("shop_messages");
                     lang.reload();
                     if (GoldEconomy.usingVault()) {
                         VaultListener listener = new VaultListener(GoldEconomy.getInstance());
                         listener.unhook();
                         listener.hook();
                     }
-                    sendMessage(commandSender, "&b&oReloaded configuration");
+                    sendPrefixedMessage(commandSender, "&b&oReloaded configuration");
                 }
                 if (args[0].equalsIgnoreCase("give")) {
-                    sendMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco give playerName ##.##" + '"');
+                    sendPrefixedMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco give playerName ##.##" + '"');
                     return true;
                 }
 
                 if (args[0].equalsIgnoreCase("take")) {
-                    sendMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco take playerName ##.##" + '"');
+                    sendPrefixedMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco take playerName ##.##" + '"');
                     return true;
                 }
 
                 if (args[0].equalsIgnoreCase("set")) {
-                    sendMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco set playerName&f,&7&oaccountID ##.##" + '"');
+                    sendPrefixedMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco set playerName&f,&7&oaccountID ##.##" + '"');
                     return true;
                 }
                 return true;
@@ -220,17 +203,17 @@ public class EconomyCommand extends BukkitCommand {
 
             if (length == 2) {
                 if (args[0].equalsIgnoreCase("give")) {
-                    sendMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco give playerName ##.##" + '"');
+                    sendPrefixedMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco give playerName ##.##" + '"');
                     return true;
                 }
 
                 if (args[0].equalsIgnoreCase("take")) {
-                    sendMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco take playerName ##.##" + '"');
+                    sendPrefixedMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco take playerName ##.##" + '"');
                     return true;
                 }
 
                 if (args[0].equalsIgnoreCase("set")) {
-                    sendMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco set playerName&f,&7&oaccountID ##.##" + '"');
+                    sendPrefixedMessage(commandSender, "&c&oNot enough arguments. Expected &7&o" + '"' + "/eco set playerName&f,&7&oaccountID ##.##" + '"');
                     return true;
                 }
 
@@ -239,7 +222,7 @@ public class EconomyCommand extends BukkitCommand {
             if (length == 3) {
                 if (args[0].equalsIgnoreCase("give")) {
                     if (!isDouble(args[2])) {
-                        sendMessage(commandSender, me.invalidDouble());
+                        sendPrefixedMessage(commandSender, me.invalidDouble());
                         return true;
                     }
                     PlayerListener list = new PlayerListener();
@@ -253,7 +236,7 @@ public class EconomyCommand extends BukkitCommand {
                     PlayerListener el = new PlayerListener(pl);
                     double current = Double.parseDouble(el.get(Utility.BALANCE).replaceAll(",", ""));
                     el.set(current + Double.parseDouble(args[2]));
-                    sendMessage(commandSender, me.staffMoneyGiven().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
+                    sendPrefixedMessage(commandSender, me.staffMoneyGiven().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("take")) {
@@ -285,7 +268,7 @@ public class EconomyCommand extends BukkitCommand {
                         }
                     }
                     if (!isDouble(args[2])) {
-                        sendMessage(commandSender, me.invalidDouble());
+                        sendPrefixedMessage(commandSender, me.invalidDouble());
                         return true;
                     }
                     // this might be an account type
@@ -294,7 +277,7 @@ public class EconomyCommand extends BukkitCommand {
                         worldName = GoldEconomy.getBankWorld(args[1]);
                         BankListener bl = new BankListener(null, args[1], worldName);
                         bl.set(Double.parseDouble(args[2]));
-                        sendMessage(commandSender, me.staffAccountSet().replaceAll("%account%", args[1]).replaceAll("%amount%", args[2]));
+                        sendPrefixedMessage(commandSender, me.staffAccountSet().replaceAll("%account%", args[1]).replaceAll("%amount%", args[2]));
                     } else {
                         try {
                             OfflinePlayer pl = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
@@ -303,12 +286,12 @@ public class EconomyCommand extends BukkitCommand {
 
                                 PlayerListener el = new PlayerListener(pl);
                                 el.set(Double.parseDouble(args[2]));
-                                sendMessage(commandSender, me.staffMoneySet().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
+                                sendPrefixedMessage(commandSender, me.staffMoneySet().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
                                 return true;
                             } else
-                                sendMessage(commandSender, "&c&oInvalid response. Expected:&r [&7playerName &ror &7accountID&r].");
+                                sendPrefixedMessage(commandSender, "&c&oInvalid response. Expected:&r [&7playerName &ror &7accountID&r].");
                         } catch (IllegalArgumentException e) {
-                            sendMessage(commandSender, "&c&oInvalid response. Expected:&r [&7playerName &ror &7accountID&r].");
+                            sendPrefixedMessage(commandSender, "&c&oInvalid response. Expected:&r [&7playerName &ror &7accountID&r].");
                         }
                     }
                     return true;
@@ -325,7 +308,7 @@ public class EconomyCommand extends BukkitCommand {
          */
         int length = args.length;
         Player p = (Player) commandSender;
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         StringLibrary me = new StringLibrary(p);
         String withdrawType = "";
@@ -401,7 +384,7 @@ public class EconomyCommand extends BukkitCommand {
                     }
                 }
                     InputStream m1 = GoldEconomy.getInstance().getResource("shop_config.yml");
-                    Config.copy(m1, main.getFile());
+                    Config.copyTo(m1, main);
                     me.msg("&3&oReloaded and updated configuration &b&o" + '"' + main.getName() + '"');
                 return true;
             }
@@ -410,11 +393,11 @@ public class EconomyCommand extends BukkitCommand {
                     me.msg(noPermission(this.getPermission() + ".update"));
                     return true;
                 }
-                Config message = new Config("shop_messages");
+                Config message = Config.get("shop_messages");
                 InputStream m1 = GoldEconomy.getInstance().getResource("shop_config_ru.yml");
                 InputStream m2 = GoldEconomy.getInstance().getResource("shop_messages_ru.yml");
-                Config.copy(m1, main.getFile());
-                Config.copy(m2, message.getFile());
+                Config.copyTo(m1, main);
+                Config.copyTo(m2, message);
                 me.msg("&3&oЯзык был изменён на &b&o" + '"' + "русский" + '"');
                 return true;
             }
@@ -424,7 +407,7 @@ public class EconomyCommand extends BukkitCommand {
                     return true;
                 }
                 main.reload();
-                Config lang = new Config("shop_messages");
+                Config lang = Config.get("shop_messages");
                 lang.reload();
                 if (GoldEconomy.usingVault()) {
                     VaultListener listener = new VaultListener(GoldEconomy.getInstance());
