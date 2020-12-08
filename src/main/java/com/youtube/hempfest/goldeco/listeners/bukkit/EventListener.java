@@ -19,7 +19,7 @@ public class EventListener implements Listener {
 
     private void loadPlayerFiles(Player player) {
         final PlayerData data = PlayerData.get(player.getUniqueId());
-        BankData world = new BankData(player.getWorld().getName());
+        BankData world = BankData.get(player.getWorld().getName());
         FileConfiguration fc = data.getConfig();
         fc.set("player." + player.getWorld().getName() + ".balance", GoldEconomy.startingBalance());
         if (!world.exists()) {

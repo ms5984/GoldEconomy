@@ -219,7 +219,7 @@ public class GoldEconomy extends JavaPlugin {
 	public static String getBankWorld(String accountID) {
 		String result = "";
 		for (String world : getBankWorlds()) {
-			BankData data = new BankData(world);
+			BankData data = BankData.get(world);
 			FileConfiguration fc = data.getConfig();
 			for (String player : fc.getConfigurationSection("banks").getKeys(false)) {
 				if (fc.getString("banks." + player + ".accountID").equals(accountID)) {
@@ -234,7 +234,7 @@ public class GoldEconomy extends JavaPlugin {
 	public static String getBankOwner(String accountID) {
 		String result = "";
 		for (String world : getBankWorlds()) {
-			BankData data = new BankData(world);
+			BankData data = BankData.get(world);
 			FileConfiguration fc = data.getConfig();
 			for (String player : fc.getConfigurationSection("banks").getKeys(false)) {
 				if (fc.getString("banks." + player + ".accountID").equals(accountID)) {
@@ -256,7 +256,7 @@ public class GoldEconomy extends JavaPlugin {
 	public static List<String> getBankAccounts() {
 		List<String> accounts = new ArrayList<>();
 		for (String world : getBankWorlds()) {
-			BankData data = new BankData(world);
+			BankData data = BankData.get(world);
 			FileConfiguration fc = data.getConfig();
 			for (String player : fc.getConfigurationSection("banks").getKeys(false)) {
 				accounts.add(fc.getString("banks." + player + ".accountID"));

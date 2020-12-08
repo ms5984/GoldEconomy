@@ -19,7 +19,7 @@ public class BankAccount {
 	public BankAccount queryWorld() {
 		String result = "";
 		for (String world : GoldEconomy.getBankWorlds()) {
-			BankData data = new BankData(world);
+			BankData data = BankData.get(world);
 			FileConfiguration fc = data.getConfig();
 			for (String player : fc.getConfigurationSection("banks").getKeys(false)) {
 				if (fc.getString("banks." + player + ".accountID").equals(accountID)) {
@@ -33,7 +33,7 @@ public class BankAccount {
 	}
 
 	public double getBalance() {
-		BankData data = new BankData(world);
+		BankData data = BankData.get(world);
 		FileConfiguration fc = data.getConfig();
 		return Double.parseDouble(fc.getString("banks." + Bukkit.getOfflinePlayer(getOwner()).getName() + ".balance").replace(",", ""));
 	}
