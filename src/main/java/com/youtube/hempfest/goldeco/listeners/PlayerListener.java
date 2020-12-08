@@ -14,10 +14,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class PlayerListener implements EconomyStructure {
 
@@ -290,7 +292,14 @@ public class PlayerListener implements EconomyStructure {
     }
 
     public static String nameByUUID(UUID id) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(id); // This method actually returns dummy objects for invalid UUIDs
+        final CompletableFuture<OfflinePlayer> cf = new CompletableFuture<>();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                cf.complete(Bukkit.getOfflinePlayer(id)); // This method actually returns dummy objects for invalid UUIDs
+            }
+        }.runTaskAsynchronously(GoldEconomy.getInstance());
+        final OfflinePlayer player = cf.join();
         if(player == null) return null; // TODO: replace this check as this is not a solution (never returns null)
         final String playerName = player.getName();
         return (playerName == null) ? id.toString() : playerName;
