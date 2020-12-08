@@ -95,8 +95,8 @@ public class InventoryBanks extends EcoMenuPaginated {
                     ///////////////////////////
                     // Create an item from our collection and place it into the inventory
                     BankAccount bank = new BankAccount(items.get(index)).queryWorld();
-                    PlayerListener listener = new PlayerListener();
-                    ItemStack playerIcon = makePersistentItem(Material.CHEST, "&7#&3&l" + items.get(index), "account", items.get(index)," ", "&6&oOwner: &f&n" + GoldEconomy.getBankOwner(items.get(index)), "", "&6&oWorld: &f&n" + GoldEconomy.getBankWorld(items.get(index)), "", "&6&lBalance: &f&n" + listener.format(bank.getBalance()));
+//                    PlayerListener listener = new PlayerListener();
+                    ItemStack playerIcon = makePersistentItem(Material.CHEST, "&7#&3&l" + items.get(index), "account", items.get(index)," ", "&6&oOwner: &f&n" + GoldEconomy.getBankOwner(items.get(index)), "", "&6&oWorld: &f&n" + GoldEconomy.getBankWorld(items.get(index)), "", "&6&lBalance: &f&n" + PlayerListener.format(bank.getBalance()));
                     inventory.addItem(playerIcon);
 
                     ////////////////////////

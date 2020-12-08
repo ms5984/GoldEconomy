@@ -36,8 +36,8 @@ public class InventoryWallets extends EcoMenuPaginated {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        PlayerListener el = new PlayerListener();
-        ArrayList<String> items = new ArrayList<String>(el.getAllPlayers());
+//        PlayerListener el = new PlayerListener();
+        final ArrayList<String> items = new ArrayList<>(PlayerListener.getAllPlayers());
         Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
         String player = e.getCurrentItem().getItemMeta().getPersistentDataContainer()
@@ -84,8 +84,8 @@ public class InventoryWallets extends EcoMenuPaginated {
 
     @Override
     public void setMenuItems() {
-        PlayerListener el = new PlayerListener();
-        ArrayList<String> items = new ArrayList<String>(el.getAllPlayers());
+//        PlayerListener el = new PlayerListener();
+        final ArrayList<String> items = new ArrayList<>(PlayerListener.getAllPlayers());
         //		return ChatColor.translateAlternateColorCodes('&', text);
         ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         inventory.setItem(45, back);

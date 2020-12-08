@@ -204,7 +204,7 @@ public class InventoryBankOptions extends EcoMenu {
         //		return ChatColor.translateAlternateColorCodes('&', text);
         ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         ItemStack head = makeItem(Material.PLAYER_HEAD, "&7[&6&l" + manager.getOwner().getName() + "&7]", "", "&e&oBalance: &f" + el.get(Utility.BALANCE), " ", "&a&oWorld: &f" + manager.getOwner().getWorld().getName());
-        ItemStack info = makeItem(Material.SEAGRASS, "&7[&6&lINFO&7]", "", "&6&oAccount #&f" + b.get(Utility.NAME), " ", "&e&oBalance: &f" + el.format(Double.valueOf(bl.get(Utility.BALANCE))));
+        ItemStack info = makeItem(Material.SEAGRASS, "&7[&6&lINFO&7]", "", "&6&oAccount #&f" + b.get(Utility.NAME), " ", "&e&oBalance: &f" + PlayerListener.format(Double.valueOf(bl.get(Utility.BALANCE))));
         inventory.setItem(2, info);
         inventory.setItem(6, head);
         inventory.setItem(4, back);

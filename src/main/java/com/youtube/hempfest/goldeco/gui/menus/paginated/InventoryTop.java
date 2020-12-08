@@ -36,8 +36,8 @@ public class InventoryTop extends EcoMenuPaginated {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        PlayerListener el = new PlayerListener();
-        ArrayList<String> items = new ArrayList<String>(el.getLeaderboard(manager.getOwner()));
+//        PlayerListener el = new PlayerListener();
+        final ArrayList<String> items = new ArrayList<>(PlayerListener.getLeaderboard(manager.getOwner()));
         Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
         String player = e.getCurrentItem().getItemMeta().getPersistentDataContainer()
@@ -77,8 +77,8 @@ public class InventoryTop extends EcoMenuPaginated {
 
     @Override
     public void setMenuItems() {
-        PlayerListener el = new PlayerListener();
-        ArrayList<String> items = new ArrayList<String>(el.getLeaderboard(manager.getOwner()));
+//        PlayerListener el = new PlayerListener();
+        final ArrayList<String> items = new ArrayList<>(PlayerListener.getLeaderboard(manager.getOwner()));
         //		return ChatColor.translateAlternateColorCodes('&', text);
         ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         inventory.setItem(45, back);

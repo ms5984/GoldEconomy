@@ -35,18 +35,18 @@ public class TopCommand extends GoldEconomyCommandBase {
     }
 
     private void getLeaderboard(Player p, int page) {
-        PlayerListener el = new PlayerListener();
+//        PlayerListener el = new PlayerListener();
         StringLibrary sl = new StringLibrary(p);
             int o = 10;
 
             HashMap<String, Double> players = new HashMap<String, Double>();
 
             // Filling the hashMap
-            for (String playerName : el.getAllPlayers()) {
+            for (String playerName : PlayerListener.getAllPlayers()) {
                 final PlayerData data = PlayerData.get(UUID.fromString(playerName));
                         FileConfiguration fc = data.getConfig();
                         if (fc.isDouble("player." + p.getWorld().getName() + ".balance")) {
-                            players.put(el.nameByUUID(UUID.fromString(playerName)), fc.getDouble("player." + p.getWorld().getName() + ".balance"));
+                            players.put(PlayerListener.nameByUUID(UUID.fromString(playerName)), fc.getDouble("player." + p.getWorld().getName() + ".balance"));
                         }
             }
 
@@ -96,11 +96,11 @@ public class TopCommand extends GoldEconomyCommandBase {
                             i1++;
                             if (Bukkit.getServer().getVersion().contains("1.16")) {
                                 sendComponent(p, ComponentR1_16.textRunnable(p, "",
-                                        " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + el.format(nextTopBal),
+                                        " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + PlayerListener.format(nextTopBal),
                                         "&6" + nextTop + " &a&oplaces &7#&6" + k + "&a&o on page " + pagee + ".", "shop"));
                             } else {
                                 sendComponent(p, ComponentR1_8_1.textRunnable( "",
-                                        " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + el.format(nextTopBal),
+                                        " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + PlayerListener.format(nextTopBal),
                                         "&6" + nextTop + " &a&oplaces &7#&6" + k + "&a&o on page " + pagee + ".", "shop"));
                             }
 

@@ -24,7 +24,7 @@ public class PlayerListener implements EconomyStructure {
     PlayerData data;
     FileConfiguration fc;
 
-    public PlayerListener() {}
+//    public PlayerListener() {} // No longer using no-args for static actions
 
     public PlayerListener(OfflinePlayer op) {
         this.op = op;
@@ -298,12 +298,11 @@ public class PlayerListener implements EconomyStructure {
             return "GOLD";
     }
 
-    public List<String> getLeaderboard(Player p) {
-        PlayerListener el = new PlayerListener();
+    public static List<String> getLeaderboard(Player p) {
         StringLibrary sl = new StringLibrary(p);
         List<String> array = new ArrayList<>();
         HashMap<String, Double> players = new HashMap<String, Double>();
-        for (String playerName : el.getAllPlayers()) {
+        for (String playerName : getAllPlayers()) {
             PlayerData data = PlayerData.get(UUID.fromString(playerName));
             FileConfiguration fc = data.getConfig();
             players.put(playerName, fc.getDouble("player." + p.getWorld().getName() + ".balance"));
@@ -326,24 +325,23 @@ public class PlayerListener implements EconomyStructure {
         return array;
     }
 
-    public List<String> getAllPlayers(){
-        List<String> users = new ArrayList<String>();
+    public static List<String> getAllPlayers(){
+        final List<String> users = new ArrayList<>();
         for(File file : PlayerData.getDataFolder().listFiles()) {
             users.add(file.getName().replace(".yml", ""));
         }
         return users;
     }
 
-    public String nameByUUID(UUID id) {
+    public static String nameByUUID(UUID id) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(id);
         if(player == null) return null;
         return player.getName();
     }
 
-    public String format(double amount) {
-        String number = String.valueOf(amount);
-        Double numParsed = Double.parseDouble(number);
-        String numString = String.format("%,.2f", numParsed);
-        return numString;
+    public static String format(double amount) {
+/*        String number = String.valueOf(amount);
+        Double numParsed = Double.parseDouble(number);*/ // wyd
+        return String.format("%,.2f", amount);
     }
 }

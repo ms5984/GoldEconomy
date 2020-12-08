@@ -225,9 +225,9 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         sendPrefixedMessage(commandSender, me.invalidDouble());
                         return true;
                     }
-                    PlayerListener list = new PlayerListener();
+//                    PlayerListener list = new PlayerListener();
                     String uuid = "";
-                    for (String id : list.getAllPlayers()) {
+                    for (String id : PlayerListener.getAllPlayers()) {
                         if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
                             uuid = id;
                         }
@@ -244,9 +244,9 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         me.msg(me.invalidDouble());
                         return true;
                     }
-                    PlayerListener list = new PlayerListener();
+//                    PlayerListener list = new PlayerListener();
                     String uuid = "";
-                    for (String id : list.getAllPlayers()) {
+                    for (String id : PlayerListener.getAllPlayers()) {
                         if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
                             uuid = id;
                         }
@@ -260,9 +260,9 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 }
                 if (args[0].equalsIgnoreCase("set")) {
                     String worldName = args[2];
-                    PlayerListener list = new PlayerListener();
+//                    PlayerListener list = new PlayerListener();
                     String uuid = "";
-                    for (String id : list.getAllPlayers()) {
+                    for (String id : PlayerListener.getAllPlayers()) {
                         if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
                             uuid = id;
                         }
@@ -282,7 +282,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         try {
                             OfflinePlayer pl = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
 
-                            if (list.getAllPlayers().contains(pl.getUniqueId().toString())) {
+                            if (PlayerListener.getAllPlayers().contains(pl.getUniqueId().toString())) {
 
                                 PlayerListener el = new PlayerListener(pl);
                                 el.set(Double.parseDouble(args[2]));
@@ -633,9 +633,9 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     me.msg(me.invalidDouble());
                     return true;
                 }
-                PlayerListener list = new PlayerListener();
+//                PlayerListener list = new PlayerListener();
                 String uuid = "";
-                for (String id : list.getAllPlayers()) {
+                for (String id : PlayerListener.getAllPlayers()) {
                     if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
                         uuid = id;
                     }
@@ -656,9 +656,9 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     me.msg(me.invalidDouble());
                     return true;
                 }
-                PlayerListener list = new PlayerListener();
+//                PlayerListener list = new PlayerListener();
                 String uuid = "";
-                for (String id : list.getAllPlayers()) {
+                for (String id : PlayerListener.getAllPlayers()) {
                     if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
                         uuid = id;
                     }
@@ -676,9 +676,9 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     me.msg(noPermission(this.getPermission() + ".set"));
                     return true;
                 }
-                PlayerListener list = new PlayerListener();
+//                PlayerListener list = new PlayerListener();
                 String uuid = "";
-                for (String id : list.getAllPlayers()) {
+                for (String id : PlayerListener.getAllPlayers()) {
                     if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
                         uuid = id;
                     }
@@ -702,7 +702,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         try {
                             OfflinePlayer pl = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
 
-                            if (list.getAllPlayers().contains(pl.getUniqueId().toString())) {
+                            if (PlayerListener.getAllPlayers().contains(pl.getUniqueId().toString())) {
                                 if (!p.hasPermission(this.getPermission() + ".set.player")) {
                                     me.msg(noPermission(this.getPermission() + ".set.player"));
                                     return true;
