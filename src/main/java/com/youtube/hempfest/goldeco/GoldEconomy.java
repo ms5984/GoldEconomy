@@ -246,11 +246,7 @@ public class GoldEconomy extends JavaPlugin {
 	}
 
 	public static List<String> getBankWorlds() {
-		List<String> users = new ArrayList<>();
-		for(File file : BankData.getDataFolder().listFiles()) {
-			users.add(file.getName().replace(".yml", ""));
-		}
-		return users;
+		return BankData.getBankWorlds();
 	}
 
 	public static List<String> getBankAccounts() {

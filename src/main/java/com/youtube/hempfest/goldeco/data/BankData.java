@@ -3,11 +3,14 @@ package com.youtube.hempfest.goldeco.data;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class BankData {
     private final String n;
@@ -106,13 +109,28 @@ public class BankData {
         return this.fc;
     }
 
-    public static File getDataFolder() {
+    private static File getDataFolder() {
         final File dir = new File(BankData.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("%20", " "));
         final File d = new File(dir.getParentFile().getPath(), PLUGIN.getName() + "/Banks/");
         if(!d.exists()) {
             d.mkdirs();
         }
         return d;
+    }
+
+    public static List<String> getBankWorlds() {
+        final CompletableFuture<List<String>> cf = new CompletableFuture<>();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                final List<String> users = new ArrayList<>();
+                for(File file : BankData.getDataFolder().listFiles()) {
+                    users.add(file.getName().replace(".yml", ""));
+                }
+                cf.complete(users);
+            }
+        }.runTaskAsynchronously(PLUGIN);
+        return cf.join();
     }
 
     public void reload() {
