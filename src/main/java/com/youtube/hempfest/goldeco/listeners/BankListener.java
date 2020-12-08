@@ -7,8 +7,10 @@ import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class BankListener implements EconomyStructure {
 
@@ -16,13 +18,29 @@ public class BankListener implements EconomyStructure {
     String accountID;
     String worldName;
 
-    public BankListener(OfflinePlayer p) {
+    BankData bank;
+    FileConfiguration fc;
+
+    /**
+     * @deprecated messes with multi-world balances. Use at own risk
+     */
+    @Deprecated
+    public BankListener(@NotNull OfflinePlayer p) { // Messes with multi-world balances
         this.op = p;
     }
 
-    public BankListener(OfflinePlayer p, String accountID) {
+    @Deprecated
+    public BankListener(@NotNull OfflinePlayer p, String accountID) { // one bank per world = one bank per player per world
         this.op = p;
         this.accountID = accountID;
+    }
+
+    /**
+     * Use this to interact with accounts for which you already know the ID and world
+     */
+    public BankListener(String accountID, String worldName) {
+        this.accountID = accountID;
+        this.worldName = worldName;
     }
 
     public BankListener(OfflinePlayer p, String accountID, String worldName) {
@@ -33,8 +51,8 @@ public class BankListener implements EconomyStructure {
 
     @Override
     public void set(double amount) {
-        BankData bank = BankData.get(worldName);
-        FileConfiguration fc = bank.getConfig();
+        bank = BankData.get(worldName);
+        fc = bank.getConfig();
         fc.set("banks." + GoldEconomy.getBankOwner(accountID) + ".balance", amount);
         bank.saveConfig();
         OfflinePlayer pl = Bukkit.getPlayer(GoldEconomy.getBankOwner(accountID));
@@ -50,9 +68,10 @@ public class BankListener implements EconomyStructure {
 
     @Override
     public void add(double amount) {
+        if (op == null) return; // we don't deal with null
     PlayerListener el = new PlayerListener(op);
-        BankData bank = BankData.get(worldName);
-        FileConfiguration fc = bank.getConfig();
+        bank = BankData.get(worldName);
+        fc = bank.getConfig();
         double current = fc.getDouble("banks." + op.getName() + ".balance");
         double result = current + amount;
         if (Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", "")) < amount) {
@@ -74,9 +93,10 @@ public class BankListener implements EconomyStructure {
 
     @Override
     public void add(double amount, String worldName) {
+        if (op == null) return;
         PlayerListener el = new PlayerListener(op);
-        BankData bank = BankData.get(worldName);
-        FileConfiguration fc = bank.getConfig();
+        bank = BankData.get(worldName);
+        fc = bank.getConfig();
         double current = fc.getDouble("banks." + op.getName() + ".balance");
         double result = current + amount;
         if (Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", "")) < amount) {
@@ -98,9 +118,10 @@ public class BankListener implements EconomyStructure {
 
     @Override
     public void remove(double amount) {
+        if (op == null) return;
         PlayerListener el = new PlayerListener(op);
-        BankData bank = BankData.get(worldName);
-        FileConfiguration fc = bank.getConfig();
+        bank = BankData.get(worldName);
+        fc = bank.getConfig();
         double current = fc.getDouble("banks." + op.getName() + ".balance");
         double result = current - amount;
         if (Double.valueOf(get(Utility.BALANCE)) < amount) {
@@ -121,12 +142,12 @@ public class BankListener implements EconomyStructure {
     }
 
     @Override
-    public void remove(double amount, String worldName) {
+    public void remove(double amount, String worldName) { // TODO
 
     }
 
     @Override
-    public void create() {
+    public void create() { // TODO: Examine this method
     if (!GoldEconomy.getWorlds().contains(worldName)) {
         if (op.isOnline()) {
             Player p = op.getPlayer();
@@ -154,43 +175,39 @@ public class BankListener implements EconomyStructure {
 
     @Override
     public boolean has(Utility type) {
-        boolean result = false;
         switch (type) {
             case BANK_ACCOUNT:
                 if (op != null) {
-                    BankListener bl = new BankListener(op);
-                    BankData bank = BankData.get(worldName);
-                    if (!bank.exists()) {
+                    bank = BankData.get(worldName);
+/*                    if (!bank.exists()) {
                         bank.getConfig().createSection("banks");
                         bank.saveConfig();
+                    }*/ // TODO: move this type of code to BankData
+                    final ConfigurationSection banks = bank.getConfig().getConfigurationSection("banks");
+                    if (banks != null && banks.getKeys(false).contains(op.getName())) { // Just needed a null-check
+                        return true;
                     }
-                        if (bank.getConfig().getConfigurationSection("banks").getKeys(false).contains(op.getName()))
-                        result = true;
-                    break;
-                }
-                break;
+                };
         }
-        return result;
+        return false;
     }
 
     @Override
     public boolean has(Utility type, String worldName) {
-        boolean result = false;
         switch (type) {
             case BANK_ACCOUNT:
-                    BankData bank = BankData.get(worldName);
+                    bank = BankData.get(worldName);
                     if (bank.exists()) {
                         FileConfiguration fc = bank.getConfig();
                         if (!bank.getConfig().contains("banks")) {
-                            result = false;
-                            break;
+                            return false;
                         }
-                        if (fc.getConfigurationSection("banks").getKeys(false).contains(op.getName()))
-                            result = true;
+                        final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                        if (banks != null && banks.getKeys(false).contains(op.getName()))
+                            return true;
                     }
-                break;
         }
-        return result;
+        return false;
     }
 
     @Override
@@ -199,40 +216,45 @@ public class BankListener implements EconomyStructure {
         switch (type) {
             case NAME:
                 if (op != null) {
-                    if (op.isOnline()) {
-                        Player p = op.getPlayer();
+                    final Player p = op.getPlayer();
+                    if (op.isOnline() && p != null) {
                         BankData data = BankData.get(p.getWorld().getName());
-                        FileConfiguration fc = data.getConfig();
+                        fc = data.getConfig();
 
-                        if (!fc.getConfigurationSection("banks").getKeys(false).isEmpty()) {
-                            if (fc.getConfigurationSection("banks").getKeys(false).contains(p.getName())) {
+                        final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                        if (banks != null && !banks.getKeys(false).isEmpty()) {
+                            if (banks.getKeys(false).contains(p.getName())) {
                                 result = fc.getString("banks." + p.getName() + ".accountID");
                             }
                         }
                         break;
                     }
                     BankData data = BankData.get(GoldEconomy.getMainWorld());
-                    FileConfiguration fc = data.getConfig();
-                    if (fc.getConfigurationSection("banks").getKeys(false).contains(op.getName())) {
+                    fc = data.getConfig();
+                    final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                    if (banks != null && banks.getKeys(false).contains(op.getName())) {
                         result = fc.getString("banks." + op.getName() + ".accountID");
                     }
                     break;
                 }
             case BALANCE:
-                if (op.isOnline()) {
-                    Player p = op.getPlayer();
+                if (op != null && op.isOnline()) {
+                    final Player p = op.getPlayer();
+                    assert p != null;
                     BankData data = BankData.get(p.getWorld().getName());
-                    FileConfiguration fc = data.getConfig();
-                    if (!fc.getConfigurationSection("banks").getKeys(false).isEmpty()) {
-                        if (fc.getConfigurationSection("banks").getKeys(false).contains(p.getName())) {
+                    fc = data.getConfig();
+                    final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                    if (banks != null && !banks.getKeys(false).isEmpty()) {
+                        if (banks.getKeys(false).contains(p.getName())) {
                             result = fc.getString("banks." + p.getName() + ".balance");
                         }
                     }
                     break;
                 }
-                BankData data = BankData.get(GoldEconomy.getMainWorld());
-                FileConfiguration fc = data.getConfig();
-                if (fc.getConfigurationSection("banks").getKeys(false).contains(op.getName())) {
+                bank = BankData.get(GoldEconomy.getMainWorld());
+                fc = bank.getConfig();
+                final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                if (banks != null && banks.getKeys(false).contains(op.getName())) {
                     result = fc.getString("banks." + op.getName() + ".balance");
                 }
                 break;
