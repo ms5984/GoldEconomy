@@ -43,7 +43,7 @@ public class TopCommand extends GoldEconomyCommandBase {
 
             // Filling the hashMap
             for (String playerName : el.getAllPlayers()) {
-                PlayerData data = new PlayerData(UUID.fromString(playerName));
+                final PlayerData data = PlayerData.get(UUID.fromString(playerName));
                         FileConfiguration fc = data.getConfig();
                         if (fc.isDouble("player." + p.getWorld().getName() + ".balance")) {
                             players.put(el.nameByUUID(UUID.fromString(playerName)), fc.getDouble("player." + p.getWorld().getName() + ".balance"));

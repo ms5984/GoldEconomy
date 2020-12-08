@@ -33,14 +33,14 @@ public class PlayerListener implements EconomyStructure {
         StringLibrary me = new StringLibrary(op.getPlayer());
         if (op != null) {
             if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
+                PlayerData data = PlayerData.get(op.getPlayer().getUniqueId());
                 FileConfiguration fc = data.getConfig();
                 fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", amount);
                 data.saveConfig();
                 me.msg(me.moneySet().replaceAll("%amount%", format(amount)));
                 return;
             }
-            PlayerData data = new PlayerData(op.getUniqueId());
+            PlayerData data = PlayerData.get(op.getUniqueId());
             FileConfiguration fc = data.getConfig();
             fc.set("player." + GoldEconomy.getMainWorld() + ".balance", amount);
             data.saveConfig();
@@ -53,7 +53,7 @@ public class PlayerListener implements EconomyStructure {
         StringLibrary me = new StringLibrary(op.getPlayer());
         if (op != null) {
             if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
+                PlayerData data = PlayerData.get(op.getPlayer().getUniqueId());
                 FileConfiguration fc = data.getConfig();
                 double current = fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance");
                 double result = current + amount;
@@ -62,7 +62,7 @@ public class PlayerListener implements EconomyStructure {
                 me.msg(me.moneyGiven().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
                 return;
             }
-        PlayerData data = new PlayerData(op.getUniqueId());
+        PlayerData data = PlayerData.get(op.getUniqueId());
         FileConfiguration fc = data.getConfig();
             double current = fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance");
             double result = current + amount;
@@ -78,7 +78,7 @@ public class PlayerListener implements EconomyStructure {
         StringLibrary me = new StringLibrary(op.getPlayer());
         if (op != null) {
             if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
+                PlayerData data = PlayerData.get(op.getPlayer().getUniqueId());
                 FileConfiguration fc = data.getConfig();
                 double current = fc.getDouble("player." + worldName + ".balance");
                 double result = current + amount;
@@ -87,7 +87,7 @@ public class PlayerListener implements EconomyStructure {
                 me.msg(me.moneyGiven().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
                 return;
             }
-            PlayerData data = new PlayerData(op.getUniqueId());
+            PlayerData data = PlayerData.get(op.getUniqueId());
             FileConfiguration fc = data.getConfig();
             double current = fc.getDouble("player." + worldName + ".balance");
             double result = current + amount;
@@ -102,7 +102,7 @@ public class PlayerListener implements EconomyStructure {
         if (op != null) {
             StringLibrary me = new StringLibrary(op.getPlayer());
             if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
+                PlayerData data = PlayerData.get(op.getPlayer().getUniqueId());
                 FileConfiguration fc = data.getConfig();
                 double current = fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance");
                 double result = current - amount;
@@ -111,7 +111,7 @@ public class PlayerListener implements EconomyStructure {
                 me.msg(me.moneyTaken().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
                 return;
             }
-            PlayerData data = new PlayerData(op.getUniqueId());
+            PlayerData data = PlayerData.get(op.getUniqueId());
             FileConfiguration fc = data.getConfig();
             double current = fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance");
             double result = current + amount;
@@ -126,7 +126,7 @@ public class PlayerListener implements EconomyStructure {
         StringLibrary me = new StringLibrary(op.getPlayer());
         if (op != null) {
             if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
+                PlayerData data = PlayerData.get(op.getPlayer().getUniqueId());
                 FileConfiguration fc = data.getConfig();
                 double current = fc.getDouble("player." + worldName + ".balance");
                 double result = current - amount;
@@ -135,7 +135,7 @@ public class PlayerListener implements EconomyStructure {
                 me.msg(me.moneyTaken().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
                 return;
             }
-            PlayerData data = new PlayerData(op.getUniqueId());
+            PlayerData data = PlayerData.get(op.getUniqueId());
             FileConfiguration fc = data.getConfig();
             double current = fc.getDouble("player." + worldName + ".balance");
             double result = current + amount;
@@ -156,14 +156,14 @@ public class PlayerListener implements EconomyStructure {
         switch (type) {
             case BALANCE:
                 if (op != null) {
-                    PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
+                    PlayerData data = PlayerData.get(op.getPlayer().getUniqueId());
                     FileConfiguration fc = data.getConfig();
                     if (fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance") != 0) {
                         result = true;
                     }
                     break;
                 }
-                PlayerData data = new PlayerData(op.getUniqueId());
+                PlayerData data = PlayerData.get(op.getUniqueId());
                 FileConfiguration fc = data.getConfig();
                 if (fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance") != 0) {
                     result = true;
@@ -178,7 +178,7 @@ public class PlayerListener implements EconomyStructure {
         boolean result = false;
         switch (type) {
             case BALANCE:
-                PlayerData data = new PlayerData(op.getUniqueId());
+                PlayerData data = PlayerData.get(op.getUniqueId());
                 FileConfiguration fc = data.getConfig();
                 if (fc.getDouble("player." + worldName + ".balance") != 0) {
                     result = true;
@@ -194,7 +194,7 @@ public class PlayerListener implements EconomyStructure {
         switch (type) {
             case BALANCE:
                 if (op != null) {
-                    PlayerData data = new PlayerData(op.getUniqueId());
+                    PlayerData data = PlayerData.get(op.getUniqueId());
                     FileConfiguration fc = data.getConfig();
                     if (op.isOnline()) {
                         result = format(fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance"));
@@ -294,7 +294,7 @@ public class PlayerListener implements EconomyStructure {
         List<String> array = new ArrayList<>();
         HashMap<String, Double> players = new HashMap<String, Double>();
         for (String playerName : el.getAllPlayers()) {
-            PlayerData data = new PlayerData(UUID.fromString(playerName));
+            PlayerData data = PlayerData.get(UUID.fromString(playerName));
             FileConfiguration fc = data.getConfig();
             players.put(playerName, fc.getDouble("player." + p.getWorld().getName() + ".balance"));
         }
