@@ -4,6 +4,7 @@ import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.gui.EcoMenu;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
+import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -22,14 +23,14 @@ public class InventoryPlayerTake extends EcoMenu {
     @Override
     public String getMenuName() {
         //		return ChatColor.translateAlternateColorCodes('&', text);
-        return new ColoredString("&6&l&m▬▬▬▬▬▬▬▬▬▬&7[&3&l" + nameByUUID(UUID.fromString(manager.getPlayerName())) + "&7]&6&l&m▬▬▬▬▬▬▬▬▬▬", ColoredString.ColorType.MC).toString();
+        return new ColoredString("&6&l&m▬▬▬▬▬▬▬▬▬▬&7[&3&l" + PlayerListener.nameByUUID(UUID.fromString(manager.getPlayerName())) + "&7]&6&l&m▬▬▬▬▬▬▬▬▬▬", ColoredString.ColorType.MC).toString();
     }
 
-    private String nameByUUID(UUID id) {
+/*    private String nameByUUID(UUID id) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(id);
         if(player == null) return null;
         return player.getName();
-    }
+    }*/
 
     @Override
     public int getSlots() {
@@ -42,7 +43,7 @@ public class InventoryPlayerTake extends EcoMenu {
     Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
         BankListener bl = new BankListener(p, "", p.getWorld().getName());
-        String name = nameByUUID(UUID.fromString(manager.getPlayerName()));
+        String name = PlayerListener.nameByUUID(UUID.fromString(manager.getPlayerName()));
         double amount = 0;
     switch (mat) {
 

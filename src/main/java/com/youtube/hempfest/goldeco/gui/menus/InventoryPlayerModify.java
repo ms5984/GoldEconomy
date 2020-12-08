@@ -5,10 +5,9 @@ import com.youtube.hempfest.goldeco.gui.EcoMenu;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryWallets;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
+import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -23,14 +22,14 @@ public class InventoryPlayerModify extends EcoMenu {
     @Override
     public String getMenuName() {
         //		return ChatColor.translateAlternateColorCodes('&', text);
-        return new ColoredString("&6&l&m▬▬▬▬▬▬▬▬▬▬&7[&3&l" + nameByUUID(UUID.fromString(manager.getPlayerName())) + "&7]&6&l&m▬▬▬▬▬▬▬▬▬▬", ColoredString.ColorType.MC).toString();
+        return new ColoredString("&6&l&m▬▬▬▬▬▬▬▬▬▬&7[&3&l" + PlayerListener.nameByUUID(UUID.fromString(manager.getPlayerName())) + "&7]&6&l&m▬▬▬▬▬▬▬▬▬▬", ColoredString.ColorType.MC).toString();
     }
 
-    private String nameByUUID(UUID id) {
+/*    private String nameByUUID(UUID id) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(id);
         if(player == null) return null;
         return player.getName();
-    }
+    }*/
 
     @Override
     public int getSlots() {

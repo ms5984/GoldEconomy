@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class InventoryWallets extends EcoMenuPaginated {
-    GoldEconomy plugin;
+//    GoldEconomy plugin;
     public InventoryWallets(MenuManager manager) {
         super(manager);
     }
@@ -76,11 +76,11 @@ public class InventoryWallets extends EcoMenuPaginated {
         }
     }
 
-    private String nameByUUID(UUID id) {
+/*    private String nameByUUID(UUID id) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(id);
         if(player == null) return null;
         return player.getName();
-    }
+    }*/
 
     @Override
     public void setMenuItems() {
@@ -101,7 +101,7 @@ public class InventoryWallets extends EcoMenuPaginated {
                 if (items.get(index) != null) {
                     ///////////////////////////
                     // Create an item from our collection and place it into the inventory
-                    ItemStack playerIcon = makePersistentItem(Material.CHEST, "&b&l&o" + nameByUUID(UUID.fromString(items.get(index))), "player", items.get(index));
+                    ItemStack playerIcon = makePersistentItem(Material.CHEST, "&b&l&o" + PlayerListener.nameByUUID(UUID.fromString(items.get(index))), "player", items.get(index));
                     inventory.addItem(playerIcon);
 
                     ////////////////////////

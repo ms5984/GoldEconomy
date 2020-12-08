@@ -121,11 +121,11 @@ public class EconomyCommand extends GoldEconomyCommandBase {
         return false;
     }
 
-    private String nameByUUID(UUID id) {
+/*    private String nameByUUID(UUID id) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(id);
         if(player == null) return null;
         return player.getName();
-    }
+    }*/
 
     private boolean isInventoryFull(Player p) { return (p.getInventory().firstEmpty() == -1); }
 
@@ -228,7 +228,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 //                    PlayerListener list = new PlayerListener();
                     String uuid = "";
                     for (String id : PlayerListener.getAllPlayers()) {
-                        if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                        if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                             uuid = id;
                         }
                     }
@@ -247,7 +247,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 //                    PlayerListener list = new PlayerListener();
                     String uuid = "";
                     for (String id : PlayerListener.getAllPlayers()) {
-                        if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                        if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                             uuid = id;
                         }
                     }
@@ -263,7 +263,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 //                    PlayerListener list = new PlayerListener();
                     String uuid = "";
                     for (String id : PlayerListener.getAllPlayers()) {
-                        if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                        if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                             uuid = id;
                         }
                     }
@@ -636,7 +636,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 //                PlayerListener list = new PlayerListener();
                 String uuid = "";
                 for (String id : PlayerListener.getAllPlayers()) {
-                    if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                    if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                         uuid = id;
                     }
                 }
@@ -659,7 +659,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 //                PlayerListener list = new PlayerListener();
                 String uuid = "";
                 for (String id : PlayerListener.getAllPlayers()) {
-                    if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                    if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                         uuid = id;
                     }
                 }
@@ -679,7 +679,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 //                PlayerListener list = new PlayerListener();
                 String uuid = "";
                 for (String id : PlayerListener.getAllPlayers()) {
-                    if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                    if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                         uuid = id;
                     }
                 }
