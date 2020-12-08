@@ -21,11 +21,15 @@ import java.util.*;
 public class PlayerListener implements EconomyStructure {
 
     OfflinePlayer op;
+    PlayerData data;
+    FileConfiguration fc;
 
     public PlayerListener() {}
 
     public PlayerListener(OfflinePlayer op) {
         this.op = op;
+        this.data = PlayerData.get(op.getUniqueId()); // online+offline objects return same uuid
+        this.fc = data.getConfig();
     }
 
     @Override
