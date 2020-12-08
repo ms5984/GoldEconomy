@@ -111,9 +111,9 @@ public class GoldEconomy extends JavaPlugin {
 
 	private void registerMetrics(int ID) {
 		Metrics metrics = new Metrics(this, ID);
-		PlayerListener playerListener = new PlayerListener();
+//		PlayerListener playerListener = new PlayerListener();
 		metrics.addCustomChart(new Metrics.SingleLineChart("bank_accounts_made", () -> GoldEconomy.getBankAccounts().size()));
-		metrics.addCustomChart(new Metrics.SingleLineChart("total_logged_players", () -> playerListener.getAllPlayers().size()));
+		metrics.addCustomChart(new Metrics.SingleLineChart("total_logged_players", () -> PlayerListener.getAllPlayers().size()));
 		metrics.addCustomChart(new Metrics.SingleLineChart("starting_balance", () -> {
 			double result = GoldEconomy.startingBalance();
 			return Integer.valueOf(String.valueOf(result));

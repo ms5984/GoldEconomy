@@ -107,7 +107,7 @@ public class InventoryBank extends EcoMenu {
         BankListener b = new BankListener(manager.getOwner(), null, manager.getOwner().getWorld().getName());
         if (b.has(Utility.BANK_ACCOUNT)) {
             BankListener bl = new BankListener(manager.getOwner(), b.get(Utility.NAME), manager.getOwner().getWorld().getName());
-            ItemStack seaw = makeItem(Material.SEAGRASS, "&7[&6&lINFO&7]", "", "&6&oAccount #&f" + b.get(Utility.NAME), " ", "&e&oBalance: &f" + el.format(Double.valueOf(bl.get(Utility.BALANCE))));
+            ItemStack seaw = makeItem(Material.SEAGRASS, "&7[&6&lINFO&7]", "", "&6&oAccount #&f" + b.get(Utility.NAME), " ", "&e&oBalance: &f" + PlayerListener.format(Double.valueOf(bl.get(Utility.BALANCE))));
             inventory.setItem(14, seaw);
         }
         inventory.setItem(16, nugg);

@@ -41,8 +41,8 @@ public class BankListener implements EconomyStructure {
         if (pl != null) {
             if (pl.isOnline()) {
                 StringLibrary me = new StringLibrary(pl.getPlayer());
-                PlayerListener el = new PlayerListener();
-                me.msg(me.accountBalanceSet().replaceAll("%account%", accountID).replaceAll("%balance%", el.format(amount)));
+//                PlayerListener el = new PlayerListener();
+                me.msg(me.accountBalanceSet().replaceAll("%account%", accountID).replaceAll("%balance%", PlayerListener.format(amount)));
                 return;
             }
         }

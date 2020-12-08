@@ -121,11 +121,11 @@ public class EconomyCommand extends GoldEconomyCommandBase {
         return false;
     }
 
-    private String nameByUUID(UUID id) {
+/*    private String nameByUUID(UUID id) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(id);
         if(player == null) return null;
         return player.getName();
-    }
+    }*/
 
     private boolean isInventoryFull(Player p) { return (p.getInventory().firstEmpty() == -1); }
 
@@ -225,10 +225,10 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         sendPrefixedMessage(commandSender, me.invalidDouble());
                         return true;
                     }
-                    PlayerListener list = new PlayerListener();
+//                    PlayerListener list = new PlayerListener();
                     String uuid = "";
-                    for (String id : list.getAllPlayers()) {
-                        if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                    for (String id : PlayerListener.getAllPlayers()) {
+                        if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                             uuid = id;
                         }
                     }
@@ -244,10 +244,10 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         me.msg(me.invalidDouble());
                         return true;
                     }
-                    PlayerListener list = new PlayerListener();
+//                    PlayerListener list = new PlayerListener();
                     String uuid = "";
-                    for (String id : list.getAllPlayers()) {
-                        if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                    for (String id : PlayerListener.getAllPlayers()) {
+                        if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                             uuid = id;
                         }
                     }
@@ -260,10 +260,10 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 }
                 if (args[0].equalsIgnoreCase("set")) {
                     String worldName = args[2];
-                    PlayerListener list = new PlayerListener();
+//                    PlayerListener list = new PlayerListener();
                     String uuid = "";
-                    for (String id : list.getAllPlayers()) {
-                        if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                    for (String id : PlayerListener.getAllPlayers()) {
+                        if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                             uuid = id;
                         }
                     }
@@ -282,7 +282,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         try {
                             OfflinePlayer pl = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
 
-                            if (list.getAllPlayers().contains(pl.getUniqueId().toString())) {
+                            if (PlayerListener.getAllPlayers().contains(pl.getUniqueId().toString())) {
 
                                 PlayerListener el = new PlayerListener(pl);
                                 el.set(Double.parseDouble(args[2]));
@@ -633,10 +633,10 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     me.msg(me.invalidDouble());
                     return true;
                 }
-                PlayerListener list = new PlayerListener();
+//                PlayerListener list = new PlayerListener();
                 String uuid = "";
-                for (String id : list.getAllPlayers()) {
-                    if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                for (String id : PlayerListener.getAllPlayers()) {
+                    if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                         uuid = id;
                     }
                 }
@@ -656,10 +656,10 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     me.msg(me.invalidDouble());
                     return true;
                 }
-                PlayerListener list = new PlayerListener();
+//                PlayerListener list = new PlayerListener();
                 String uuid = "";
-                for (String id : list.getAllPlayers()) {
-                    if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                for (String id : PlayerListener.getAllPlayers()) {
+                    if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                         uuid = id;
                     }
                 }
@@ -676,10 +676,10 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     me.msg(noPermission(this.getPermission() + ".set"));
                     return true;
                 }
-                PlayerListener list = new PlayerListener();
+//                PlayerListener list = new PlayerListener();
                 String uuid = "";
-                for (String id : list.getAllPlayers()) {
-                    if (nameByUUID(UUID.fromString(id)).equals(args[1])) {
+                for (String id : PlayerListener.getAllPlayers()) {
+                    if (PlayerListener.nameByUUID(UUID.fromString(id)).equals(args[1])) {
                         uuid = id;
                     }
                 }
@@ -702,7 +702,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         try {
                             OfflinePlayer pl = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
 
-                            if (list.getAllPlayers().contains(pl.getUniqueId().toString())) {
+                            if (PlayerListener.getAllPlayers().contains(pl.getUniqueId().toString())) {
                                 if (!p.hasPermission(this.getPermission() + ".set.player")) {
                                     me.msg(noPermission(this.getPermission() + ".set.player"));
                                     return true;

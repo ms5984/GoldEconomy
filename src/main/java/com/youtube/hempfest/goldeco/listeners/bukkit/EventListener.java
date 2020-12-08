@@ -18,7 +18,7 @@ import org.bukkit.inventory.InventoryHolder;
 public class EventListener implements Listener {
 
     private void loadPlayerFiles(Player player) {
-        PlayerData data = new PlayerData(player.getUniqueId());
+        final PlayerData data = PlayerData.get(player.getUniqueId());
         BankData world = new BankData(player.getWorld().getName());
         FileConfiguration fc = data.getConfig();
         fc.set("player." + player.getWorld().getName() + ".balance", GoldEconomy.startingBalance());
