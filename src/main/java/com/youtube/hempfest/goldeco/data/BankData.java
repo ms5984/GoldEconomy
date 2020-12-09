@@ -4,7 +4,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -120,87 +119,65 @@ public class BankData {
     }
 
     public static String getBankWorld(String accountID) {
-        final CompletableFuture<String> cf = new CompletableFuture<>();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (String world : getBankWorlds()) {
-                    final BankData data = BankData.get(world);
-                    final FileConfiguration fc = data.getConfig();
-                    final ConfigurationSection banks = fc.getConfigurationSection("banks");
-                    if (banks == null) continue; // skip this file no banks section
-                    for (String player : banks.getKeys(false)) {
-                        final String entry = fc.getString("banks." + player + ".accountID");
-                        if (entry != null && entry.equals(accountID)) {
-                            cf.complete(world);
-                            break;
-                        }
+        return CompletableFuture.supplyAsync(() -> {
+            for (String world : getBankWorlds()) {
+                final BankData data = BankData.get(world);
+                final FileConfiguration fc = data.getConfig();
+                final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                if (banks == null) continue; // skip this file no banks section
+                for (String player : banks.getKeys(false)) {
+                    final String entry = fc.getString("banks." + player + ".accountID");
+                    if (entry != null && entry.equals(accountID)) {
+                        return world;
                     }
                 }
             }
-        }.runTaskAsynchronously(PLUGIN);
-        if (!cf.isDone()) cf.complete("");
-        return cf.join();
+            return "";
+        }).join();
     }
 
     public static String getBankOwner(String accountID) { // TODO: migrate to dedicated object/UUID
-        final CompletableFuture<String> cf = new CompletableFuture<>();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (String world : getBankWorlds()) {
-                    final BankData data = BankData.get(world);
-                    final FileConfiguration fc = data.getConfig();
-                    final ConfigurationSection banks = fc.getConfigurationSection("banks");
-                    if (banks == null) continue; // skip this file, it doesn't have any banks
-                    for (String owner : banks.getKeys(false)) {
-                        final String entry = fc.getString("banks." + owner + ".accountID");
-                        if (entry != null && entry.equals(accountID)) {
-                            cf.complete(owner);
-                            break;
-                        }
+        return CompletableFuture.supplyAsync(() -> {
+            for (String world : getBankWorlds()) {
+                final BankData data = BankData.get(world);
+                final FileConfiguration fc = data.getConfig();
+                final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                if (banks == null) continue; // skip this file, it doesn't have any banks
+                for (String owner : banks.getKeys(false)) {
+                    final String entry = fc.getString("banks." + owner + ".accountID");
+                    if (entry != null && entry.equals(accountID)) {
+                        return owner;
                     }
                 }
             }
-        }.runTaskAsynchronously(PLUGIN);
-        if (!cf.isDone()) cf.complete("");
-        return cf.join();
+            return "";
+        }).join();
     }
 
     public static List<String> getBankWorlds() {
-        final CompletableFuture<List<String>> cf = new CompletableFuture<>();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                final List<String> users = new ArrayList<>();
-                for(File file : BankData.getDataFolder().listFiles()) {
-                    users.add(file.getName().replace(".yml", ""));
-                }
-                cf.complete(users);
+        return CompletableFuture.supplyAsync(() -> {
+            final List<String> users = new ArrayList<>();
+            for(File file : BankData.getDataFolder().listFiles()) {
+                users.add(file.getName().replace(".yml", ""));
             }
-        }.runTaskAsynchronously(PLUGIN);
-        return cf.join();
+            return users;
+        }).join();
     }
 
     public static List<String> getBankAccounts() {
-        final CompletableFuture<List<String>> cf = new CompletableFuture<>();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                final List<String> accounts = new ArrayList<>();
-                for (String world : getBankWorlds()) {
-                    final BankData data = BankData.get(world);
-                    final FileConfiguration fc = data.getConfig();
-                    final ConfigurationSection banks = fc.getConfigurationSection("banks");
-                    if (banks == null) continue; // skip processing this file
-                    for (String player : banks.getKeys(false)) {
-                        accounts.add(fc.getString("banks." + player + ".accountID"));
-                    }
+        return CompletableFuture.supplyAsync(() -> {
+            final List<String> accounts = new ArrayList<>();
+            for (String world : getBankWorlds()) {
+                final BankData data = BankData.get(world);
+                final FileConfiguration fc = data.getConfig();
+                final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                if (banks == null) continue; // skip processing this file
+                for (String player : banks.getKeys(false)) {
+                    accounts.add(fc.getString("banks." + player + ".accountID"));
                 }
-                cf.complete(accounts);
             }
-        }.runTaskAsynchronously(PLUGIN);
-        return cf.join();
+            return accounts;
+        }).join();
     }
 
     public void reload() {
