@@ -1,5 +1,6 @@
 package com.youtube.hempfest.goldeco.data;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -118,6 +119,54 @@ public class BankData {
         return d;
     }
 
+    public static String getBankWorld(String accountID) {
+        final CompletableFuture<String> cf = new CompletableFuture<>();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (String world : getBankWorlds()) {
+                    final BankData data = BankData.get(world);
+                    final FileConfiguration fc = data.getConfig();
+                    final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                    if (banks == null) continue; // skip this file no banks section
+                    for (String player : banks.getKeys(false)) {
+                        final String entry = fc.getString("banks." + player + ".accountID");
+                        if (entry != null && entry.equals(accountID)) {
+                            cf.complete(world);
+                            break;
+                        }
+                    }
+                }
+            }
+        }.runTaskAsynchronously(PLUGIN);
+        if (!cf.isDone()) cf.complete("");
+        return cf.join();
+    }
+
+    public static String getBankOwner(String accountID) { // TODO: migrate to dedicated object/UUID
+        final CompletableFuture<String> cf = new CompletableFuture<>();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (String world : getBankWorlds()) {
+                    final BankData data = BankData.get(world);
+                    final FileConfiguration fc = data.getConfig();
+                    final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                    if (banks == null) continue; // skip this file, it doesn't have any banks
+                    for (String owner : banks.getKeys(false)) {
+                        final String entry = fc.getString("banks." + owner + ".accountID");
+                        if (entry != null && entry.equals(accountID)) {
+                            cf.complete(owner);
+                            break;
+                        }
+                    }
+                }
+            }
+        }.runTaskAsynchronously(PLUGIN);
+        if (!cf.isDone()) cf.complete("");
+        return cf.join();
+    }
+
     public static List<String> getBankWorlds() {
         final CompletableFuture<List<String>> cf = new CompletableFuture<>();
         new BukkitRunnable() {
@@ -128,6 +177,27 @@ public class BankData {
                     users.add(file.getName().replace(".yml", ""));
                 }
                 cf.complete(users);
+            }
+        }.runTaskAsynchronously(PLUGIN);
+        return cf.join();
+    }
+
+    public static List<String> getBankAccounts() {
+        final CompletableFuture<List<String>> cf = new CompletableFuture<>();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                final List<String> accounts = new ArrayList<>();
+                for (String world : getBankWorlds()) {
+                    final BankData data = BankData.get(world);
+                    final FileConfiguration fc = data.getConfig();
+                    final ConfigurationSection banks = fc.getConfigurationSection("banks");
+                    if (banks == null) continue; // skip processing this file
+                    for (String player : banks.getKeys(false)) {
+                        accounts.add(fc.getString("banks." + player + ".accountID"));
+                    }
+                }
+                cf.complete(accounts);
             }
         }.runTaskAsynchronously(PLUGIN);
         return cf.join();
