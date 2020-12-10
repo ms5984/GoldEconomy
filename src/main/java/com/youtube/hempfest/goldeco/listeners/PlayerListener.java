@@ -292,14 +292,8 @@ public class PlayerListener implements EconomyStructure {
     }
 
     public static String nameByUUID(UUID id) {
-        final CompletableFuture<OfflinePlayer> cf = new CompletableFuture<>();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                cf.complete(Bukkit.getOfflinePlayer(id)); // This method actually returns dummy objects for invalid UUIDs
-            }
-        }.runTaskAsynchronously(GoldEconomy.getInstance());
-        final OfflinePlayer player = cf.join();
+        // This method in Bukkit actually returns dummy objects for invalid player UUIDs
+        final OfflinePlayer player = CompletableFuture.supplyAsync(() -> Bukkit.getOfflinePlayer(id)).join();
         if(player == null) return null; // TODO: replace this check as this is not a solution (never returns null)
         final String playerName = player.getName();
         return (playerName == null) ? id.toString() : playerName;
