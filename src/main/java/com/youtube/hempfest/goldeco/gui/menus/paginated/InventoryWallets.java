@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class InventoryWallets extends EcoMenuPaginated {
-    GoldEconomy plugin;
+//    GoldEconomy plugin;
     public InventoryWallets(MenuManager manager) {
         super(manager);
     }
@@ -36,8 +36,8 @@ public class InventoryWallets extends EcoMenuPaginated {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        PlayerListener el = new PlayerListener();
-        ArrayList<String> items = new ArrayList<String>(el.getAllPlayers());
+//        PlayerListener el = new PlayerListener();
+        final ArrayList<String> items = new ArrayList<>(PlayerListener.getAllPlayers());
         Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
         String player = e.getCurrentItem().getItemMeta().getPersistentDataContainer()
@@ -76,16 +76,16 @@ public class InventoryWallets extends EcoMenuPaginated {
         }
     }
 
-    private String nameByUUID(UUID id) {
+/*    private String nameByUUID(UUID id) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(id);
         if(player == null) return null;
         return player.getName();
-    }
+    }*/
 
     @Override
     public void setMenuItems() {
-        PlayerListener el = new PlayerListener();
-        ArrayList<String> items = new ArrayList<String>(el.getAllPlayers());
+//        PlayerListener el = new PlayerListener();
+        final ArrayList<String> items = new ArrayList<>(PlayerListener.getAllPlayers());
         //		return ChatColor.translateAlternateColorCodes('&', text);
         ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         inventory.setItem(45, back);
@@ -101,7 +101,7 @@ public class InventoryWallets extends EcoMenuPaginated {
                 if (items.get(index) != null) {
                     ///////////////////////////
                     // Create an item from our collection and place it into the inventory
-                    ItemStack playerIcon = makePersistentItem(Material.CHEST, "&b&l&o" + nameByUUID(UUID.fromString(items.get(index))), "player", items.get(index));
+                    ItemStack playerIcon = makePersistentItem(Material.CHEST, "&b&l&o" + PlayerListener.nameByUUID(UUID.fromString(items.get(index))), "player", items.get(index));
                     inventory.addItem(playerIcon);
 
                     ////////////////////////
