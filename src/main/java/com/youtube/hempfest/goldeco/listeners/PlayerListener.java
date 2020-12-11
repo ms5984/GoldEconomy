@@ -4,22 +4,26 @@ import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.PlayerData;
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.structure.EconomyStructure;
-import com.youtube.hempfest.goldeco.util.*;
-import com.youtube.hempfest.goldeco.util.libraries.ItemLibrary;
+import com.youtube.hempfest.goldeco.util.HighestValue;
+import com.youtube.hempfest.goldeco.util.Utility;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
+import com.youtube.hempfest.hempcore.library.Items;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 public class PlayerListener implements EconomyStructure {
 
@@ -202,8 +206,8 @@ public class PlayerListener implements EconomyStructure {
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
 //        ItemManager im = GoldEconomy.getItemManager();
-        Material mat = ItemLibrary.getMaterial(item);
-        double itemCost = items.getConfig().getDouble("Items." + ItemLibrary.getMaterial(item).name() + ".purchase-price") * amount;
+        Material mat = Items.getMaterial(item);
+        double itemCost = items.getConfig().getDouble("Items." + Items.getMaterial(item).name() + ".purchase-price") * amount;
         if (Double.parseDouble(get(Utility.BALANCE).replaceAll(",", "")) >= itemCost) {
             remove(itemCost);
             ItemStack material = new ItemStack(mat);
@@ -230,8 +234,8 @@ public class PlayerListener implements EconomyStructure {
         Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
-        Material mat = ItemLibrary.getMaterial(item.toUpperCase());
-        double itemCost = items.getConfig().getDouble("Items." + ItemLibrary.getMaterial(item).name() + ".sell-price") * amount;
+        Material mat = Items.getMaterial(item.toUpperCase());
+        double itemCost = items.getConfig().getDouble("Items." + Items.getMaterial(item).name() + ".sell-price") * amount;
         if (ItemManager.removeItem(op.getPlayer(), mat, amount).transactionSuccess) {
             add(itemCost);
             me.msg("You sold " + '"' + amount + '"' + " " + "&7&o" + item + "&r for " + '"' + itemCost + '"' + " " + currency);

@@ -1,14 +1,15 @@
 package com.youtube.hempfest.goldeco.gui.menus.paginated;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
-import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.gui.EcoMenuPaginated;
+import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryItem;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryShop;
-import com.youtube.hempfest.goldeco.util.libraries.ItemLibrary;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
 import com.youtube.hempfest.hempcore.HempCore;
 import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
+import com.youtube.hempfest.hempcore.library.Items;
+import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -16,8 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-
-import java.util.ArrayList;
 
 public class InventoryBrowse extends EcoMenuPaginated {
     GoldEconomy plugin;
@@ -50,7 +49,7 @@ public class InventoryBrowse extends EcoMenuPaginated {
         MenuManager menu = GoldEconomy.menuViewer(p);
 
         for (String item : ItemManager.getShopContents()) {
-            if (mat.equals(ItemLibrary.getMaterial(item))) {
+            if (mat.equals(Items.getMaterial(item))) {
                     if (mat.equals(Material.TOTEM_OF_UNDYING)) {
                         break;
                     }
@@ -131,7 +130,7 @@ public class InventoryBrowse extends EcoMenuPaginated {
                 if (items.get(index) != null) {
                     ///////////////////////////
                     // Create an item from our collection and place it into the inventory
-                    Material it = ItemLibrary.getMaterial(items.get(index));
+                    Material it = Items.getMaterial(items.get(index));
                     if (it != null) {
                         ItemStack item = makePersistentItem(it, "&6&l&oITEM: &f&o&n" + items.get(index), "shop-item", items.get(index), " ", "&f&oBuy Price (&a&n" + ItemManager.getItemPrice(ItemManager.indexPrice.PURCHASE, items.get(index)) + "&f&o)", " ", "&c&oSell Price &f&o[" + ItemManager.getItemPrice(ItemManager.indexPrice.SELL, items.get(index)) + "&f&o]", " ", "&a&l&oClick to buy or sell.");
                         inventory.addItem(item);
