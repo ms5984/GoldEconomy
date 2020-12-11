@@ -14,135 +14,113 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class PlayerListener implements EconomyStructure {
 
-    OfflinePlayer op;
+    final OfflinePlayer op;
+    final PlayerData data;
+    final FileConfiguration fc;
 
-    public PlayerListener() {}
+//    public PlayerListener() {} // No longer using no-args for static actions
 
-    public PlayerListener(OfflinePlayer op) {
+    public PlayerListener(@NotNull OfflinePlayer op) {
         this.op = op;
+        this.data = PlayerData.get(op.getUniqueId()); // online+offline objects return same uuid
+        this.fc = data.getConfig();
     }
 
     @Override
     public void set(double amount) {
-        StringLibrary me = new StringLibrary(op.getPlayer());
-        if (op != null) {
-            if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
-                FileConfiguration fc = data.getConfig();
-                fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", amount);
-                data.saveConfig();
-                me.msg(me.moneySet().replaceAll("%amount%", format(amount)));
-                return;
-            }
-            PlayerData data = new PlayerData(op.getUniqueId());
-            FileConfiguration fc = data.getConfig();
-            fc.set("player." + GoldEconomy.getMainWorld() + ".balance", amount);
+        StringLibrary me = new StringLibrary(op.getPlayer()); // TODO: null check?
+//        if (op != null) { // this null-check no longer needed object will not exist with null op
+        // explanation of next line: op.getUniqueId() will return same UUID for both online+offline
+//        final PlayerData data = PlayerData.get(op.getUniqueId());
+//        final FileConfiguration fc = data.getConfig();
+        if (op.isOnline()) {
+            assert op.getPlayer() != null; // removes warn on line below
+            fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", amount);
             data.saveConfig();
+            me.msg(me.moneySet().replaceAll("%amount%", format(amount)));
             return;
         }
+        fc.set("player." + GoldEconomy.getMainWorld() + ".balance", amount);
+        data.saveConfig();
     }
 
     @Override
     public void add(double amount) {
-        StringLibrary me = new StringLibrary(op.getPlayer());
-        if (op != null) {
-            if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
-                FileConfiguration fc = data.getConfig();
-                double current = fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance");
-                double result = current + amount;
-                fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", result);
-                data.saveConfig();
-                me.msg(me.moneyGiven().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
-                return;
-            }
-        PlayerData data = new PlayerData(op.getUniqueId());
-        FileConfiguration fc = data.getConfig();
-            double current = fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance");
+        StringLibrary me = new StringLibrary(op.getPlayer()); // TODO: null-check
+//        final PlayerData data = PlayerData.get(op.getUniqueId());
+//        final FileConfiguration fc = data.getConfig();
+        if (op.isOnline()) {
+            double current = fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance");
             double result = current + amount;
-            fc.set("player." + GoldEconomy.getMainWorld() + ".balance", result);
+            fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", result);
             data.saveConfig();
-        return;
+            me.msg(me.moneyGiven().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
+            return;
         }
-
+        double current = fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance");
+        double result = current + amount;
+        fc.set("player." + GoldEconomy.getMainWorld() + ".balance", result);
+        data.saveConfig();
     }
 
     @Override
     public void add(double amount, String worldName) {
-        StringLibrary me = new StringLibrary(op.getPlayer());
-        if (op != null) {
-            if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
-                FileConfiguration fc = data.getConfig();
-                double current = fc.getDouble("player." + worldName + ".balance");
-                double result = current + amount;
-                fc.set("player." + worldName + ".balance", result);
-                data.saveConfig();
-                me.msg(me.moneyGiven().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
-                return;
-            }
-            PlayerData data = new PlayerData(op.getUniqueId());
-            FileConfiguration fc = data.getConfig();
+        StringLibrary me = new StringLibrary(op.getPlayer()); // TODO: null-check
+        if (op.isOnline()) {
             double current = fc.getDouble("player." + worldName + ".balance");
             double result = current + amount;
             fc.set("player." + worldName + ".balance", result);
             data.saveConfig();
+            me.msg(me.moneyGiven().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
             return;
         }
+        double current = fc.getDouble("player." + worldName + ".balance");
+        double result = current + amount;
+        fc.set("player." + worldName + ".balance", result);
+        data.saveConfig();
     }
 
     @Override
     public void remove(double amount) {
-        if (op != null) {
-            StringLibrary me = new StringLibrary(op.getPlayer());
-            if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
-                FileConfiguration fc = data.getConfig();
-                double current = fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance");
-                double result = current - amount;
-                fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", result);
-                data.saveConfig();
-                me.msg(me.moneyTaken().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
-                return;
-            }
-            PlayerData data = new PlayerData(op.getUniqueId());
-            FileConfiguration fc = data.getConfig();
-            double current = fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance");
-            double result = current + amount;
-            fc.set("player." + GoldEconomy.getMainWorld() + ".balance", result);
+        StringLibrary me = new StringLibrary(op.getPlayer());
+        if (op.isOnline()) {
+            double current = fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance"); // TODO: null-check
+            double result = current - amount;
+            fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", result);
             data.saveConfig();
+            me.msg(me.moneyTaken().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
             return;
         }
+        double current = fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance");
+        double result = current - amount; // Uhm, what?
+        fc.set("player." + GoldEconomy.getMainWorld() + ".balance", result);
+        data.saveConfig();
     }
 
     @Override
     public void remove(double amount, String worldName) {
         StringLibrary me = new StringLibrary(op.getPlayer());
-        if (op != null) {
-            if (op.isOnline()) {
-                PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
-                FileConfiguration fc = data.getConfig();
-                double current = fc.getDouble("player." + worldName + ".balance");
-                double result = current - amount;
-                fc.set("player." + worldName + ".balance", result);
-                data.saveConfig();
-                me.msg(me.moneyTaken().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
-                return;
-            }
-            PlayerData data = new PlayerData(op.getUniqueId());
-            FileConfiguration fc = data.getConfig();
+        if (op.isOnline()) {
             double current = fc.getDouble("player." + worldName + ".balance");
-            double result = current + amount;
+            double result = current - amount;
             fc.set("player." + worldName + ".balance", result);
             data.saveConfig();
+            me.msg(me.moneyTaken().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
             return;
         }
+        double current = fc.getDouble("player." + worldName + ".balance");
+        double result = current - amount; // okay, if this is deliberate, then why?
+        fc.set("player." + worldName + ".balance", result);
+        data.saveConfig();
     }
 
     @Override
@@ -155,16 +133,12 @@ public class PlayerListener implements EconomyStructure {
         boolean result = false;
         switch (type) {
             case BALANCE:
-                if (op != null) {
-                    PlayerData data = new PlayerData(op.getPlayer().getUniqueId());
-                    FileConfiguration fc = data.getConfig();
+                if (op.getPlayer() != null) { // I think you mean op.getPlayer(), so
                     if (fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance") != 0) {
                         result = true;
                     }
                     break;
                 }
-                PlayerData data = new PlayerData(op.getUniqueId());
-                FileConfiguration fc = data.getConfig();
                 if (fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance") != 0) {
                     result = true;
                 }
@@ -178,8 +152,6 @@ public class PlayerListener implements EconomyStructure {
         boolean result = false;
         switch (type) {
             case BALANCE:
-                PlayerData data = new PlayerData(op.getUniqueId());
-                FileConfiguration fc = data.getConfig();
                 if (fc.getDouble("player." + worldName + ".balance") != 0) {
                     result = true;
                 }
@@ -193,16 +165,12 @@ public class PlayerListener implements EconomyStructure {
         String result = "";
         switch (type) {
             case BALANCE:
-                if (op != null) {
-                    PlayerData data = new PlayerData(op.getUniqueId());
-                    FileConfiguration fc = data.getConfig();
-                    if (op.isOnline()) {
+//                if (op != null) { // op is never null but is not always online/Player
+                    if (op.isOnline() && op.getPlayer() != null) {
                         result = format(fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance"));
                     } else {
                         result = format(fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance"));
                     }
-
-                }
                 break;
         }
         return result;
@@ -211,7 +179,7 @@ public class PlayerListener implements EconomyStructure {
     @Override
     public double get(Utility type, String item) {
         double result = 0.0;
-        Config items = new Config("shop_items");
+        Config items = Config.get("shop_items");
         switch (type) {
             case BUY_PRICE:
             result = items.getConfig().getDouble("Items." + item + ".purchase-price");
@@ -226,19 +194,17 @@ public class PlayerListener implements EconomyStructure {
     public boolean isInventoryFull(Player p) { return (p.getInventory().firstEmpty() == -1); }
 
     @Override
-    public void buy(String item, int amount) {
+    public void buy(String item, int amount) { // TODO: This method needs to decide how to deal with OfflinePlayers
         StringLibrary me = new StringLibrary(op.getPlayer());
-        GoldEconomy plugin = GoldEconomy.getInstance();
-        Config items = new Config("shop_items");
-        Config main = new Config("shop_config");
+//        GoldEconomy plugin = GoldEconomy.getInstance();
+        Config items = Config.get("shop_items");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
-        ItemManager im = GoldEconomy.itemManager(plugin, op.getPlayer());
+//        ItemManager im = GoldEconomy.getItemManager();
         Material mat = ItemLibrary.getMaterial(item);
         double itemCost = items.getConfig().getDouble("Items." + ItemLibrary.getMaterial(item).name() + ".purchase-price") * amount;
-        if (Double.parseDouble(get(Utility.BALANCE).replaceAll(",", "")) >= itemCost)
-            im.transactionSuccess = true;
-        if (im.transactionSuccess) {
+        if (Double.parseDouble(get(Utility.BALANCE).replaceAll(",", "")) >= itemCost) {
             remove(itemCost);
             ItemStack material = new ItemStack(mat);
             for (int i = 0; i < amount; i++) {
@@ -258,25 +224,22 @@ public class PlayerListener implements EconomyStructure {
     }
 
     @Override
-    public void sell(String item, int amount) {
+    public void sell(String item, int amount) { // TODO: null-check getPlayer
         StringLibrary me = new StringLibrary(op.getPlayer());
-        GoldEconomy plugin = GoldEconomy.getInstance();
-        Config items = new Config("shop_items");
-        Config main = new Config("shop_config");
+        Config items = Config.get("shop_items");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
-        ItemManager im = GoldEconomy.itemManager(plugin, op.getPlayer());
         Material mat = ItemLibrary.getMaterial(item.toUpperCase());
         double itemCost = items.getConfig().getDouble("Items." + ItemLibrary.getMaterial(item).name() + ".sell-price") * amount;
-        im.removeItem(mat, amount);
-        if (im.transactionSuccess) {
+        if (ItemManager.removeItem(op.getPlayer(), mat, amount).transactionSuccess) {
             add(itemCost);
             me.msg("You sold " + '"' + amount + '"' + " " + "&7&o" + item + "&r for " + '"' + itemCost + '"' + " " + currency);
         }
     }
 
     private String getPrimaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return fc.getString("Economy.custom-currency.name");
@@ -285,7 +248,7 @@ public class PlayerListener implements EconomyStructure {
     }
 
     private String getSecondaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return fc.getString("Economy.custom-currency.change");
@@ -293,13 +256,12 @@ public class PlayerListener implements EconomyStructure {
             return "GOLD";
     }
 
-    public List<String> getLeaderboard(Player p) {
-        PlayerListener el = new PlayerListener();
-        StringLibrary sl = new StringLibrary(p);
+    public static List<String> getLeaderboard(Player p) {
+//        StringLibrary sl = new StringLibrary(p);
         List<String> array = new ArrayList<>();
         HashMap<String, Double> players = new HashMap<String, Double>();
-        for (String playerName : el.getAllPlayers()) {
-            PlayerData data = new PlayerData(UUID.fromString(playerName));
+        for (String playerName : getAllPlayers()) {
+            PlayerData data = PlayerData.get(UUID.fromString(playerName));
             FileConfiguration fc = data.getConfig();
             players.put(playerName, fc.getDouble("player." + p.getWorld().getName() + ".balance"));
         }
@@ -321,24 +283,25 @@ public class PlayerListener implements EconomyStructure {
         return array;
     }
 
-    public List<String> getAllPlayers(){
-        List<String> users = new ArrayList<String>();
+    public static List<String> getAllPlayers(){
+        final List<String> users = new ArrayList<>();
         for(File file : PlayerData.getDataFolder().listFiles()) {
             users.add(file.getName().replace(".yml", ""));
         }
         return users;
     }
 
-    public String nameByUUID(UUID id) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(id);
-        if(player == null) return null;
-        return player.getName();
+    public static String nameByUUID(UUID id) {
+        // This method in Bukkit actually returns dummy objects for invalid player UUIDs
+        final OfflinePlayer player = CompletableFuture.supplyAsync(() -> Bukkit.getOfflinePlayer(id)).join();
+        if(player == null) return null; // TODO: replace this check as this is not a solution (never returns null)
+        final String playerName = player.getName();
+        return (playerName == null) ? id.toString() : playerName;
     }
 
-    public String format(double amount) {
-        String number = String.valueOf(amount);
-        Double numParsed = Double.parseDouble(number);
-        String numString = String.format("%,.2f", numParsed);
-        return numString;
+    public static String format(double amount) {
+/*        String number = String.valueOf(amount);
+        Double numParsed = Double.parseDouble(number);*/ // wyd
+        return String.format("%,.2f", amount);
     }
 }

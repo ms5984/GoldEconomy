@@ -1,9 +1,9 @@
 package com.youtube.hempfest.goldeco.commands;
 
-import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.PlayerData;
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
+import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
 import com.youtube.hempfest.goldeco.util.versions.ComponentR1_16;
 import com.youtube.hempfest.goldeco.util.versions.ComponentR1_8_1;
 import com.youtube.hempfest.goldeco.util.HighestValue;
@@ -13,48 +13,40 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class TopCommand extends BukkitCommand {
+public class TopCommand extends GoldEconomyCommandBase {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("richest"));
 
-    public TopCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public TopCommand() {
+        super("top", "GoldEconomy richest player list", "/top", ALIASES);
     }
 
-    private void sendMessage(CommandSender player, String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
-
-    private String notPlayer() {
-        return String.format("[%s] - You aren't a player..", GoldEconomy.getInstance().getDescription().getName());
+    @Override
+    protected String permissionNode() {
+        return "goldeconomy.use.top";
     }
 
     private void sendComponent(Player player, TextComponent text) {
         player.spigot().sendMessage((BaseComponent) text);
     }
 
-    private String noPermission(String permission) {
-        return "You don't have permission " + '"' + permission + '"';
-    }
-
     private void getLeaderboard(Player p, int page) {
-        PlayerListener el = new PlayerListener();
+//        PlayerListener el = new PlayerListener();
         StringLibrary sl = new StringLibrary(p);
             int o = 10;
 
             HashMap<String, Double> players = new HashMap<String, Double>();
 
             // Filling the hashMap
-            for (String playerName : el.getAllPlayers()) {
-                PlayerData data = new PlayerData(UUID.fromString(playerName));
+            for (String playerName : PlayerListener.getAllPlayers()) {
+                final PlayerData data = PlayerData.get(UUID.fromString(playerName));
                         FileConfiguration fc = data.getConfig();
                         if (fc.isDouble("player." + p.getWorld().getName() + ".balance")) {
-                            players.put(el.nameByUUID(UUID.fromString(playerName)), fc.getDouble("player." + p.getWorld().getName() + ".balance"));
+                            players.put(PlayerListener.nameByUUID(UUID.fromString(playerName)), fc.getDouble("player." + p.getWorld().getName() + ".balance"));
                         }
             }
 
@@ -104,11 +96,11 @@ public class TopCommand extends BukkitCommand {
                             i1++;
                             if (Bukkit.getServer().getVersion().contains("1.16")) {
                                 sendComponent(p, ComponentR1_16.textRunnable(p, "",
-                                        " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + el.format(nextTopBal),
+                                        " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + PlayerListener.format(nextTopBal),
                                         "&6" + nextTop + " &a&oplaces &7#&6" + k + "&a&o on page " + pagee + ".", "shop"));
                             } else {
                                 sendComponent(p, ComponentR1_8_1.textRunnable( "",
-                                        " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + el.format(nextTopBal),
+                                        " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + PlayerListener.format(nextTopBal),
                                         "&6" + nextTop + " &a&oplaces &7#&6" + k + "&a&o on page " + pagee + ".", "shop"));
                             }
 
@@ -146,15 +138,6 @@ public class TopCommand extends BukkitCommand {
         return;
     }
 
-    private boolean isInt(String text) {
-        try {
-            Integer.parseInt(text);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
     @Override
     public boolean execute(CommandSender commandSender, String commandLabel, String[] args) {
         if (!(commandSender instanceof Player)) {
@@ -168,7 +151,7 @@ public class TopCommand extends BukkitCommand {
          */
         int length = args.length;
         Player p = (Player) commandSender;
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
         /*

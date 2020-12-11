@@ -1,54 +1,29 @@
 package com.youtube.hempfest.goldeco.commands;
 
-import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
+import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class PayCommand extends BukkitCommand {
+public class PayCommand extends GoldEconomyCommandBase {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("transfer"));
 
-    public PayCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public PayCommand() {
+        super("pay", "GoldEconomy item purchasing", "/pay player", ALIASES);
     }
 
-    private void sendMessage(CommandSender player, String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
-
-    private String notPlayer() {
-        return String.format("[%s] - You aren't a player..", GoldEconomy.getInstance().getDescription().getName());
-    }
-
-    private boolean isInt(String e) {
-        try {
-            Integer.parseInt(e);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isDouble(String text) {
-        try {
-            Double.parseDouble(text);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private String noPermission(String permission) {
-        return "You don't have permission " + '"' + permission + '"';
+    @Override
+    protected String permissionNode() {
+        return "goldeconomy.use.pay";
     }
 
     @Override
@@ -64,7 +39,7 @@ public class PayCommand extends BukkitCommand {
          */
         int length = args.length;
         Player p = (Player) commandSender;
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
         StringLibrary me = new StringLibrary(p);

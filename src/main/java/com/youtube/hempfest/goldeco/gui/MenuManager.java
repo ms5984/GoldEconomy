@@ -1,5 +1,6 @@
 package com.youtube.hempfest.goldeco.gui;
 
+import com.youtube.hempfest.hempcore.gui.GuiLibrary;
 import org.bukkit.entity.Player;
 
 /*
@@ -9,13 +10,7 @@ Companion class to all menus. This is needed to pass information across the enti
  Each player has one of these objects, and only one.
  */
 
-public class MenuManager {
-
-	private Player owner;
-
-	String itemToEdit;
-
-	String itemTooEdit;
+public class MenuManager extends GuiLibrary {
 
 	String playerName;
 
@@ -24,26 +19,32 @@ public class MenuManager {
 	int page;
 
 	public MenuManager(Player p) {
-		this.owner = p;
+		super(p);
 	}
 
 	public Player getOwner() {
-		return owner;
+		return getViewer();
 	}
 
 	public String getPlayerName() {
 		return playerName;
 	}
 
-	public String getItemToEdit() { return itemToEdit; }
+	public String getItemToEdit() {
+		return getData();
+	}
 
-	public String getItemTooEdit() { return itemTooEdit; }
+	public String getItemTooEdit() {
+		return getData2();
+	}
 
 	public String getAccountID() {
 		return accountID;
 	}
 
-	public int getPage() { return page; }
+	public int getPage() {
+		return page;
+	}
 
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
@@ -57,8 +58,12 @@ public class MenuManager {
 		this.accountID = accountID;
 	}
 
-	public void setItemToEdit(String itemToEdit) { this.itemToEdit = itemToEdit; }
+	public void setItemToEdit(String itemToEdit) {
+		setData(itemToEdit);
+	}
 
-	public void setItemTooEdit(String itemTooEdit) { this.itemTooEdit = itemTooEdit; }
+	public void setItemTooEdit(String itemTooEdit) {
+		setData2(itemTooEdit);
+	}
 
 }

@@ -1,34 +1,26 @@
 package com.youtube.hempfest.goldeco.commands;
 
-import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.independant.Config;
+import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class BankCommand extends BukkitCommand {
+public class BankCommand extends GoldEconomyCommandBase {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("account"));
 
-    public BankCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public BankCommand() {
+        super("bank", "GoldEconomy bank account system", "/bank", ALIASES);
     }
 
-    private void sendMessage(CommandSender player, String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
-
-    private String notPlayer() {
-        return String.format("[%s] - You aren't a player..", GoldEconomy.getInstance().getDescription().getName());
-    }
-
-    private String noPermission(String permission) {
-        return "You don't have permission " + '"' + permission + '"';
+    @Override
+    protected String permissionNode() {
+        return "goldeconomy.use.bank";
     }
 
     @Override
@@ -44,7 +36,7 @@ public class BankCommand extends BukkitCommand {
          */
         int length = args.length;
         Player p = (Player) commandSender;
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
         StringLibrary me = new StringLibrary(p);

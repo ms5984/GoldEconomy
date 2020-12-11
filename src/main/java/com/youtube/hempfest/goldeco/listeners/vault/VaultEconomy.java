@@ -55,14 +55,14 @@ public class VaultEconomy implements Economy {
 
     @Override
     public String currencyNamePlural() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name") + "'s";
     }
 
     @Override
     public String currencyNameSingular() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name");
     }
@@ -96,7 +96,7 @@ public class VaultEconomy implements Economy {
 
     @Override
     public double getBalance(OfflinePlayer player) {
-        PlayerData data = new PlayerData(player.getUniqueId());
+        final PlayerData data = PlayerData.get(player.getUniqueId());
         if (data.exists()) {
             FileConfiguration fc = data.getConfig();
             if (player.isOnline()) {
@@ -114,7 +114,7 @@ public class VaultEconomy implements Economy {
 
     @Override
     public double getBalance(OfflinePlayer player, String world) {
-        PlayerData data = new PlayerData(player.getUniqueId());
+        final PlayerData data = PlayerData.get(player.getUniqueId());
         if (data.exists()) {
             FileConfiguration fc = data.getConfig();
             return fc.getDouble("player." + world + ".balance");
@@ -129,7 +129,7 @@ public class VaultEconomy implements Economy {
 
     @Override
     public boolean has(OfflinePlayer player, double amount) {
-        PlayerData data = new PlayerData(player.getUniqueId());
+        final PlayerData data = PlayerData.get(player.getUniqueId());
         if (data.exists()) {
             FileConfiguration fc = data.getConfig();
             if (player.isOnline()) {
@@ -151,7 +151,7 @@ public class VaultEconomy implements Economy {
 
     @Override
     public boolean has(OfflinePlayer player, String worldName, double amount) {
-        PlayerData data = new PlayerData(player.getUniqueId());
+        final PlayerData data = PlayerData.get(player.getUniqueId());
         if (data.exists()) {
             FileConfiguration fc = data.getConfig();
             if (player.isOnline()) {

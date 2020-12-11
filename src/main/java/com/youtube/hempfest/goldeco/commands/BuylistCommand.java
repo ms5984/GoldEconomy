@@ -2,50 +2,26 @@ package com.youtube.hempfest.goldeco.commands;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.independant.Config;
+import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class BuylistCommand extends BukkitCommand {
+public class BuylistCommand extends GoldEconomyCommandBase {
+    private static final List<String> ALIASES = new ArrayList<>(Collections.singletonList("buyl"));
 
-    public BuylistCommand(String name, String description, String permission, String usageMessage, List<String> aliases) {
-        super(name, description, usageMessage, aliases);
-        setPermission(permission);
+    public BuylistCommand() {
+        super("buylist", "GoldEconomy item buy list", "/buylist", ALIASES);
     }
 
-    private void sendMessage(CommandSender player, String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
-
-    private String notPlayer() {
-        return String.format("[%s] - You aren't a player..", GoldEconomy.getInstance().getDescription().getName());
-    }
-
-    private boolean isInt(String e) {
-        try {
-            Integer.parseInt(e);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isDouble(String text) {
-        try {
-            Double.parseDouble(text);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private String noPermission(String permission) {
-        return "You don't have permission " + '"' + permission + '"';
+    @Override
+    protected String permissionNode() {
+        return "goldeconomy.use.buylist";
     }
 
     @Override
@@ -61,7 +37,7 @@ public class BuylistCommand extends BukkitCommand {
          */
         int length = args.length;
         Player p = (Player) commandSender;
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
         StringLibrary me = new StringLibrary(p);
@@ -71,7 +47,7 @@ public class BuylistCommand extends BukkitCommand {
          */
 
         if (length == 0) {
-            if (!p.hasPermission(this.getPermission())) {
+            if (!p.hasPermission(permissionNode())) {
                 me.msg(noPermission(this.getPermission()));
                 return true;
             }
@@ -84,8 +60,8 @@ public class BuylistCommand extends BukkitCommand {
         }
 
         if (length == 1) {
-                if (!p.hasPermission(this.getPermission())) {
-                    me.msg(noPermission(this.getPermission()));
+                if (!p.hasPermission(permissionNode())) {
+                    me.msg(noPermission(permissionNode()));
                     return true;
                 }
             if (!GoldEconomy.usingShop()) {
