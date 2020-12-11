@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class BankAccount {
 
-	private String accountID;
+	private final String accountID;
 	private String world;
 
 	public BankAccount(String accountID) {

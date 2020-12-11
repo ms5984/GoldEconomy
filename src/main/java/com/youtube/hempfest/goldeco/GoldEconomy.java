@@ -12,6 +12,7 @@ import com.youtube.hempfest.goldeco.listeners.vault.VaultListener;
 import com.youtube.hempfest.goldeco.structure.EconomyStructure;
 import com.youtube.hempfest.goldeco.util.Metrics;
 import com.youtube.hempfest.hempcore.command.CommandBuilder;
+import com.youtube.hempfest.hempcore.event.EventBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -42,8 +43,7 @@ public class GoldEconomy extends JavaPlugin {
 	private final Logger log = Logger.getLogger("Minecraft");
 	private static final HashMap<Player, MenuManager> GuiMap = new HashMap<Player, MenuManager>();
 	public VaultEconomy eco;
-	private PluginManager pm = getServer().getPluginManager();
-	private List<Listener> toRegister = new ArrayList<>();
+	private final PluginManager pm = getServer().getPluginManager();
 
 	//Start server
 	public void onEnable() {
@@ -51,8 +51,7 @@ public class GoldEconomy extends JavaPlugin {
 //		registerCommands();
 		new CommandBuilder(this).compileFields("com.youtube.hempfest.goldeco.commands");
 		registerMetrics(9063);
-		toRegister.add(new EventListener());
-		registerEvents(toRegister);
+		new EventBuilder(this).compileFields("com.youtube.hempfest.goldeco.listeners.bukkit");
 		setInstance(this);
 		loadConfiguration();
 		loadDefaults();
@@ -89,29 +88,8 @@ public class GoldEconomy extends JavaPlugin {
 		}
 	}
 
-	private void registerEvents(List<Listener> events) {
-		for (Listener event : events) {
-			pm.registerEvents(event, this);
-		}
-	}
-
-/*	private void registerCommand(BukkitCommand command) {
-		try {
-
-			final Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
-			commandMapField.setAccessible(true);
-
-			final CommandMap commandMap = (CommandMap) commandMapField.get(getServer());
-			commandMap.register(command.getLabel(), command);
-
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-	}*/
-
 	private void registerMetrics(int ID) {
 		Metrics metrics = new Metrics(this, ID);
-//		PlayerListener playerListener = new PlayerListener();
 		metrics.addCustomChart(new Metrics.SingleLineChart("bank_accounts_made", () -> GoldEconomy.getBankAccounts().size()));
 		metrics.addCustomChart(new Metrics.SingleLineChart("total_logged_players", () -> PlayerListener.getAllPlayers().size()));
 		metrics.addCustomChart(new Metrics.SingleLineChart("starting_balance", () -> {
@@ -129,22 +107,6 @@ public class GoldEconomy extends JavaPlugin {
 		}));
 
 	}
-
-
-/*	private void registerCommands() {
-//		registerCommand(new BuyCommand("buy", "GoldEconomy item purchasing", "goldeconomy.use.buy", "/buy item", aliasesBuy));
-//		registerCommand(new DepositCommand("deposit", "GoldEconomy deposit money", "goldeconomy.use.deposit", "/deposit amount", aliasesDeposit));
-//		registerCommand(new WithdrawCommand("withdraw", "GoldEconomy withdraw money", "goldeconomy.use.withdraw", "/withdraw amount", aliasesWithdraw));
-//		registerCommand(new PayCommand("pay", "GoldEconomy item purchasing", "goldeconomy.use.pay", "/pay player", aliasesPay));
-//		registerCommand(new ShopCommand("shop", "GoldEconomy gui shop", "goldeconomy.use.shop", "/shop", aliasesShop));
-//		registerCommand(new BalanceCommand("balance", "GoldEconomy player balance", "goldeconomy.use.balance", "/balance", aliasesBal));
-//		registerCommand(new BankCommand("bank", "GoldEconomy bank account system", "goldeconomy.use.bank", "/bank", aliasesBank));
-//		registerCommand(new SellCommand("sell", "GoldEconomy item selling", "goldeconomy.use.sell", "/sell item", aliasesSell));
-//		registerCommand(new EconomyCommand("economy", "GoldEconomy help", "goldeconomy.use", "/economy", aliases));
-//		registerCommand(new TopCommand("top", "GoldEconomy richest player list", "goldeconomy.use.top", "/top", aliasesTop));
-//		registerCommand(new BuylistCommand("buylist", "GoldEconomy item buy list", "goldeconomy.use.buylist", "/buylist", aliasesBuylist));
-//		registerCommand(new SelllistCommand("selllist", "GoldEconomy item sell list", "goldeconomy.use.selllist", "/selllist", aliasesSelllist));
-	}*/
 
 	public static MenuManager menuViewer(Player p) {
 		MenuManager manager;

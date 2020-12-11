@@ -8,10 +8,10 @@ import com.youtube.hempfest.goldeco.listeners.BankListener;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.listeners.vault.VaultListener;
 import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
-import com.youtube.hempfest.goldeco.util.libraries.ItemLibrary;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
+import com.youtube.hempfest.hempcore.library.Items;
 import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -447,7 +447,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 
         if (length == 2) {
             if (args[0].equalsIgnoreCase("buy")) {
-                Material item = ItemLibrary.getMaterial(args[1]);
+                Material item = Items.getMaterial(args[1]);
                 if (item == null) {
                     // item not found
                     me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
@@ -466,7 +466,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 return true;
             }
             if (args[0].equalsIgnoreCase("sell")) {
-                Material item = ItemLibrary.getMaterial(args[1]);
+                Material item = Items.getMaterial(args[1]);
                 if (item == null) {
                     // item not found
                     me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
@@ -493,13 +493,13 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 ArrayList<String> names = new ArrayList<>();
                 boolean hasAny = false;
                 for (String currencies : fc.getStringList("Economy.currency-items")) {
-                    if (ItemLibrary.getMaterial(currencies) == null) {
+                    if (Items.getMaterial(currencies) == null) {
                         GoldEconomy.getInstance().getLogger().info(String.format("[%s] - There was an issue while loading currency types", GoldEconomy.getInstance().getDescription().getName()));
                         GoldEconomy.getInstance().getLogger().info(String.format("[%s] - Check to make sure you're using proper material names", GoldEconomy.getInstance().getDescription().getName()));
                         break;
                     }
                     names.add(currencies);
-                    mats.add(ItemLibrary.getMaterial(currencies));
+                    mats.add(Items.getMaterial(currencies));
                 }
                 for (Material mat : mats) {
                     if (p.getInventory().contains(mat)) {
@@ -555,12 +555,12 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         return true;
                     }
                     el.remove(result);
-                    ItemStack item = new ItemStack(ItemLibrary.getMaterial(items.get(0)));
+                    ItemStack item = new ItemStack(Items.getMaterial(items.get(0)));
                     if (!withdrawType.equals("dollar")) {
-                        item = new ItemStack(ItemLibrary.getMaterial(items.get(1)));
+                        item = new ItemStack(Items.getMaterial(items.get(1)));
                     }
                     if (usingCustomCurrency()) {
-                        item = new ItemStack(ItemLibrary.getMaterial(getPrimaryDollarItem()));
+                        item = new ItemStack(Items.getMaterial(getPrimaryDollarItem()));
                         ItemMeta meta = item.getItemMeta();
                         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&o" + getPrimaryDollar()));
                         item.setItemMeta(meta);
@@ -730,7 +730,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     return true;
                 }
                 try {
-                    Material item = ItemLibrary.getMaterial(args[1]);
+                    Material item = Items.getMaterial(args[1]);
                     if (item == null) {
                         // item not found
                         me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
@@ -753,7 +753,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     return true;
                 }
                 try {
-                Material item = ItemLibrary.getMaterial(args[1]);
+                Material item = Items.getMaterial(args[1]);
                 if (item == null) {
                     // item not found
                     me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
@@ -783,7 +783,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     el.remove(amount);
                     ItemStack item = new ItemStack(Material.GOLD_INGOT, amount);
                     if (usingCustomCurrency()) {
-                        item = new ItemStack(ItemLibrary.getMaterial(getPrimaryDollarItem()));
+                        item = new ItemStack(Items.getMaterial(getPrimaryDollarItem()));
                         ItemMeta meta = item.getItemMeta();
                         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&a&o" + getPrimaryDollar()));
                         item.setItemMeta(meta);
@@ -809,7 +809,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     el.remove(amount);
                     ItemStack item = new ItemStack(Material.GOLD_INGOT, amount);
                     if (usingCustomCurrency()) {
-                        item = new ItemStack(ItemLibrary.getMaterial(getSecondaryDollarItem()));
+                        item = new ItemStack(Items.getMaterial(getSecondaryDollarItem()));
                         ItemMeta meta = item.getItemMeta();
                         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&a&o" + getPrimaryDollar()));
                         item.setItemMeta(meta);
@@ -830,9 +830,9 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 ArrayList<Material> mats = new ArrayList<>();
                 ArrayList<String> names = new ArrayList<>();
                 boolean hasAny = false;
-                    mats.add(ItemLibrary.getMaterial(getPrimaryDollarItem()));
+                    mats.add(Items.getMaterial(getPrimaryDollarItem()));
                     names.add(getPrimaryDollar());
-                    ItemStack item = new ItemStack(ItemLibrary.getMaterial(getPrimaryDollarItem()));
+                    ItemStack item = new ItemStack(Items.getMaterial(getPrimaryDollarItem()));
                     ItemMeta meta = item.getItemMeta();
                     meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&o" + getPrimaryDollar()));
                     item.setItemMeta(meta);
@@ -853,7 +853,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     ArrayList<Material> mats = new ArrayList<>();
                     ArrayList<String> names = new ArrayList<>();
                     boolean hasAny = false;
-                        mats.add(ItemLibrary.getMaterial(getSecondaryDollarItem()));
+                        mats.add(Items.getMaterial(getSecondaryDollarItem()));
                     names.add(getSecondaryDollar());
                     for (Material mat : mats) {
                         if (p.getInventory().contains(mat)) {
