@@ -2,7 +2,7 @@ package com.youtube.hempfest.goldeco.gui.menus;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.independant.Config;
-import com.youtube.hempfest.goldeco.gui.Menu;
+import com.youtube.hempfest.goldeco.gui.EcoMenu;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryBrowse;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
@@ -10,6 +10,7 @@ import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.util.libraries.ItemLibrary;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,14 +21,15 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InventoryPlayer extends Menu {
+public class InventoryPlayer extends EcoMenu {
     public InventoryPlayer(MenuManager manager) {
         super(manager);
     }
 
     @Override
     public String getMenuName() {
-        return color("&5&l&m▬▬▬▬▬▬▬▬&7[&6&lPlayer Wallet&7]&5&l&m▬▬▬▬▬▬▬▬");
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        return new ColoredString("&5&l&m▬▬▬▬▬▬▬▬&7[&6&lPlayer Wallet&7]&5&l&m▬▬▬▬▬▬▬▬", ColoredString.ColorType.MC).toString();
     }
 
     @Override
@@ -42,7 +44,7 @@ public class InventoryPlayer extends Menu {
         MenuManager menu = GoldEconomy.menuViewer(p);
         BankListener bl = new BankListener(p, "", p.getWorld().getName());
 
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         List<String> items = new ArrayList<>(fc.getStringList("Economy.currency-items"));
         if (mat.equals(ItemLibrary.getMaterial(items.get(0)))) {
@@ -199,25 +201,25 @@ public class InventoryPlayer extends Menu {
     }
 
     private String getPrimaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name-item");
     }
 
     private String getSecondaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.change-item");
     }
 
     private String getPrimaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name");
     }
 
     private boolean usingCustomCurrency() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return true;
@@ -226,7 +228,7 @@ public class InventoryPlayer extends Menu {
     }
 
     private String getSecondaryDollar() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.change");
     }
@@ -242,12 +244,13 @@ public class InventoryPlayer extends Menu {
             scurrency = "NUGGET";
         }
         PlayerListener el = new PlayerListener(manager.getOwner());
-        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, this.color("&a&oGo back."), "");
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         ItemStack head = makeItem(Material.PLAYER_HEAD, "&7[&6&l" + manager.getOwner().getName() + "&7]", "", "&e&oBalance: &f" + el.get(Utility.BALANCE), " ", "&a&oWorld: &f" + manager.getOwner().getWorld().getName());
         BankListener ba = new BankListener(manager.getOwner(), null, manager.getOwner().getWorld().getName());
         if (ba.has(Utility.BANK_ACCOUNT)) {
             BankListener bl = new BankListener(manager.getOwner(), ba.get(Utility.NAME), manager.getOwner().getWorld().getName());
-            ItemStack info = makeItem(Material.CHEST, "&7[&6&lINFO&7]", "", "&6&oAccount #&f" + ba.get(Utility.NAME), " ", "&e&oBalance: &f" + el.format(Double.valueOf(bl.get(Utility.BALANCE))));
+            ItemStack info = makeItem(Material.CHEST, "&7[&6&lINFO&7]", "", "&6&oAccount #&f" + ba.get(Utility.NAME), " ", "&e&oBalance: &f" + PlayerListener.format(Double.valueOf(bl.get(Utility.BALANCE))));
             inventory.setItem(2, info);
         }
         inventory.setItem(6, head);

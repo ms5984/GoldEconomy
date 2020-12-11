@@ -2,7 +2,7 @@ package com.youtube.hempfest.goldeco.gui.menus;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.independant.Config;
-import com.youtube.hempfest.goldeco.gui.Menu;
+import com.youtube.hempfest.goldeco.gui.EcoMenu;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryBrowse;
 import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryTop;
@@ -10,6 +10,7 @@ import com.youtube.hempfest.goldeco.listeners.BankListener;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -19,14 +20,15 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InventoryShop extends Menu {
+public class InventoryShop extends EcoMenu {
     public InventoryShop(MenuManager manager) {
         super(manager);
     }
 
     @Override
     public String getMenuName() {
-        return color("&5&l&m▬▬▬▬▬▬▬▬&7[&6&lEconomy Menu&7]&5&l&m▬▬▬▬▬▬▬▬");
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        return new ColoredString("&5&l&m▬▬▬▬▬▬▬▬&7[&6&lEconomy Menu&7]&5&l&m▬▬▬▬▬▬▬▬", ColoredString.ColorType.MC).toString();
     }
 
     @Override
@@ -74,7 +76,7 @@ public class InventoryShop extends Menu {
                 menu.setItemToEdit(getPrimaryDollarItem());
                 menu.setItemTooEdit(getSecondaryDollarItem());
             } else {
-                Config main = new Config("shop_config");
+                Config main = Config.get("shop_config");
                 FileConfiguration fc = main.getConfig();
                 List<String> items = new ArrayList<>(fc.getStringList("Economy.currency-items"));
                 menu.setItemToEdit(items.get(0));
@@ -86,19 +88,19 @@ public class InventoryShop extends Menu {
     }
 
     private String getPrimaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.name-item");
     }
 
     private String getSecondaryDollarItem() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         return fc.getString("Economy.custom-currency.change-item");
     }
 
     private boolean usingCustomCurrency() {
-        Config main = new Config("shop_config");
+        Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         if (fc.getString("Economy.custom-currency.status").equals("on")) {
             return true;

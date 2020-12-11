@@ -2,11 +2,13 @@ package com.youtube.hempfest.goldeco.gui.menus.paginated;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
-import com.youtube.hempfest.goldeco.gui.MenuPaginated;
+import com.youtube.hempfest.goldeco.gui.EcoMenuPaginated;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryItem;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryShop;
 import com.youtube.hempfest.goldeco.util.libraries.ItemLibrary;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
+import com.youtube.hempfest.hempcore.HempCore;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -17,7 +19,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 
-public class InventoryBrowse extends MenuPaginated {
+public class InventoryBrowse extends EcoMenuPaginated {
     GoldEconomy plugin;
     public InventoryBrowse(MenuManager manager) {
         super(manager);
@@ -30,8 +32,7 @@ public class InventoryBrowse extends MenuPaginated {
             page = menu.getPage();
             menu.setPage(0);
         }
-        ItemManager man = GoldEconomy.getInstance().itemManager(GoldEconomy.getInstance(), manager.getOwner());
-        int pgCount = man.getShopContents().size() / getMaxItemsPerPage();
+        int pgCount = ItemManager.getShopContents().size() / getMaxItemsPerPage();
         return "▬▬▬▬▬▬▬▬▬▬▬(PAGE #" + page + " / " + pgCount + ")▬▬▬▬▬▬▬▬▬▬▬";
     }
 
@@ -43,13 +44,12 @@ public class InventoryBrowse extends MenuPaginated {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        ItemManager man = GoldEconomy.getInstance().itemManager(GoldEconomy.getInstance(), manager.getOwner());
-        ArrayList<String> items = new ArrayList<String>(man.getShopContents());
+//        ItemManager man = GoldEconomy.getItemManager();
+        ArrayList<String> items = new ArrayList<>(ItemManager.getShopContents());
         Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
-        ItemManager im = new ItemManager(GoldEconomy.getInstance());
 
-        for (String item : im.getShopContents()) {
+        for (String item : ItemManager.getShopContents()) {
             if (mat.equals(ItemLibrary.getMaterial(item))) {
                     if (mat.equals(Material.TOTEM_OF_UNDYING)) {
                         break;
@@ -70,7 +70,7 @@ public class InventoryBrowse extends MenuPaginated {
                     break;
                 }
                         menu.setItemToEdit(e.getCurrentItem().getItemMeta().getPersistentDataContainer()
-                                .get(new NamespacedKey(GoldEconomy.getInstance(), "shop-item"), PersistentDataType.STRING));
+                                .get(new NamespacedKey(HempCore.getInstance(), "shop-item"), PersistentDataType.STRING));
                         menu.setPage(page);
                         new InventoryItem(menu).open();
                         break;
@@ -114,9 +114,10 @@ public class InventoryBrowse extends MenuPaginated {
             mang.setPage(0);
         }
         plugin = GoldEconomy.getInstance();
-        ItemManager man = GoldEconomy.itemManager(plugin, manager.getOwner());
-        ArrayList<String> items = new ArrayList<String>(man.getShopContents());
-        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, this.color("&a&oGo back."), "");
+//        ItemManager man = GoldEconomy.getItemManager();
+        ArrayList<String> items = new ArrayList<>(ItemManager.getShopContents());
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         inventory.setItem(45, back);
         addMenuBorder();
         // The thing you will be looping through to place items
@@ -132,7 +133,7 @@ public class InventoryBrowse extends MenuPaginated {
                     // Create an item from our collection and place it into the inventory
                     Material it = ItemLibrary.getMaterial(items.get(index));
                     if (it != null) {
-                        ItemStack item = makeItem(it, "&6&l&oITEM: &f&o&n" + items.get(index), PersistentDataType.STRING, "shop-item", items.get(index), " ", "&f&oBuy Price (&a&n" + man.getItemPrice(ItemManager.indexPrice.PURCHASE, items.get(index)) + "&f&o)", " ", "&c&oSell Price &f&o[" + man.getItemPrice(ItemManager.indexPrice.SELL, items.get(index)) + "&f&o]", " ", "&a&l&oClick to buy or sell.");
+                        ItemStack item = makePersistentItem(it, "&6&l&oITEM: &f&o&n" + items.get(index), "shop-item", items.get(index), " ", "&f&oBuy Price (&a&n" + ItemManager.getItemPrice(ItemManager.indexPrice.PURCHASE, items.get(index)) + "&f&o)", " ", "&c&oSell Price &f&o[" + ItemManager.getItemPrice(ItemManager.indexPrice.SELL, items.get(index)) + "&f&o]", " ", "&a&l&oClick to buy or sell.");
                         inventory.addItem(item);
                     }
                     ////////////////////////

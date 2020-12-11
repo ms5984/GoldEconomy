@@ -2,14 +2,14 @@ package com.youtube.hempfest.goldeco.gui.menus.paginated;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
-import com.youtube.hempfest.goldeco.gui.MenuPaginated;
+import com.youtube.hempfest.goldeco.gui.EcoMenuPaginated;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryBankModify;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryStaff;
 import com.youtube.hempfest.goldeco.listeners.BankAccount;
-import com.youtube.hempfest.goldeco.listeners.BankListener;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
-import com.youtube.hempfest.goldeco.structure.EconomyStructure;
-import java.util.UUID;
+
+import com.youtube.hempfest.hempcore.HempCore;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,7 +18,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 
-public class InventoryBanks extends MenuPaginated {
+public class InventoryBanks extends EcoMenuPaginated {
     GoldEconomy plugin;
     public InventoryBanks(MenuManager manager) {
         super(manager);
@@ -41,7 +41,7 @@ public class InventoryBanks extends MenuPaginated {
         Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
         String player = e.getCurrentItem().getItemMeta().getPersistentDataContainer()
-                .get(new NamespacedKey(GoldEconomy.getInstance(), "account"), PersistentDataType.STRING);
+                .get(new NamespacedKey(HempCore.getInstance(), "account"), PersistentDataType.STRING);
         switch (mat) {
             case TOTEM_OF_UNDYING:
                 new InventoryStaff(menu).open();
@@ -79,7 +79,8 @@ public class InventoryBanks extends MenuPaginated {
     @Override
     public void setMenuItems() {
         ArrayList<String> items = new ArrayList<String>(GoldEconomy.getBankAccounts());
-        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, this.color("&a&oGo back."), "");
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         inventory.setItem(45, back);
         addMenuBorder();
         // The thing you will be looping through to place items
@@ -94,8 +95,8 @@ public class InventoryBanks extends MenuPaginated {
                     ///////////////////////////
                     // Create an item from our collection and place it into the inventory
                     BankAccount bank = new BankAccount(items.get(index)).queryWorld();
-                    PlayerListener listener = new PlayerListener();
-                    ItemStack playerIcon = makeItem(Material.CHEST, "&7#&3&l" + items.get(index), PersistentDataType.STRING, "account", items.get(index)," ", "&6&oOwner: &f&n" + GoldEconomy.getBankOwner(items.get(index)), "", "&6&oWorld: &f&n" + GoldEconomy.getBankWorld(items.get(index)), "", "&6&lBalance: &f&n" + listener.format(bank.getBalance()));
+//                    PlayerListener listener = new PlayerListener();
+                    ItemStack playerIcon = makePersistentItem(Material.CHEST, "&7#&3&l" + items.get(index), "account", items.get(index)," ", "&6&oOwner: &f&n" + GoldEconomy.getBankOwner(items.get(index)), "", "&6&oWorld: &f&n" + GoldEconomy.getBankWorld(items.get(index)), "", "&6&lBalance: &f&n" + PlayerListener.format(bank.getBalance()));
                     inventory.addItem(playerIcon);
 
                     ////////////////////////

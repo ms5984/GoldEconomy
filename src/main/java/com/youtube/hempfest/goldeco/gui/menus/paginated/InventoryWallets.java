@@ -2,10 +2,12 @@ package com.youtube.hempfest.goldeco.gui.menus.paginated;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
-import com.youtube.hempfest.goldeco.gui.MenuPaginated;
+import com.youtube.hempfest.goldeco.gui.EcoMenuPaginated;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryPlayerModify;
 import com.youtube.hempfest.goldeco.gui.menus.InventoryStaff;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
+import com.youtube.hempfest.hempcore.HempCore;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,8 +17,8 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class InventoryWallets extends MenuPaginated {
-    GoldEconomy plugin;
+public class InventoryWallets extends EcoMenuPaginated {
+//    GoldEconomy plugin;
     public InventoryWallets(MenuManager manager) {
         super(manager);
     }
@@ -34,12 +36,12 @@ public class InventoryWallets extends MenuPaginated {
     @Override
     public void handleMenu(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        PlayerListener el = new PlayerListener();
-        ArrayList<String> items = new ArrayList<String>(el.getAllPlayers());
+//        PlayerListener el = new PlayerListener();
+        final ArrayList<String> items = new ArrayList<>(PlayerListener.getAllPlayers());
         Material mat = e.getCurrentItem().getType();
         MenuManager menu = GoldEconomy.menuViewer(p);
         String player = e.getCurrentItem().getItemMeta().getPersistentDataContainer()
-                .get(new NamespacedKey(GoldEconomy.getInstance(), "player"), PersistentDataType.STRING);
+                .get(new NamespacedKey(HempCore.getInstance(), "player"), PersistentDataType.STRING);
         switch (mat) {
             case TOTEM_OF_UNDYING:
                 new InventoryStaff(menu).open();
@@ -74,17 +76,18 @@ public class InventoryWallets extends MenuPaginated {
         }
     }
 
-    private String nameByUUID(UUID id) {
+/*    private String nameByUUID(UUID id) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(id);
         if(player == null) return null;
         return player.getName();
-    }
+    }*/
 
     @Override
     public void setMenuItems() {
-        PlayerListener el = new PlayerListener();
-        ArrayList<String> items = new ArrayList<String>(el.getAllPlayers());
-        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, this.color("&a&oGo back."), "");
+//        PlayerListener el = new PlayerListener();
+        final ArrayList<String> items = new ArrayList<>(PlayerListener.getAllPlayers());
+        //		return ChatColor.translateAlternateColorCodes('&', text);
+        ItemStack back = makeItem(Material.TOTEM_OF_UNDYING, new ColoredString("&a&oGo back.", ColoredString.ColorType.MC).toString(), "");
         inventory.setItem(45, back);
         addMenuBorder();
         // The thing you will be looping through to place items
@@ -98,7 +101,7 @@ public class InventoryWallets extends MenuPaginated {
                 if (items.get(index) != null) {
                     ///////////////////////////
                     // Create an item from our collection and place it into the inventory
-                    ItemStack playerIcon = makeItem(Material.CHEST, "&b&l&o" + nameByUUID(UUID.fromString(items.get(index))), PersistentDataType.STRING, "player", items.get(index));
+                    ItemStack playerIcon = makePersistentItem(Material.CHEST, "&b&l&o" + PlayerListener.nameByUUID(UUID.fromString(items.get(index))), "player", items.get(index));
                     inventory.addItem(playerIcon);
 
                     ////////////////////////
