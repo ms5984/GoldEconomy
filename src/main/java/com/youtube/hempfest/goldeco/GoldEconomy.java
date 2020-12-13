@@ -204,6 +204,10 @@ public class GoldEconomy extends JavaPlugin {
 		return new PlayerListener(p);
 	}
 
+	/** carried from BankListener
+	 * @deprecated messes with multi-world balances. Use at own risk
+	 */
+	@Deprecated
 	public static EconomyStructure getBankAccount(OfflinePlayer p, String accountID) {
 		return new BankListener(p);
 	}

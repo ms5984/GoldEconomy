@@ -29,6 +29,15 @@ public class BankListener implements EconomyStructure {
         this.op = p;
     }
 
+    /**
+     * Replaces above method but requires an instance of Player, helping to affirm
+     * that it's a good idea for us to use their current World to run transactions.
+     */
+    public BankListener(@NotNull Player p) {
+        this.op = p;
+        this.worldName = p.getWorld().getName();
+    }
+
     @Deprecated
     public BankListener(@NotNull OfflinePlayer p, String accountID) { // one bank per world = one bank per player per world
         this.op = p;
