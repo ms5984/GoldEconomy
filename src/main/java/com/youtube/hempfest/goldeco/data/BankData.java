@@ -4,13 +4,16 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BankData {
     private final String n;
@@ -18,59 +21,21 @@ public class BankData {
     private File file;
 
     private static final JavaPlugin PLUGIN = JavaPlugin.getProvidingPlugin(BankData.class);
-    private static final ArrayList<BankData> BANK_DATA = new ArrayList<>();
+    private static final Map<String, BankData> BANK_DATA = new ConcurrentHashMap<>();
 
     private BankData(@NotNull final String n) { // Force to factory
         this.n = Objects.requireNonNull(n);
-        BANK_DATA.add(this);
+        BANK_DATA.put(n, this);
     }
 
-/*    public static void copy(InputStream in, File file) { // unused lol
-        try {
-            OutputStream out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while((len=in.read(buf))>0){
-                out.write(buf,0,len);
-            }
-            out.close();
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
     public String getName() {
-/*        if(this.n == null) {
-            try {
-                throw new Exception();
-            }catch(final Exception e) {
-                e.printStackTrace();
-            }
-        }*/
         return this.n; // sanitize in constructor
     }
 
-/*    public static JavaPlugin getInstance() { // NPE works better
-        if(plugin == null) {
-            try {
-                throw new Exception();
-            }catch(final Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return plugin;
-    }*/
-
-
+    @Contract("null->null")
     public static BankData get(final String n) {
         if (n == null) return null;
-        for(final BankData c: BankData.BANK_DATA) {
-            if(c.getName().equals(n)) {
-                return c;
-            }
-        }
-        return new BankData(n);
+        return BANK_DATA.computeIfAbsent(n, BankData::new);
     }
 
     public boolean delete() {
@@ -181,19 +146,9 @@ public class BankData {
     }
 
     public void reload() {
-/*        if(this.file == null) {
-            this.file = new File(getDataFolder(), this.getName() + ".yml");
-            if(!this.file.exists()) {
-                try {
-                    this.file.createNewFile();
-                }catch(final IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/ // should just do #getFile
         this.fc = YamlConfiguration.loadConfiguration(getFile());
         final File defConfigStream = new File(PLUGIN.getDataFolder(), this.getName() + ".yml");
-        if(defConfigStream != null) { // TODO: File#exists() check?
+        if(defConfigStream.exists()) {
             final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
             this.fc.setDefaults(defConfig);
         }
@@ -206,10 +161,5 @@ public class BankData {
             e.printStackTrace();
         }
     }
-
-
-
-
-
 
 }
