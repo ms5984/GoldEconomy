@@ -25,7 +25,6 @@ public class BankData {
 
     private BankData(@NotNull final String n) { // Force to factory
         this.n = Objects.requireNonNull(n);
-        BANK_DATA.put(n, this);
     }
 
     public String getName() {
