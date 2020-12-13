@@ -204,6 +204,10 @@ public class GoldEconomy extends JavaPlugin {
 		return new PlayerListener(p);
 	}
 
+	/** carried from BankListener
+	 * @deprecated messes with multi-world balances. Use at own risk
+	 */
+	@Deprecated
 	public static EconomyStructure getBankAccount(OfflinePlayer p, String accountID) {
 		return new BankListener(p);
 	}
@@ -217,52 +221,19 @@ public class GoldEconomy extends JavaPlugin {
 	}
 
 	public static String getBankWorld(String accountID) {
-		String result = "";
-		for (String world : getBankWorlds()) {
-			BankData data = new BankData(world);
-			FileConfiguration fc = data.getConfig();
-			for (String player : fc.getConfigurationSection("banks").getKeys(false)) {
-				if (fc.getString("banks." + player + ".accountID").equals(accountID)) {
-					result = world;
-					break;
-				}
-			}
-		}
-		return result;
+		return BankData.getBankWorld(accountID);
 	}
 
 	public static String getBankOwner(String accountID) {
-		String result = "";
-		for (String world : getBankWorlds()) {
-			BankData data = new BankData(world);
-			FileConfiguration fc = data.getConfig();
-			for (String player : fc.getConfigurationSection("banks").getKeys(false)) {
-				if (fc.getString("banks." + player + ".accountID").equals(accountID)) {
-					result = player;
-				}
-			}
-		}
-		return result;
+		return BankData.getBankOwner(accountID);
 	}
 
 	public static List<String> getBankWorlds() {
-		List<String> users = new ArrayList<>();
-		for(File file : BankData.getDataFolder().listFiles()) {
-			users.add(file.getName().replace(".yml", ""));
-		}
-		return users;
+		return BankData.getBankWorlds();
 	}
 
 	public static List<String> getBankAccounts() {
-		List<String> accounts = new ArrayList<>();
-		for (String world : getBankWorlds()) {
-			BankData data = new BankData(world);
-			FileConfiguration fc = data.getConfig();
-			for (String player : fc.getConfigurationSection("banks").getKeys(false)) {
-				accounts.add(fc.getString("banks." + player + ".accountID"));
-			}
-		}
-		return accounts;
+		return BankData.getBankAccounts();
 	}
 
 }

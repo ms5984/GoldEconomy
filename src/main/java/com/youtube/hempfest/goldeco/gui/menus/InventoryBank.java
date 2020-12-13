@@ -99,7 +99,7 @@ public class InventoryBank extends EcoMenu {
         ItemStack nugg = makeItem(Material.GOLD_NUGGET, "&7[&6&lOPEN&7]", "", "Description: &a&oClick to deposit/withdraw", "&a&ointo your account.");
         inventory.setItem(10, chest);
         inventory.setItem(12, lava);
-        BankData world = new BankData(manager.getOwner().getWorld().getName());
+        BankData world = BankData.get(manager.getOwner().getWorld().getName());
         if (!world.exists()) {
             world.getConfig().createSection("banks");
             world.saveConfig();
