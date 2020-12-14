@@ -5,24 +5,33 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Config {
-    private final String n; // strings are immutable; we could sanitize in constructor and make this public
+    public final String name; // strings are immutable; sanitized in constructor = can safely be public
     private FileConfiguration fc;
     private File file;
     private static final JavaPlugin PLUGIN = JavaPlugin.getProvidingPlugin(Config.class);
-    private static final ArrayList<Config> CONFIGS = new ArrayList<>();
+    private static final Map<String, Config> CONFIGS = new ConcurrentHashMap<>();
 
-    private Config(@NotNull final String n) {
-        this.n = n;
-        CONFIGS.add(this);
+    private Config(@NotNull final String name) {
+        this.name = Objects.requireNonNull(name);
     }
 
-    public static void copyTo(InputStream in, Config out) {
+    public static Config get(@NotNull final String name) {
+        return CONFIGS.computeIfAbsent(name, Config::new);
+    }
+
+    public void copyFromResource(InputStream in) { // Converted to instance method
         try {
-            final OutputStream outputStream = new FileOutputStream(out.getFile());
+            final OutputStream outputStream = new FileOutputStream(getFile());
             byte[] buf = new byte[1024];
             int len;
             while((len=in.read(buf))>0){
@@ -35,47 +44,13 @@ public class Config {
         }
     }
 
-    public String getName() { // TODO: explain this code
-/*        if(this.n == null) {
-            try {
-                throw new Exception();
-            }catch(final Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return this.n;*/
-        return (n == null) ? "" : n; // Should we let the NPE pass through or stop it like this?
-    }
-
-/*    private static JavaPlugin getInstance() { // Should let an NPE do its job
-        if(PLUGIN == null) { // this method doesn't even try to reinitialize the field
-            try {
-                throw new Exception();
-            }catch(final Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return PLUGIN;
-    }*/
-
-
-    public static Config get(final String n) {
-        for(final Config c: Config.CONFIGS) {
-            if(c.getName().equals(n)) {
-                return c;
-            }
-        }
-
-        return new Config(n);
-    }
-
     public boolean delete() {
         return getFile().delete();
     }
 
     public boolean exists() {
-        if(this.fc == null || this.file == null) {
-            final File temp = new File(getDataFolder(), getName() + ".yml");
+        if(this.file == null) { // if we haven't established a file; we might have a config but no backing
+            final File temp = new File(getDataFolder(), name + ".yml");
             if(!temp.exists()) {
                 return false;
             }
@@ -86,9 +61,10 @@ public class Config {
 
     private File getFile() { // better encapsulation
         if(file == null) {
-            file = new File(getDataFolder(), getName() + ".yml"); //create method get data folder
+            file = new File(getDataFolder(), name + ".yml"); //create method get data folder
             if(!file.exists()) {
                 try {
+                    //noinspection ResultOfMethodCallIgnored
                     file.createNewFile();
                 }catch(final IOException e) {
                     e.printStackTrace();
@@ -109,31 +85,15 @@ public class Config {
         final File dir = new File(Config.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("%20", " "));
         final File d = new File(dir.getParentFile().getPath(), PLUGIN.getName() + "/Configuration/");
         if(!d.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             d.mkdirs();
         }
         return d;
     }
 
     public void reload() {
-/*        if(this.file == null) { // Why are we only running this code if file is null?
-            this.file = new File(getDataFolder(), this.getName() + ".yml");
-            if(!this.file.exists()) {
-                try {
-                    this.file.createNewFile();
-                }catch(final IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            this.fc = YamlConfiguration.loadConfiguration(this.file);
-            final File defConfigStream = new File(PLUGIN.getDataFolder(), this.getName() + ".yml");
-//            if(defConfigStream != null) { // defConfigStream is never null, is this supposed to be .exists()?
-                final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-                this.fc.setDefaults(defConfig);
-//            }
-        }*/
         this.fc = YamlConfiguration.loadConfiguration(getFile());
-        final File defConfigStream = new File(PLUGIN.getDataFolder(), this.getName() + ".yml");
+        final File defConfigStream = new File(PLUGIN.getDataFolder(), name + ".yml");
         final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
         this.fc.setDefaults(defConfig);
     }
@@ -145,10 +105,5 @@ public class Config {
             e.printStackTrace();
         }
     }
-
-
-
-
-
 
 }

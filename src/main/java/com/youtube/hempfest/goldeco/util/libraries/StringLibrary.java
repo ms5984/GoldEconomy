@@ -189,7 +189,7 @@ public class StringLibrary {
     public void run(Config c) {
         if (!c.exists()) {
             InputStream i = GoldEconomy.getInstance().getResource("shop_messages.yml");
-            Config.copyTo(i, lang);
+            lang.copyFromResource(i);
         }
     }
 

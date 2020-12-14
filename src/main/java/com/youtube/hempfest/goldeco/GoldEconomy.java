@@ -6,7 +6,6 @@ import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
-import com.youtube.hempfest.goldeco.listeners.bukkit.EventListener;
 import com.youtube.hempfest.goldeco.listeners.vault.VaultEconomy;
 import com.youtube.hempfest.goldeco.listeners.vault.VaultListener;
 import com.youtube.hempfest.goldeco.structure.EconomyStructure;
@@ -20,14 +19,11 @@ import org.bukkit.OfflinePlayer;
 //import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.io.InputStream;
 //import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -151,7 +147,7 @@ public class GoldEconomy extends JavaPlugin {
 		Config main = Config.get("shop_config");
 		if (!main.exists()) {
 			InputStream m1 = GoldEconomy.getInstance().getResource("shop_config.yml");
-			Config.copyTo(m1, main);
+			main.copyFromResource(m1);
 		}
 		FileConfiguration fc = main.getConfig();
 		if (fc.getBoolean("Economy.check-for-vault") == Boolean.valueOf(true)) {
@@ -164,7 +160,7 @@ public class GoldEconomy extends JavaPlugin {
 		Config main = Config.get("shop_messages");
 		if (!main.exists()) {
 			InputStream m1 = getResource("shop_messages.yml");
-			Config.copyTo(m1, main);
+			main.copyFromResource(m1);
 		}
 	}
 

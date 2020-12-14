@@ -169,8 +169,8 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         }
                     }
                     InputStream m1 = GoldEconomy.getInstance().getResource("shop_config.yml");
-                    Config.copyTo(m1, main);
-                    sendPrefixedMessage(commandSender, "&3&oReloaded and updated configuration &b&o" + '"' + main.getName() + '"');
+                    main.copyFromResource(m1);
+                    sendPrefixedMessage(commandSender, "&3&oReloaded and updated configuration &b&o" + '"' + main.name + '"');
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("reload")) {
@@ -384,8 +384,8 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     }
                 }
                     InputStream m1 = GoldEconomy.getInstance().getResource("shop_config.yml");
-                    Config.copyTo(m1, main);
-                    me.msg("&3&oReloaded and updated configuration &b&o" + '"' + main.getName() + '"');
+                    main.copyFromResource(m1);
+                me.msg("&3&oReloaded and updated configuration &b&o" + '"' + main.name + '"');
                 return true;
             }
             if (args[0].equalsIgnoreCase("ru")) {
@@ -396,8 +396,8 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 Config message = Config.get("shop_messages");
                 InputStream m1 = GoldEconomy.getInstance().getResource("shop_config_ru.yml");
                 InputStream m2 = GoldEconomy.getInstance().getResource("shop_messages_ru.yml");
-                Config.copyTo(m1, main);
-                Config.copyTo(m2, message);
+                main.copyFromResource(m1);
+                message.copyFromResource(m2);
                 me.msg("&3&oЯзык был изменён на &b&o" + '"' + "русский" + '"');
                 return true;
             }
