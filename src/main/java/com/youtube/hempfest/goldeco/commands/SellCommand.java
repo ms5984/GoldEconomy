@@ -2,6 +2,7 @@ package com.youtube.hempfest.goldeco.commands;
 
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -40,7 +41,7 @@ public class SellCommand extends GoldEconomyCommandBase {
         Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
-        StringLibrary me = new StringLibrary(p);
+        Messaging me = new Messaging(p);
         /*
         //  /\ /\ /\ /\ /\ /\
         //

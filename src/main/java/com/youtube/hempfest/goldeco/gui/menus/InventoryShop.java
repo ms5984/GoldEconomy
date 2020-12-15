@@ -8,7 +8,7 @@ import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryBrowse;
 import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryTop;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
-import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.Utility;
 import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import org.bukkit.Material;
@@ -48,13 +48,13 @@ public class InventoryShop extends EcoMenu {
                 new InventoryStaff(menu).open();
             } else {
                 p.closeInventory();
-                StringLibrary me = new StringLibrary(p);
+                Messaging me = new Messaging(p);
                 me.msg("&c&oNice try, administrative powers needed beyond the 5th dimension.");
             }
             break;
         case FEATHER:
             if (!GoldEconomy.usingShop()) {
-                StringLibrary me = new StringLibrary(p);
+                Messaging me = new Messaging(p);
                 p.closeInventory();
                 me.msg("&c&oUse of the &6&oGoldEconomy &c&oitem shop is disabled on this server.");
                 return;

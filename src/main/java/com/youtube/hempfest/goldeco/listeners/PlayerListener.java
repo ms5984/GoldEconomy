@@ -7,6 +7,7 @@ import com.youtube.hempfest.goldeco.structure.EconomyStructure;
 import com.youtube.hempfest.goldeco.util.HighestValue;
 import com.youtube.hempfest.goldeco.util.Utility;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.hempcore.library.Items;
 import java.io.File;
@@ -41,7 +42,7 @@ public class PlayerListener implements EconomyStructure {
 
     @Override
     public void set(double amount) {
-        StringLibrary me = new StringLibrary(op.getPlayer()); // TODO: null check?
+        Messaging me = new Messaging(op.getPlayer()); // TODO: null check?
 //        if (op != null) { // this null-check no longer needed object will not exist with null op
         // explanation of next line: op.getUniqueId() will return same UUID for both online+offline
 //        final PlayerData data = PlayerData.get(op.getUniqueId());
@@ -59,7 +60,7 @@ public class PlayerListener implements EconomyStructure {
 
     @Override
     public void add(double amount) {
-        StringLibrary me = new StringLibrary(op.getPlayer()); // TODO: null-check
+        Messaging me = new Messaging(op.getPlayer()); // TODO: null-check
 //        final PlayerData data = PlayerData.get(op.getUniqueId());
 //        final FileConfiguration fc = data.getConfig();
         if (op.isOnline()) {
@@ -78,7 +79,7 @@ public class PlayerListener implements EconomyStructure {
 
     @Override
     public void add(double amount, String worldName) {
-        StringLibrary me = new StringLibrary(op.getPlayer()); // TODO: null-check
+        Messaging me = new Messaging(op.getPlayer()); // TODO: null-check
         if (op.isOnline()) {
             double current = fc.getDouble("player." + worldName + ".balance");
             double result = current + amount;
@@ -95,7 +96,7 @@ public class PlayerListener implements EconomyStructure {
 
     @Override
     public void remove(double amount) {
-        StringLibrary me = new StringLibrary(op.getPlayer());
+        Messaging me = new Messaging(op.getPlayer());
         if (op.isOnline()) {
             double current = fc.getDouble("player." + op.getPlayer().getWorld().getName() + ".balance"); // TODO: null-check
             double result = current - amount;
@@ -112,7 +113,7 @@ public class PlayerListener implements EconomyStructure {
 
     @Override
     public void remove(double amount, String worldName) {
-        StringLibrary me = new StringLibrary(op.getPlayer());
+        Messaging me = new Messaging(op.getPlayer());
         if (op.isOnline()) {
             double current = fc.getDouble("player." + worldName + ".balance");
             double result = current - amount;
@@ -199,7 +200,7 @@ public class PlayerListener implements EconomyStructure {
 
     @Override
     public void buy(String item, int amount) { // TODO: This method needs to decide how to deal with OfflinePlayers
-        StringLibrary me = new StringLibrary(op.getPlayer());
+        Messaging me = new Messaging(op.getPlayer());
 //        GoldEconomy plugin = GoldEconomy.getInstance();
         Config items = Config.get("shop_items");
         Config main = Config.get("shop_config");
@@ -229,7 +230,7 @@ public class PlayerListener implements EconomyStructure {
 
     @Override
     public void sell(String item, int amount) { // TODO: null-check getPlayer
-        StringLibrary me = new StringLibrary(op.getPlayer());
+        Messaging me = new Messaging(op.getPlayer());
         Config items = Config.get("shop_items");
         Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();

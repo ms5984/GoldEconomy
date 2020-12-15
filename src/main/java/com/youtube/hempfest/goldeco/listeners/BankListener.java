@@ -3,6 +3,7 @@ package com.youtube.hempfest.goldeco.listeners;
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.BankData;
 import com.youtube.hempfest.goldeco.structure.EconomyStructure;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
 import org.bukkit.Bukkit;
@@ -67,7 +68,7 @@ public class BankListener implements EconomyStructure {
         OfflinePlayer pl = Bukkit.getPlayer(GoldEconomy.getBankOwner(accountID));
         if (pl != null) {
             if (pl.isOnline()) {
-                StringLibrary me = new StringLibrary(pl.getPlayer());
+                Messaging me = new Messaging(pl.getPlayer());
 //                PlayerListener el = new PlayerListener();
                 me.msg(StringLibrary.accountBalanceSet(accountID, PlayerListener.format(amount)));
                 return;
@@ -86,7 +87,7 @@ public class BankListener implements EconomyStructure {
         if (Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", "")) < amount) {
             // not enough
             if (op.isOnline()) {
-                StringLibrary lib = new StringLibrary(op.getPlayer());
+                Messaging lib = new Messaging(op.getPlayer());
                 lib.msg(StringLibrary.notEnoughMoney(op.getPlayer().getWorld().getName()));
             }
             return;
@@ -95,7 +96,7 @@ public class BankListener implements EconomyStructure {
         fc.set("banks." + op.getName() + ".balance", result);
         bank.saveConfig();
         if (op.isOnline()) {
-            StringLibrary lib = new StringLibrary(op.getPlayer());
+            Messaging lib = new Messaging(op.getPlayer());
             lib.msg(StringLibrary.accountDeposit(String.valueOf(amount), get(Utility.NAME)));
         }
     }
@@ -111,7 +112,7 @@ public class BankListener implements EconomyStructure {
         if (Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", "")) < amount) {
             // not enough
             if (op.isOnline()) {
-                StringLibrary lib = new StringLibrary(op.getPlayer());
+                Messaging lib = new Messaging(op.getPlayer());
                 lib.msg(StringLibrary.notEnoughMoney(op.getPlayer().getWorld().getName()));
             }
             return;
@@ -120,7 +121,7 @@ public class BankListener implements EconomyStructure {
         fc.set("banks." + op.getName() + ".balance", result);
         bank.saveConfig();
         if (op.isOnline()) {
-            StringLibrary lib = new StringLibrary(op.getPlayer());
+            Messaging lib = new Messaging(op.getPlayer());
             lib.msg(StringLibrary.accountDeposit(String.valueOf(amount), get(Utility.NAME)));
         }
     }
@@ -136,7 +137,7 @@ public class BankListener implements EconomyStructure {
         if (Double.valueOf(get(Utility.BALANCE)) < amount) {
             // not enough
             if (op.isOnline()) {
-                StringLibrary lib = new StringLibrary(op.getPlayer());
+                Messaging lib = new Messaging(op.getPlayer()); // this will npe on offline players
                 lib.msg(StringLibrary.notEnoughMoney(op.getPlayer().getWorld().getName()));
             }
             return;
@@ -145,7 +146,7 @@ public class BankListener implements EconomyStructure {
         fc.set("banks." + op.getName() + ".balance", result);
         bank.saveConfig();
         if (op.isOnline()) {
-            StringLibrary lib = new StringLibrary(op.getPlayer());
+            Messaging lib = new Messaging(op.getPlayer());
             lib.msg(StringLibrary.accountWithdraw(String.valueOf(amount), get(Utility.NAME)));
         }
     }
@@ -160,7 +161,7 @@ public class BankListener implements EconomyStructure {
     if (!GoldEconomy.getWorlds().contains(worldName)) {
         if (op.isOnline()) {
             Player p = op.getPlayer();
-            StringLibrary lib = new StringLibrary(p);
+            Messaging lib = new Messaging(p);
             lib.msg(StringLibrary.accountNotAllowed());
         }
         return;
@@ -172,7 +173,7 @@ public class BankListener implements EconomyStructure {
                 fc.set("banks." + op.getName() + ".balance", 0.0);
                 if (op.isOnline()) {
                     Player p = op.getPlayer();
-                    StringLibrary lib = new StringLibrary(p);
+                    Messaging lib = new Messaging(p);
                     lib.msg(StringLibrary.accountMade(accountID, p.getWorld().getName()));
                 }
                 world.saveConfig();

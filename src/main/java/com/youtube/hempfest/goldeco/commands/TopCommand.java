@@ -5,6 +5,7 @@ import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
 import com.youtube.hempfest.goldeco.util.HighestValue;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.hempcore.formatting.component.Text;
 import com.youtube.hempfest.hempcore.formatting.component.Text_R2;
@@ -42,7 +43,7 @@ public class TopCommand extends GoldEconomyCommandBase {
 
     private void getLeaderboard(Player p, int page) {
 //        PlayerListener el = new PlayerListener();
-        StringLibrary sl = new StringLibrary(p);
+        Messaging sl = new Messaging(p);
             int o = 10;
 
             HashMap<String, Double> players = new HashMap<String, Double>();
@@ -166,7 +167,7 @@ public class TopCommand extends GoldEconomyCommandBase {
          */
 
         if (length == 0) {
-            StringLibrary me = new StringLibrary(p);
+            Messaging me = new Messaging(p);
             if (!p.hasPermission(this.getPermission())) {
                 me.msg(noPermission(this.getPermission()));
                 return true;
@@ -176,7 +177,7 @@ public class TopCommand extends GoldEconomyCommandBase {
         }
 
         if (length == 1) {
-            StringLibrary me = new StringLibrary(p);
+            Messaging me = new Messaging(p);
             if (!p.hasPermission(this.getPermission())) {
                 me.msg(noPermission(this.getPermission()));
                 return true;

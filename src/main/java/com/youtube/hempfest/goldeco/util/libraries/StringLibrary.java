@@ -1,386 +1,238 @@
 package com.youtube.hempfest.goldeco.util.libraries;
 
 import com.youtube.hempfest.goldeco.GoldEconomy;
-import com.youtube.hempfest.goldeco.data.independant.Config;
-import com.youtube.hempfest.goldeco.util.HighestValue;
-import com.youtube.hempfest.hempcore.formatting.component.Text;
-import com.youtube.hempfest.hempcore.formatting.component.Text_R2;
-import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 import java.util.Objects;
-import java.util.TreeMap;
+import java.util.Properties;
 
 public class StringLibrary {
-    private final CommandSender p;
-    private static final String PREFIX = "&7[&6&lEconomy&7]&r -"; // TODO: localization
-    private static final Config SHOP_MESSAGES = Config.get("shop_messages");
-    private static FileConfiguration fc = SHOP_MESSAGES.getConfig();
-    public static final Text TEXT_1_16 = new Text();
+    private static StringLibrary instance;
+    private final Properties p;
 
-    static {
-        if (!SHOP_MESSAGES.exists()) {
-            InputStream i = GoldEconomy.getInstance().getResource("shop_messages.yml");
-            SHOP_MESSAGES.copyFromResource(i);
+    private StringLibrary() {
+        instance = this;
+        this.p = new Properties();
+    }
+    public StringLibrary(GoldEconomy goldEconomy) {
+        this();
+        try {
+            p.load(goldEconomy.getResource("messages.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public StringLibrary(GoldEconomy goldEconomy, String region) {
+        this();
+        try {
+            p.load(goldEconomy.getResource("lang/messages".concat(region).concat(".properties")));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public StringLibrary(@NotNull CommandSender p) {
-        this.p = Objects.requireNonNull(p);
+    public static String buyList1(int page) {
+        return Objects.requireNonNull(instance.p.getProperty("buy-list.pages"))
+                .replaceAll("%page%", String.valueOf(page));
     }
 
-    public void msg(String text) {
-        p.sendMessage(new ColoredString(PREFIX + " " + text, ColoredString.ColorType.MC).toString());
+    public static String buyHover(String nextTop) {
+        return instance.p.getProperty("buy-list.hover").replaceAll("%nextTop%", nextTop);
     }
 
-    public void text(String text) {
-        p.sendMessage(new ColoredString(text, ColoredString.ColorType.MC).toString());
+    public static String sellList1(int page) {
+        return Objects.requireNonNull(instance.p.getProperty("sell-list.pages"))
+                .replaceAll("%page%", String.valueOf(page));
     }
 
-    private static void sendMessage(Player player, String s) {
-        player.sendMessage(new ColoredString(s, ColoredString.ColorType.MC).toString());
+    public static String sellHover(String nextTop) {
+        return instance.p.getProperty("sell-list.hover").replaceAll("%nextTop%", nextTop);
     }
 
-    private static void sendComponent(Player player, TextComponent text) {
-        player.spigot().sendMessage(text);
+    public enum Lang {
+        PREFIX("PREFIX"),
+        navigate("navigate"),
+        NEXT("word.NEXT"),
+        BACK("word.BACK"),
+        ListToNextPage("list.to-next"),
+        ListGoBack("list.go-back"),
+        ListEmpty("empty-list"),
+        OnlyOnePage("pages.single");
+
+        private final String s;
+
+        Lang(String key) {
+            this.s = key;
+        }
+
+        public String get() {
+            return instance.p.getProperty(s);
+        }
+    }
+
+    public static String pagesLeft(int count) {
+        return instance.p.getProperty("pages.plural").replaceAll("%totalPageCount%", String.valueOf(count));
+    }
+
+    public enum Menu {
+        Title("menu.title"),
+        Horizontal_Rule("menu.hr"),
+        Line1("menu.1"),
+        Line2("menu.2"),
+        Line3("menu.3"),
+        Line4("menu.4"),
+        Line5("menu.5"),
+        Line6("menu.6"),
+        Staff1("menu.s1"),
+        Staff2("menu.s2"),
+        Staff3("menu.s3"),
+        Staff4("menu.s4"),
+        Staff5("menu.s5");
+
+        private final String s;
+
+        Menu(String s) {
+            this.s = s;
+        }
+
+        public String get() {
+            return instance.p.getProperty(s);
+        }
     }
 
     public static String invalidDouble() {
-        return fc.getString("invalid-double");
+        return instance.p.getProperty("invalid-double");
     }
 
     public static String invalidInteger() {
-        return fc.getString("invalid-integer");
+        return instance.p.getProperty("invalid-integer");
     }
 
     public static String notEnoughMoney(String world) {
-        return Objects.requireNonNull(fc.getString("not-enough-money")).replaceAll("%world%", world);
+        return Objects.requireNonNull(instance.p.getProperty("not-enough-money")).replaceAll("%world%", world);
     }
 
     public static String notEnoughSpace() {
-        return fc.getString("not-enough-space");
+        return instance.p.getProperty("not-enough-space");
     }
 
     public static String amountTooLarge() {
-        return fc.getString("amount-too-large");
+        return instance.p.getProperty("amount-too-large");
     }
 
     public static String nameUnknown(String replacement) {
-        return Objects.requireNonNull(fc.getString("name-unknown")).replaceAll("%args%", replacement);
+        return Objects.requireNonNull(instance.p.getProperty("name-unknown"))
+                .replaceAll("%args%", replacement);
     }
 
     public static String nameNeeded() {
-        return fc.getString("name-needed");
+        return instance.p.getProperty("name-needed");
     }
 
     public static String money(String world, String amount, String currency) {
-        return Objects.requireNonNull(fc.getString("money"))
+        return Objects.requireNonNull(instance.p.getProperty("money"))
                 .replaceAll("%world%", world)
                 .replaceAll("%amount%", amount)
                 .replaceAll("%currency%", currency);
     }
 
     public static String moneySent(String amount, String recipientName) {
-        return Objects.requireNonNull(fc.getString("money-sent"))
+        return Objects.requireNonNull(instance.p.getProperty("money-sent"))
                 .replaceAll("%amount%", amount).replaceAll("%player%", recipientName);
     }
 
     public static String moneySet(String amount) {
-        return Objects.requireNonNull(fc.getString("money-set")).replaceAll("%amount%", amount);
+        return Objects.requireNonNull(instance.p.getProperty("money-set")).replaceAll("%amount%", amount);
     }
 
     public static String moneyReceived(String senderName, String amount) {
-        return Objects.requireNonNull(fc.getString("money-received"))
+        return Objects.requireNonNull(instance.p.getProperty("money-received"))
                 .replaceAll("%player%", senderName).replaceAll("%amount%", amount);
     }
 
     public static String moneyTaken(String amount, String balance) {
-        return Objects.requireNonNull(fc.getString("money-taken"))
+        return Objects.requireNonNull(instance.p.getProperty("money-taken"))
                 .replaceAll("%amount%", amount).replaceAll("%balance%", balance);
     }
 
     public static String moneyGiven(String amount, String balance) {
-        return Objects.requireNonNull(fc.getString("money-given"))
+        return Objects.requireNonNull(instance.p.getProperty("money-given"))
                 .replaceAll("%amount%", amount)
                 .replaceAll("%balance%", balance);
     }
 
     public static String moneyDeposited(String amount) {
-        return Objects.requireNonNull(fc.getString("money-deposited"))
+        return Objects.requireNonNull(instance.p.getProperty("money-deposited"))
                 .replaceAll("%amount%", amount);
     }
 
     public static String moneyWithdrawn(String amount) {
-        return Objects.requireNonNull(fc.getString("money-withdrawn"))
+        return Objects.requireNonNull(instance.p.getProperty("money-withdrawn"))
                 .replaceAll("%amount%", amount);
     }
 
     public static String playerNotFound() {
-        return fc.getString("player-not-found");
+        return instance.p.getProperty("player-not-found");
     }
 
     public static String maxWithdrawReached() {
-        return fc.getString("max-withdraw-reached");
+        return instance.p.getProperty("max-withdraw-reached");
     }
 
     public static String accountMade(String account, String accountWorld) {
-        return Objects.requireNonNull(fc.getString("account-made"))
+        return Objects.requireNonNull(instance.p.getProperty("account-made"))
                 .replaceAll("%account%", account)
                 .replaceAll("%account_world%", accountWorld);
     }
 
     public static String accountDeposit(String amount, String account) {
-        return Objects.requireNonNull(fc.getString("account-deposit"))
+        return Objects.requireNonNull(instance.p.getProperty("account-deposit"))
                 .replaceAll("%amount%", amount)
                 .replaceAll("%account%", account);
     }
 
     public static String accountWithdraw(String amount, String account) {
-        return Objects.requireNonNull(fc.getString("account-withdraw"))
+        return Objects.requireNonNull(instance.p.getProperty("account-withdraw"))
                 .replaceAll("%amount%", amount)
                 .replaceAll("%account%", account);
     }
 
     public static String accountAlreadyMade() {
-        return fc.getString("account-already-made");
+        return instance.p.getProperty("account-already-made");
     }
 
     public static String accountNotAllowed() {
-        return fc.getString("account-not-allowed");
+        return instance.p.getProperty("account-not-allowed");
     }
 
     public static String accountBalanceSet(String account, String newBalance) {
-        return Objects.requireNonNull(fc.getString("account-balance-set"))
+        return Objects.requireNonNull(instance.p.getProperty("account-balance-set"))
                 .replaceAll("%account%", account)
                 .replaceAll("%balance%", newBalance);
     }
 
     public static String staffAccountSet(String account, String amount) {
-        return Objects.requireNonNull(fc.getString("staff-account-set"))
+        return Objects.requireNonNull(instance.p.getProperty("staff-account-set"))
                 .replaceAll("%account%", account)
                 .replaceAll("%amount%", amount);
     }
 
     public static String staffMoneySet(String player, String amount) {
-        return Objects.requireNonNull(fc.getString("staff-money-set"))
+        return Objects.requireNonNull(instance.p.getProperty("staff-money-set"))
                 .replaceAll("%player%", player)
                 .replaceAll("%amount%", amount);
     }
 
     public static String staffMoneyGiven(String amount, String player) {
-        return Objects.requireNonNull(fc.getString("staff-money-given"))
+        return Objects.requireNonNull(instance.p.getProperty("staff-money-given"))
                 .replaceAll("%amount%", amount)
                 .replaceAll("%player%", player);
     }
 
     public static String staffMoneyTaken(String amount, String player) {
-        return Objects.requireNonNull(fc.getString("staff-money-taken"))
+        return Objects.requireNonNull(instance.p.getProperty("staff-money-taken"))
                 .replaceAll("%amount%", amount)
                 .replaceAll("%player%", player);
     }
-
-    public static void getBuyList(Player p, int page) {
-        int o = 10;
-
-        HashMap<String, Double> players = new HashMap<>();
-
-        // Filling the hashMap
-        for (String itemName : ItemManager.getShopContents()) {
-            players.put(itemName, ItemManager.getItemPrice(ItemManager.indexPrice.PURCHASE, itemName));
-        }
-
-        sendMessage(p, "&7&m------------&7&l[&6&oPage &l" + page + " &7: &6&oBuylist&7&l]&7&m------------");
-        int totalPageCount = 1;
-        if ((players.size() % o) == 0) {
-            if (players.size() > 0) {
-                totalPageCount = players.size() / o;
-            }
-        } else {
-            totalPageCount = (players.size() / o) + 1;
-        }
-        String nextTop = "";
-        Double nextTopBal = 0.0;
-
-
-
-
-        if (page <= totalPageCount) {
-            // beginline
-            if (players.isEmpty()) {
-                p.sendMessage(ChatColor.WHITE + "The list is empty!");
-            } else {
-                int i1 = 0, k = 0;
-                page--;
-                HighestValue comp =  new HighestValue(players);
-                TreeMap<String,Double> sorted_map =new TreeMap<String,Double>(comp);
-
-
-                sorted_map.putAll(players);
-
-
-                for (Map.Entry<String, Double> clanName : sorted_map.entrySet()) {
-
-                    if (clanName.getValue() > nextTopBal) {
-                        nextTop = clanName.getKey();
-                        nextTopBal = clanName.getValue();
-
-
-
-                    }
-
-                    int pagee = page + 1;
-
-                    k++;
-                    if ((((page * o) + i1 + 1) == k) && (k != ((page * o) + o + 1))) {
-                        i1++;
-                        if (Bukkit.getServer().getVersion().contains("1.16")) {
-                            sendComponent(p, TEXT_1_16.textRunnable( "",
-                                    " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + nextTopBal,
-                                    "&6" + nextTop + " &a&oClick to purchase.", "buy 1 " + nextTop));
-                        } else {
-                            sendComponent(p, Text_R2.textRunnable( "",
-                                    " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + nextTopBal,
-                                    "&6" + nextTop + " &a&oClick to purchase.", "buy 1 " + nextTop));
-                        }
-
-                    }
-                    players.remove(nextTop);
-                    nextTop = "";
-                    nextTopBal = 0.0;
-
-                }
-
-                int point; point = page + 1; if (page >= 1) {
-                    int last; last = point - 1; point = point + 1;
-                    if (Bukkit.getServer().getVersion().contains("1.16")) {
-                        sendComponent(p, TEXT_1_16.textRunnable("&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "buylist " + point, "buylist " + last));
-                    } else {
-                        sendComponent(p, Text_R2.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "buylist " + point, "buylist " + last));
-                    }
-                } if (page == 0) {
-                    point = page + 1 + 1;
-                    if (Bukkit.getServer().getVersion().contains("1.16")) {
-                        sendComponent(p, TEXT_1_16.textRunnable("&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "buylist " + point));
-                    } else {
-                        sendComponent(p, Text_R2.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "buylist " + point));
-                    }
-                }
-
-
-            }
-            // endline
-        } else
-        {
-            p.sendMessage(ChatColor.DARK_AQUA + "There are only " + ChatColor.GRAY + totalPageCount + ChatColor.DARK_AQUA + " pages!");
-
-        }
-    }
-
-    public static void getSellList(Player p, int page) {
-        int o = 10;
-
-        HashMap<String, Double> players = new HashMap<String, Double>();
-
-        // Filling the hashMap
-        for (String itemName : ItemManager.getShopContents()) {
-            players.put(itemName, ItemManager.getItemPrice(ItemManager.indexPrice.SELL, itemName));
-        }
-
-        sendMessage(p, "&7&m------------&7&l[&6&oPage &l" + page + " &7: &6&oSellList&7&l]&7&m------------");
-        int totalPageCount = 1;
-        if ((players.size() % o) == 0) {
-            if (players.size() > 0) {
-                totalPageCount = players.size() / o;
-            }
-        } else {
-            totalPageCount = (players.size() / o) + 1;
-        }
-        String nextTop = "";
-        Double nextTopBal = 0.0;
-
-
-
-
-        if (page <= totalPageCount) {
-            // beginline
-            if (players.isEmpty()) {
-                p.sendMessage(ChatColor.WHITE + "The list is empty!");
-            } else {
-                int i1 = 0, k = 0;
-                page--;
-                HighestValue comp =  new HighestValue(players);
-                TreeMap<String,Double> sorted_map =new TreeMap<String,Double>(comp);
-
-
-                sorted_map.putAll(players);
-
-
-                for (Map.Entry<String, Double> clanName : sorted_map.entrySet()) {
-
-                    if (clanName.getValue() > nextTopBal) {
-                        nextTop = clanName.getKey();
-                        nextTopBal = clanName.getValue();
-
-
-
-                    }
-
-                    int pagee = page + 1;
-
-                    k++;
-                    if ((((page * o) + i1 + 1) == k) && (k != ((page * o) + o + 1))) {
-                        i1++;
-                        if (Bukkit.getServer().getVersion().contains("1.16")) {
-                            sendComponent(p, TEXT_1_16.textRunnable("",
-                                    " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + nextTopBal,
-                                    "&6" + nextTop + " &a&oClick to sell.", "buy 1 " + nextTop));
-                        } else {
-                            sendComponent(p, Text_R2.textRunnable( "",
-                                    " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + nextTopBal,
-                                    "&6" + nextTop + " &a&oClick to sell.", "buy 1 " + nextTop));
-                        }
-
-                    }
-                    players.remove(nextTop);
-                    nextTop = "";
-                    nextTopBal = 0.0;
-
-                }
-
-                int point; point = page + 1; if (page >= 1) {
-                    int last; last = point - 1; point = point + 1;
-                    if (Bukkit.getServer().getVersion().contains("1.16")) {
-                        sendComponent(p, TEXT_1_16.textRunnable("&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "selllist " + point, "selllist " + last));
-                    } else {
-                        sendComponent(p, Text_R2.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "selllist " + point, "selllist " + last));
-                    }
-                } if (page == 0) {
-                    point = page + 1 + 1;
-                    if (Bukkit.getServer().getVersion().contains("1.16")) {
-                        sendComponent(p, TEXT_1_16.textRunnable("&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "selllist " + point));
-                    } else {
-                        sendComponent(p, Text_R2.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "selllist " + point));
-                    }
-                }
-
-
-            }
-            // endline
-        } else
-        {
-            p.sendMessage(ChatColor.DARK_AQUA + "There are only " + ChatColor.GRAY + totalPageCount + ChatColor.DARK_AQUA + " pages!");
-
-        }
-    }
-
 
 }

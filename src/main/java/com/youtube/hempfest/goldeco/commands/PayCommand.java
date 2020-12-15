@@ -3,6 +3,7 @@ package com.youtube.hempfest.goldeco.commands;
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
 import org.bukkit.Bukkit;
@@ -42,7 +43,7 @@ public class PayCommand extends GoldEconomyCommandBase {
         Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
-        StringLibrary me = new StringLibrary(p);
+        Messaging me = new Messaging(p);
         /*
         //  /\ /\ /\ /\ /\ /\
         //
@@ -91,7 +92,7 @@ public class PayCommand extends GoldEconomyCommandBase {
             player.set(pCurrent - Double.parseDouble(args[1]));
             target.set(tCurrent + Double.parseDouble(args[1]));
             me.msg(StringLibrary.moneySent(args[1], tar.getName()));
-            StringLibrary them = new StringLibrary(tar);
+            Messaging them = new Messaging(tar);
             them.msg(StringLibrary.moneyReceived(args[1], p.getName()));
             return true;
         }

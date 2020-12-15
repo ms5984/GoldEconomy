@@ -9,6 +9,7 @@ import com.youtube.hempfest.goldeco.listeners.PlayerListener;
 import com.youtube.hempfest.goldeco.listeners.vault.VaultListener;
 import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
 import com.youtube.hempfest.goldeco.util.libraries.ItemManager;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
 import com.youtube.hempfest.hempcore.library.Items;
@@ -46,7 +47,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 
     private void sendPrefixedMessage(CommandSender player, String message) {
         if (player instanceof Player) {
-            new StringLibrary((Player) player).msg(message); // may convert to static unsure
+            new Messaging(player).msg(message); // may convert to static unsure
         }
     }
 
@@ -139,7 +140,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
             FileConfiguration fc = main.getConfig();
             if (length == 0) {
                 ArrayList<String> help = new ArrayList<>();
-                sendPrefixedMessage(commandSender, "Command list"); // was sending prefix twice
+/*                sendPrefixedMessage(commandSender, "Command list"); // was sending prefix twice
                 help.add("&m-------------------------------");
                 help.add(" &7/shop&f,&7menu&f,&7gui&f - &oOpens the economy GUI.");
                 help.add(" &7/buy&f - &oBuy an item from the shop");
@@ -152,7 +153,21 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 help.add(" &7/eco &eset&f - &b&oSet a specified players wallet balance");
                 help.add(" &7/eco &breload&f - &b&oReload the configuration.");
                 help.add(" &7/eco &6update&f - &b&oCheck if the config needs an update.");
-                help.add("&m-------------------------------");
+                help.add("&m-------------------------------");*/
+                sendPrefixedMessage(commandSender, StringLibrary.Menu.Title.get()); // was sending prefix twice
+                help.add(StringLibrary.Menu.Horizontal_Rule.get());
+                help.add(" " + StringLibrary.Menu.Line1.get());
+                help.add(" " + StringLibrary.Menu.Line2.get());
+                help.add(" " + StringLibrary.Menu.Line3.get());
+                help.add(" " + StringLibrary.Menu.Line4.get());
+                help.add(" " + StringLibrary.Menu.Line5.get());
+                help.add(" " + StringLibrary.Menu.Line6.get());
+                help.add(" " + StringLibrary.Menu.Staff1.get());
+                help.add(" " + StringLibrary.Menu.Staff2.get());
+                help.add(" " + StringLibrary.Menu.Staff3.get());
+                help.add(" " + StringLibrary.Menu.Staff4.get());
+                help.add(" " + StringLibrary.Menu.Staff5.get());
+                help.add(StringLibrary.Menu.Horizontal_Rule.get());
                 help.add(" ");
                 for (String list : help) {
                     sendMessage(commandSender, list);
@@ -313,7 +328,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
         Player p = (Player) commandSender;
         Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
-        StringLibrary me = new StringLibrary(p);
+        Messaging me = new Messaging(commandSender);
         String withdrawType = "";
         try {
             switch (fc.getString("Economy.drop-type")) {
@@ -336,7 +351,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
          */
         if (length == 0) {
             ArrayList<String> help = new ArrayList<>();
-            me.msg("Command list");
+/*            me.msg("Command list");
             help.add("&m-------------------------------");
             help.add(" &7/shop&f,&7menu&f,&7gui&f - &oOpens the economy GUI.");
             help.add(" &7/buy&f - &oBuy an item from the shop");
@@ -351,7 +366,23 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 help.add(" &7/eco &breload&f - &b&oReload the configuration.");
                 help.add(" &7/eco &6update&f - &b&oCheck if the config needs an update.");
             }
-            help.add("&m-------------------------------");
+            help.add("&m-------------------------------");*/
+            me.msg(StringLibrary.Menu.Title.get());
+            help.add(StringLibrary.Menu.Horizontal_Rule.get());
+            help.add(" " + StringLibrary.Menu.Line1.get());
+            help.add(" " + StringLibrary.Menu.Line2.get());
+            help.add(" " + StringLibrary.Menu.Line3.get());
+            help.add(" " + StringLibrary.Menu.Line4.get());
+            help.add(" " + StringLibrary.Menu.Line5.get());
+            help.add(" " + StringLibrary.Menu.Line6.get());
+            if (p.hasPermission(this.getPermission() + ".staff")) {
+                help.add(" " + StringLibrary.Menu.Staff1.get());
+                help.add(" " + StringLibrary.Menu.Staff2.get());
+                help.add(" " + StringLibrary.Menu.Staff3.get());
+                help.add(" " + StringLibrary.Menu.Staff4.get());
+                help.add(" " + StringLibrary.Menu.Staff5.get());
+            }
+            help.add(StringLibrary.Menu.Horizontal_Rule.get());
             help.add(" ");
             for (String list : help) {
                 me.text(list);
@@ -362,7 +393,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
         if (length == 1) {
             if (args[0].equalsIgnoreCase("buy") || args[0].equalsIgnoreCase("sell")) {
 //                me = new StringLibrary(p, args[0]);
-                me = new StringLibrary(p);
+                me = new Messaging(p);
                 me.msg(StringLibrary.nameUnknown("Type an item type by name including a specified amount."));
             }
             if (args[0].equalsIgnoreCase("withdraw") || args[0].equalsIgnoreCase("deposit")) {

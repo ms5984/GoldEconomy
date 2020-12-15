@@ -2,7 +2,7 @@ package com.youtube.hempfest.goldeco.commands;
 
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
-import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,7 +46,7 @@ public class ShopCommand extends GoldEconomyCommandBase {
          */
 
         if (length == 0) {
-            StringLibrary me = new StringLibrary(p);
+            Messaging me = new Messaging(p);
             if (!p.hasPermission(this.getPermission())) {
                 me.msg(noPermission(this.getPermission()));
                 return true;

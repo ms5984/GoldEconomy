@@ -2,6 +2,7 @@ package com.youtube.hempfest.goldeco.commands;
 
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -41,7 +42,7 @@ public class BuyCommand extends GoldEconomyCommandBase {
         Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
-        StringLibrary me = new StringLibrary(p);
+        Messaging me = new Messaging(p);
         /*
         //  /\ /\ /\ /\ /\ /\
         //
@@ -58,7 +59,7 @@ public class BuyCommand extends GoldEconomyCommandBase {
 
         if (length == 1) {
 //            me = new StringLibrary(p, args[0]); // what is this signature supposed to do
-            me = new StringLibrary(p);
+            me = new Messaging(p);
             if (!p.hasPermission(this.getPermission())) {
                 me.msg(noPermission(this.getPermission()));
                 return true;

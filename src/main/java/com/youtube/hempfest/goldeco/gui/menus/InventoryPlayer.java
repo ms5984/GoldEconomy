@@ -7,6 +7,7 @@ import com.youtube.hempfest.goldeco.gui.MenuManager;
 import com.youtube.hempfest.goldeco.gui.menus.paginated.InventoryBrowse;
 import com.youtube.hempfest.goldeco.listeners.BankListener;
 import com.youtube.hempfest.goldeco.listeners.PlayerListener;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.goldeco.util.Utility;
 import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
@@ -113,7 +114,7 @@ public class InventoryPlayer extends EcoMenu {
             if (e.getCurrentItem().getItemMeta().getDisplayName().contains("WITHDRAW")) {
                 if (e.getCurrentItem().getAmount() == 1) {
                     PlayerListener el = new PlayerListener(p);
-                    StringLibrary me = new StringLibrary(p);
+                    Messaging me = new Messaging(p);
                     double cost = fc.getDouble("Economy.currency-worth." + items.get(1)) * 1;
 
                     if (cost > Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", ""))) {
@@ -134,7 +135,7 @@ public class InventoryPlayer extends EcoMenu {
                 }
                 if (e.getCurrentItem().getAmount() == 32) {
                     PlayerListener el = new PlayerListener(p);
-                    StringLibrary me = new StringLibrary(p);
+                    Messaging me = new Messaging(p);
                     double amount = fc.getDouble("Economy.currency-worth." + items.get(1)) * 32;
                     if (amount > Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", ""))) {
                         me.msg(StringLibrary.notEnoughMoney(p.getWorld().getName()));
@@ -154,7 +155,7 @@ public class InventoryPlayer extends EcoMenu {
                 }
                 if (e.getCurrentItem().getAmount() == 64) {
                     PlayerListener el = new PlayerListener(p);
-                    StringLibrary me = new StringLibrary(p);
+                    Messaging me = new Messaging(p);
                     double amount = fc.getDouble("Economy.currency-worth." + items.get(1)) * 64;
                     if (amount > Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", ""))) {
                         me.msg(StringLibrary.notEnoughMoney(p.getWorld().getName()));

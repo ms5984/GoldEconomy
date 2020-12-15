@@ -3,6 +3,7 @@ package com.youtube.hempfest.goldeco.commands;
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.util.GoldEconomyCommandBase;
+import com.youtube.hempfest.goldeco.util.libraries.Messaging;
 import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -40,7 +41,7 @@ public class SelllistCommand extends GoldEconomyCommandBase {
         Config main = Config.get("shop_config");
         FileConfiguration fc = main.getConfig();
         String currency = fc.getString("Economy.custom-currency.name");
-        StringLibrary me = new StringLibrary(p);
+        Messaging me = new Messaging(p);
         /*
         //  /\ /\ /\ /\ /\ /\
         //
@@ -55,7 +56,7 @@ public class SelllistCommand extends GoldEconomyCommandBase {
                 me.msg("&c&oUse of the &6&oGoldEconomy &c&oitem shop is disabled on this server.");
                 return true;
             }
-            me.getSellList(p, 1);
+            Messaging.getSellList(p, 1);
             return true;
         }
 
@@ -68,7 +69,7 @@ public class SelllistCommand extends GoldEconomyCommandBase {
                 me.msg("&c&oUse of the &6&oGoldEconomy &c&oitem shop is disabled on this server.");
                 return true;
             }
-            me.getSellList(p, Integer.parseInt(args[0]));
+            Messaging.getSellList(p, Integer.parseInt(args[0]));
             return true;
         }
 
