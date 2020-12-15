@@ -10,6 +10,7 @@ import com.youtube.hempfest.goldeco.listeners.vault.VaultEconomy;
 import com.youtube.hempfest.goldeco.listeners.vault.VaultListener;
 import com.youtube.hempfest.goldeco.structure.EconomyStructure;
 import com.youtube.hempfest.goldeco.util.Metrics;
+import com.youtube.hempfest.goldeco.util.libraries.StringLibrary;
 import com.youtube.hempfest.hempcore.command.CommandBuilder;
 import com.youtube.hempfest.hempcore.event.EventBuilder;
 import org.bukkit.Bukkit;
@@ -18,10 +19,12 @@ import org.bukkit.OfflinePlayer;
 //import org.bukkit.command.CommandMap;
 //import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.InputStream;
 //import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -45,6 +48,7 @@ public class GoldEconomy extends JavaPlugin {
 	public void onEnable() {
 		log.info(String.format("[%s] - Loading economy files.", getDescription().getName()));
 //		registerCommands();
+		loadStringLibrary();
 		new CommandBuilder(this).compileFields("com.youtube.hempfest.goldeco.commands");
 		registerMetrics(9063);
 		new EventBuilder(this).compileFields("com.youtube.hempfest.goldeco.listeners.bukkit");
@@ -82,6 +86,17 @@ public class GoldEconomy extends JavaPlugin {
 				pm.disablePlugin(this);
 			}
 		}
+	}
+
+	private void loadStringLibrary() {
+		final File config = new File(getDataFolder(), "config.yml");
+		FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(config);
+		final String lang = fileConfiguration.getString("lang");
+		if (lang != null && !lang.isEmpty()) {
+			new StringLibrary(this, lang);
+			return;
+		}
+		new StringLibrary(this);
 	}
 
 	private void registerMetrics(int ID) {
