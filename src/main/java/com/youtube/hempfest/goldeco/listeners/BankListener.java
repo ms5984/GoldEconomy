@@ -69,7 +69,7 @@ public class BankListener implements EconomyStructure {
             if (pl.isOnline()) {
                 StringLibrary me = new StringLibrary(pl.getPlayer());
 //                PlayerListener el = new PlayerListener();
-                me.msg(me.accountBalanceSet().replaceAll("%account%", accountID).replaceAll("%balance%", PlayerListener.format(amount)));
+                me.msg(StringLibrary.accountBalanceSet(accountID, PlayerListener.format(amount)));
                 return;
             }
         }
@@ -87,7 +87,7 @@ public class BankListener implements EconomyStructure {
             // not enough
             if (op.isOnline()) {
                 StringLibrary lib = new StringLibrary(op.getPlayer());
-                lib.msg(lib.notEnoughMoney().replaceAll("%world%", op.getPlayer().getWorld().getName()));
+                lib.msg(StringLibrary.notEnoughMoney(op.getPlayer().getWorld().getName()));
             }
             return;
         }
@@ -96,7 +96,7 @@ public class BankListener implements EconomyStructure {
         bank.saveConfig();
         if (op.isOnline()) {
             StringLibrary lib = new StringLibrary(op.getPlayer());
-            lib.msg(lib.accountDeposit().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%account%", get(Utility.NAME)));
+            lib.msg(StringLibrary.accountDeposit(String.valueOf(amount), get(Utility.NAME)));
         }
     }
 
@@ -112,7 +112,7 @@ public class BankListener implements EconomyStructure {
             // not enough
             if (op.isOnline()) {
                 StringLibrary lib = new StringLibrary(op.getPlayer());
-                lib.msg(lib.notEnoughMoney().replaceAll("%world%", op.getPlayer().getWorld().getName()));
+                lib.msg(StringLibrary.notEnoughMoney(op.getPlayer().getWorld().getName()));
             }
             return;
         }
@@ -121,7 +121,7 @@ public class BankListener implements EconomyStructure {
         bank.saveConfig();
         if (op.isOnline()) {
             StringLibrary lib = new StringLibrary(op.getPlayer());
-            lib.msg(lib.accountDeposit().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%account%", get(Utility.NAME)));
+            lib.msg(StringLibrary.accountDeposit(String.valueOf(amount), get(Utility.NAME)));
         }
     }
 
@@ -137,7 +137,7 @@ public class BankListener implements EconomyStructure {
             // not enough
             if (op.isOnline()) {
                 StringLibrary lib = new StringLibrary(op.getPlayer());
-                lib.msg(lib.notEnoughMoney().replaceAll("%world%", op.getPlayer().getWorld().getName()));
+                lib.msg(StringLibrary.notEnoughMoney(op.getPlayer().getWorld().getName()));
             }
             return;
         }
@@ -146,7 +146,7 @@ public class BankListener implements EconomyStructure {
         bank.saveConfig();
         if (op.isOnline()) {
             StringLibrary lib = new StringLibrary(op.getPlayer());
-            lib.msg(lib.accountWithdraw().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%account%", get(Utility.NAME)));
+            lib.msg(StringLibrary.accountWithdraw(String.valueOf(amount), get(Utility.NAME)));
         }
     }
 
@@ -160,8 +160,8 @@ public class BankListener implements EconomyStructure {
     if (!GoldEconomy.getWorlds().contains(worldName)) {
         if (op.isOnline()) {
             Player p = op.getPlayer();
-            StringLibrary lib = new StringLibrary(p, "");
-            lib.msg(lib.accountNotAllowed());
+            StringLibrary lib = new StringLibrary(p);
+            lib.msg(StringLibrary.accountNotAllowed());
         }
         return;
     }
@@ -172,8 +172,8 @@ public class BankListener implements EconomyStructure {
                 fc.set("banks." + op.getName() + ".balance", 0.0);
                 if (op.isOnline()) {
                     Player p = op.getPlayer();
-                    StringLibrary lib = new StringLibrary(p, "");
-                    lib.msg(lib.accountMade().replaceAll("%account%", accountID).replaceAll("%account_world%", p.getWorld().getName()));
+                    StringLibrary lib = new StringLibrary(p);
+                    lib.msg(StringLibrary.accountMade(accountID, p.getWorld().getName()));
                 }
                 world.saveConfig();
                 return;

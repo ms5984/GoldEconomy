@@ -50,7 +50,7 @@ public class PlayerListener implements EconomyStructure {
             assert op.getPlayer() != null; // removes warn on line below
             fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", amount);
             data.saveConfig();
-            me.msg(me.moneySet().replaceAll("%amount%", format(amount)));
+            me.msg(StringLibrary.moneySet(format(amount)));
             return;
         }
         fc.set("player." + GoldEconomy.getMainWorld() + ".balance", amount);
@@ -67,7 +67,7 @@ public class PlayerListener implements EconomyStructure {
             double result = current + amount;
             fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", result);
             data.saveConfig();
-            me.msg(me.moneyGiven().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
+            me.msg(StringLibrary.moneyGiven(String.valueOf(amount), format(result)));
             return;
         }
         double current = fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance");
@@ -84,7 +84,7 @@ public class PlayerListener implements EconomyStructure {
             double result = current + amount;
             fc.set("player." + worldName + ".balance", result);
             data.saveConfig();
-            me.msg(me.moneyGiven().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
+            me.msg(StringLibrary.moneyGiven(String.valueOf(amount), format(result)));
             return;
         }
         double current = fc.getDouble("player." + worldName + ".balance");
@@ -101,7 +101,7 @@ public class PlayerListener implements EconomyStructure {
             double result = current - amount;
             fc.set("player." + op.getPlayer().getWorld().getName() + ".balance", result);
             data.saveConfig();
-            me.msg(me.moneyTaken().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
+            me.msg(StringLibrary.moneyTaken(String.valueOf(amount), format(result)));
             return;
         }
         double current = fc.getDouble("player." + GoldEconomy.getMainWorld() + ".balance");
@@ -118,7 +118,7 @@ public class PlayerListener implements EconomyStructure {
             double result = current - amount;
             fc.set("player." + worldName + ".balance", result);
             data.saveConfig();
-            me.msg(me.moneyTaken().replaceAll("%amount%", String.valueOf(amount)).replaceAll("%balance%", format(result)));
+            me.msg(StringLibrary.moneyTaken(String.valueOf(amount), format(result)));
             return;
         }
         double current = fc.getDouble("player." + worldName + ".balance");
@@ -213,7 +213,7 @@ public class PlayerListener implements EconomyStructure {
             ItemStack material = new ItemStack(mat);
             for (int i = 0; i < amount; i++) {
                 if (isInventoryFull(op.getPlayer())) {
-                    me.msg(me.notEnoughSpace());
+                    me.msg(StringLibrary.notEnoughSpace());
                     material.setAmount(amount);
                     op.getPlayer().getWorld().dropItemNaturally(op.getPlayer().getLocation(), material);
                     break;
@@ -223,7 +223,7 @@ public class PlayerListener implements EconomyStructure {
         op.getPlayer().updateInventory();
         me.msg("You bought " + '"' + amount + '"' + " " + "&7&o" + item + "&r for " + '"' + itemCost + '"' + " " + currency);
         } else {
-            me.msg(me.notEnoughMoney().replaceAll("%world%", op.getPlayer().getWorld().getName()));
+            me.msg(StringLibrary.notEnoughMoney(op.getPlayer().getWorld().getName()));
         }
     }
 

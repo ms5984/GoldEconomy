@@ -57,14 +57,15 @@ public class BuyCommand extends GoldEconomyCommandBase {
         }
 
         if (length == 1) {
-            me = new StringLibrary(p, args[0]);
+//            me = new StringLibrary(p, args[0]); // what is this signature supposed to do
+            me = new StringLibrary(p);
             if (!p.hasPermission(this.getPermission())) {
                 me.msg(noPermission(this.getPermission()));
                 return true;
             }
             String item = args[0];
             if (isInt(item)) {
-                me.msg(me.nameUnknown().replaceAll("%args%", item));
+                me.msg(StringLibrary.nameUnknown(item));
                 return true;
             }
             Bukkit.dispatchCommand(p, "eco buy " + item);
