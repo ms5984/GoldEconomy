@@ -3,8 +3,8 @@ package com.youtube.hempfest.goldeco.util.libraries;
 import com.youtube.hempfest.goldeco.GoldEconomy;
 import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.util.HighestValue;
-import com.youtube.hempfest.goldeco.util.versions.ComponentR1_16;
-import com.youtube.hempfest.goldeco.util.versions.ComponentR1_8_1;
+import com.youtube.hempfest.hempcore.formatting.component.Text;
+import com.youtube.hempfest.hempcore.formatting.component.Text_R2;
 import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -25,6 +25,7 @@ public class StringLibrary {
     private static final String PREFIX = "&7[&6&lEconomy&7]&r -"; // TODO: localization
     private static final Config SHOP_MESSAGES = Config.get("shop_messages");
     private static FileConfiguration fc = SHOP_MESSAGES.getConfig();
+    public static final Text TEXT_1_16 = new Text();
 
     static {
         if (!SHOP_MESSAGES.exists()) {
@@ -35,10 +36,6 @@ public class StringLibrary {
 
     public StringLibrary(@NotNull CommandSender p) {
         this.p = Objects.requireNonNull(p);
-    }
-
-    public String color(String text) {
-        return ChatColor.translateAlternateColorCodes('&', text);
     }
 
     public void msg(String text) {
@@ -242,11 +239,11 @@ public class StringLibrary {
                     if ((((page * o) + i1 + 1) == k) && (k != ((page * o) + o + 1))) {
                         i1++;
                         if (Bukkit.getServer().getVersion().contains("1.16")) {
-                            sendComponent(p, ComponentR1_16.textRunnable(p, "",
+                            sendComponent(p, TEXT_1_16.textRunnable( "",
                                     " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + nextTopBal,
                                     "&6" + nextTop + " &a&oClick to purchase.", "buy 1 " + nextTop));
                         } else {
-                            sendComponent(p, ComponentR1_8_1.textRunnable( "",
+                            sendComponent(p, Text_R2.textRunnable( "",
                                     " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + nextTopBal,
                                     "&6" + nextTop + " &a&oClick to purchase.", "buy 1 " + nextTop));
                         }
@@ -261,16 +258,16 @@ public class StringLibrary {
                 int point; point = page + 1; if (page >= 1) {
                     int last; last = point - 1; point = point + 1;
                     if (Bukkit.getServer().getVersion().contains("1.16")) {
-                        sendComponent(p, ComponentR1_16.textRunnable(p, "&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "buylist " + point, "buylist " + last));
+                        sendComponent(p, TEXT_1_16.textRunnable("&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "buylist " + point, "buylist " + last));
                     } else {
-                        sendComponent(p, ComponentR1_8_1.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "buylist " + point, "buylist " + last));
+                        sendComponent(p, Text_R2.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "buylist " + point, "buylist " + last));
                     }
                 } if (page == 0) {
                     point = page + 1 + 1;
                     if (Bukkit.getServer().getVersion().contains("1.16")) {
-                        sendComponent(p, ComponentR1_16.textRunnable(p, "&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "buylist " + point));
+                        sendComponent(p, TEXT_1_16.textRunnable("&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "buylist " + point));
                     } else {
-                        sendComponent(p, ComponentR1_8_1.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "buylist " + point));
+                        sendComponent(p, Text_R2.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "buylist " + point));
                     }
                 }
 
@@ -339,11 +336,11 @@ public class StringLibrary {
                     if ((((page * o) + i1 + 1) == k) && (k != ((page * o) + o + 1))) {
                         i1++;
                         if (Bukkit.getServer().getVersion().contains("1.16")) {
-                            sendComponent(p, ComponentR1_16.textRunnable(p, "",
+                            sendComponent(p, TEXT_1_16.textRunnable("",
                                     " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + nextTopBal,
                                     "&6" + nextTop + " &a&oClick to sell.", "buy 1 " + nextTop));
                         } else {
-                            sendComponent(p, ComponentR1_8_1.textRunnable( "",
+                            sendComponent(p, Text_R2.textRunnable( "",
                                     " &7# &3&l" + k + " &b&o" + nextTop + " &7: &6&l" + nextTopBal,
                                     "&6" + nextTop + " &a&oClick to sell.", "buy 1 " + nextTop));
                         }
@@ -358,16 +355,16 @@ public class StringLibrary {
                 int point; point = page + 1; if (page >= 1) {
                     int last; last = point - 1; point = point + 1;
                     if (Bukkit.getServer().getVersion().contains("1.16")) {
-                        sendComponent(p, ComponentR1_16.textRunnable(p, "&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "selllist " + point, "selllist " + last));
+                        sendComponent(p, TEXT_1_16.textRunnable("&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "selllist " + point, "selllist " + last));
                     } else {
-                        sendComponent(p, ComponentR1_8_1.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "selllist " + point, "selllist " + last));
+                        sendComponent(p, Text_R2.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7] : &7[", "&c&lBACK&7]", "&b&oClick this to goto the &5&onext page.", "&b&oClick this to go &d&oback a page.", "selllist " + point, "selllist " + last));
                     }
                 } if (page == 0) {
                     point = page + 1 + 1;
                     if (Bukkit.getServer().getVersion().contains("1.16")) {
-                        sendComponent(p, ComponentR1_16.textRunnable(p, "&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "selllist " + point));
+                        sendComponent(p, TEXT_1_16.textRunnable("&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "selllist " + point));
                     } else {
-                        sendComponent(p, ComponentR1_8_1.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "selllist " + point));
+                        sendComponent(p, Text_R2.textRunnable( "&b&oNavigate &7[", "&3&lNEXT", "&7]", "&b&oClick this to goto the &5&onext page.", "selllist " + point));
                     }
                 }
 
