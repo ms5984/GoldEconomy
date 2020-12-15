@@ -3,6 +3,9 @@ package com.youtube.hempfest.goldeco.util.libraries;
 import com.youtube.hempfest.goldeco.GoldEconomy;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -17,7 +20,8 @@ public class StringLibrary {
     public StringLibrary(GoldEconomy goldEconomy) {
         this();
         try {
-            p.load(goldEconomy.getResource("messages.properties"));
+            final InputStream resource = Objects.requireNonNull(goldEconomy.getResource("messages.properties"));
+            p.load(new InputStreamReader(resource, StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -25,7 +29,8 @@ public class StringLibrary {
     public StringLibrary(GoldEconomy goldEconomy, String region) {
         this();
         try {
-            p.load(goldEconomy.getResource("lang/messages".concat(region).concat(".properties")));
+            final InputStream resource = goldEconomy.getResource("lang/messages".concat(region).concat(".properties"));
+            p.load(new InputStreamReader(Objects.requireNonNull(resource), StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }

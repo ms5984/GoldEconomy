@@ -25,6 +25,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 //import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -91,12 +92,17 @@ public class GoldEconomy extends JavaPlugin {
 	private void loadStringLibrary() {
 		final File config = new File(getDataFolder(), "config.yml");
 		FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(config);
+		try {
+			fileConfiguration.save(config);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		final String lang = fileConfiguration.getString("lang");
 		if (lang != null && !lang.isEmpty()) {
 			new StringLibrary(this, lang);
-			return;
+		} else {
+			new StringLibrary(this);
 		}
-		new StringLibrary(this);
 	}
 
 	private void registerMetrics(int ID) {
