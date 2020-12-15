@@ -45,8 +45,9 @@ public class EconomyCommand extends GoldEconomyCommandBase {
     }
 
     private void sendPrefixedMessage(CommandSender player, String message) {
-        StringLibrary lib = new StringLibrary(null);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', lib.prefix + " " + message));
+        if (player instanceof Player) {
+            new StringLibrary((Player) player).msg(message); // may convert to static unsure
+        }
     }
 
     private String format(double amount) {
@@ -133,12 +134,12 @@ public class EconomyCommand extends GoldEconomyCommandBase {
     public boolean execute(CommandSender commandSender, String commandLabel, String[] args) {
         if (!(commandSender instanceof Player)) {
             int length = args.length;
-            StringLibrary me = new StringLibrary(null);
+//            StringLibrary me = new StringLibrary(null);
             Config main = Config.get("shop_config");
             FileConfiguration fc = main.getConfig();
             if (length == 0) {
                 ArrayList<String> help = new ArrayList<>();
-                sendPrefixedMessage(commandSender, me.prefix + " Command list");
+                sendPrefixedMessage(commandSender, "Command list"); // was sending prefix twice
                 help.add("&m-------------------------------");
                 help.add(" &7/shop&f,&7menu&f,&7gui&f - &oOpens the economy GUI.");
                 help.add(" &7/buy&f - &oBuy an item from the shop");
@@ -222,7 +223,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
             if (length == 3) {
                 if (args[0].equalsIgnoreCase("give")) {
                     if (!isDouble(args[2])) {
-                        sendPrefixedMessage(commandSender, me.invalidDouble());
+                        sendPrefixedMessage(commandSender, StringLibrary.invalidDouble());
                         return true;
                     }
 //                    PlayerListener list = new PlayerListener();
@@ -236,12 +237,13 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     PlayerListener el = new PlayerListener(pl);
                     double current = Double.parseDouble(el.get(Utility.BALANCE).replaceAll(",", ""));
                     el.set(current + Double.parseDouble(args[2]));
-                    sendPrefixedMessage(commandSender, me.staffMoneyGiven().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
+                    sendPrefixedMessage(commandSender, StringLibrary.staffMoneyGiven(args[1], args[2]));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("take")) {
                     if (!isDouble(args[2])) {
-                        me.msg(me.invalidDouble());
+//                        me.msg(StringLibrary.invalidDouble());
+                        sendPrefixedMessage(commandSender, StringLibrary.invalidDouble());
                         return true;
                     }
 //                    PlayerListener list = new PlayerListener();
@@ -255,7 +257,8 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     PlayerListener el = new PlayerListener(pl);
                     double current = Double.parseDouble(el.get(Utility.BALANCE).replaceAll(",", ""));
                     el.set(current - Double.parseDouble(args[2]));
-                    me.msg(me.staffMoneyTaken().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
+//                    me.msg(StringLibrary.staffMoneyTaken(args[1], args[2]));
+                    sendPrefixedMessage(commandSender, StringLibrary.staffMoneyTaken(args[1], args[2]));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("set")) {
@@ -268,7 +271,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         }
                     }
                     if (!isDouble(args[2])) {
-                        sendPrefixedMessage(commandSender, me.invalidDouble());
+                        sendPrefixedMessage(commandSender, StringLibrary.invalidDouble());
                         return true;
                     }
                     // this might be an account type
@@ -277,7 +280,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         worldName = GoldEconomy.getBankWorld(args[1]);
                         BankListener bl = new BankListener(null, args[1], worldName);
                         bl.set(Double.parseDouble(args[2]));
-                        sendPrefixedMessage(commandSender, me.staffAccountSet().replaceAll("%account%", args[1]).replaceAll("%amount%", args[2]));
+                        sendPrefixedMessage(commandSender, StringLibrary.staffAccountSet(args[1], args[2]));
                     } else {
                         try {
                             OfflinePlayer pl = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
@@ -286,7 +289,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 
                                 PlayerListener el = new PlayerListener(pl);
                                 el.set(Double.parseDouble(args[2]));
-                                sendPrefixedMessage(commandSender, me.staffMoneySet().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
+                                sendPrefixedMessage(commandSender, StringLibrary.staffMoneySet(args[1], args[2]));
                                 return true;
                             } else
                                 sendPrefixedMessage(commandSender, "&c&oInvalid response. Expected:&r [&7playerName &ror &7accountID&r].");
@@ -358,15 +361,16 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 
         if (length == 1) {
             if (args[0].equalsIgnoreCase("buy") || args[0].equalsIgnoreCase("sell")) {
-                me = new StringLibrary(p, args[0]);
-                me.msg(me.nameUnknown().replaceAll("%args%", "Type an item type by name including a specified amount."));
+//                me = new StringLibrary(p, args[0]);
+                me = new StringLibrary(p);
+                me.msg(StringLibrary.nameUnknown("Type an item type by name including a specified amount."));
             }
             if (args[0].equalsIgnoreCase("withdraw") || args[0].equalsIgnoreCase("deposit")) {
-                me.msg(me.invalidDouble());
+                me.msg(StringLibrary.invalidDouble());
             }
             if (args[0].equalsIgnoreCase("bal") || args[0].equalsIgnoreCase("balance")) {
                 PlayerListener el = new PlayerListener(p);
-                me.msg(me.money().replaceAll("%world%", p.getWorld().getName()).replaceAll("%amount%", el.get(Utility.BALANCE)).replaceAll("%currency%", currency));
+                me.msg(StringLibrary.money(p.getWorld().getName(), el.get(Utility.BALANCE), currency));
             }
             if (args[0].equalsIgnoreCase("shop")) {
                 MenuManager menu = GoldEconomy.menuViewer(p);
@@ -450,7 +454,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 Material item = Items.getMaterial(args[1]);
                 if (item == null) {
                     // item not found
-                    me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
+                    me.msg(StringLibrary.nameUnknown(args[1]));
                     return true;
                 }
                 if (!GoldEconomy.usingShop()) {
@@ -458,7 +462,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     return true;
                 }
                 if (!ItemManager.getShopContents().contains(args[1])) {
-                    me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
+                    me.msg(StringLibrary.nameUnknown(args[1]));
                     return true;
                 }
                 PlayerListener el = new PlayerListener(p);
@@ -469,7 +473,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 Material item = Items.getMaterial(args[1]);
                 if (item == null) {
                     // item not found
-                    me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
+                    me.msg(StringLibrary.nameUnknown(args[1]));
                     return true;
                 }
                 if (!GoldEconomy.usingShop()) {
@@ -477,7 +481,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     return true;
                 }
                 if (!ItemManager.getShopContents().contains(args[1])) {
-                    me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
+                    me.msg(StringLibrary.nameUnknown(args[1]));
                     return true;
                 }
                 PlayerListener el = new PlayerListener(p);
@@ -533,7 +537,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     PlayerListener el = new PlayerListener(p);
 //                    ItemManager im = GoldEconomy.getItemManager();
                     if (amount > 640) {
-                        me.msg(me.maxWithdrawReached());
+                        me.msg(StringLibrary.maxWithdrawReached());
                         return true;
                     }
                     List<String> items = fc.getStringList("Economy.currency-items");
@@ -542,7 +546,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         cost = fc.getDouble("Economy.currency-worth." + items.get(1)) * amount;
                     }
                     if (cost > Double.parseDouble(el.get(Utility.BALANCE).replace(",", ""))) {
-                        me.msg(me.notEnoughMoney().replaceAll("%world%", p.getWorld().getName()));
+                        me.msg(StringLibrary.notEnoughMoney(p.getWorld().getName()));
                         return true;
                     }
                     double worth = fc.getInt("Economy.currency-worth." + items.get(0));
@@ -570,7 +574,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     }
                     return true;
                 } catch (NumberFormatException e) {
-                    me.msg(me.amountTooLarge());
+                    me.msg(StringLibrary.amountTooLarge());
                 }
             }
 
@@ -581,7 +585,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         if (!bl.has(Utility.BANK_ACCOUNT, p.getWorld().getName())) {
                             bl.create();
                         } else {
-                            me.msg(me.accountAlreadyMade());
+                            me.msg(StringLibrary.accountAlreadyMade());
                             return true;
                         }
                         return true;
@@ -630,7 +634,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     return true;
                 }
                 if (!isDouble(args[2])) {
-                    me.msg(me.invalidDouble());
+                    me.msg(StringLibrary.invalidDouble());
                     return true;
                 }
 //                PlayerListener list = new PlayerListener();
@@ -644,7 +648,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 PlayerListener el = new PlayerListener(pl);
                 double current = Double.parseDouble(el.get(Utility.BALANCE).replaceAll(",", ""));
                 el.set(current + Double.parseDouble(args[2]));
-                me.msg(me.staffMoneyGiven().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
+                me.msg(StringLibrary.staffMoneyGiven(args[1], args[2]));
                 return true;
             }
             if (args[0].equalsIgnoreCase("take")) {
@@ -653,7 +657,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     return true;
                 }
                 if (!isDouble(args[2])) {
-                    me.msg(me.invalidDouble());
+                    me.msg(StringLibrary.invalidDouble());
                     return true;
                 }
 //                PlayerListener list = new PlayerListener();
@@ -667,7 +671,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 PlayerListener el = new PlayerListener(pl);
                 double current = Double.parseDouble(el.get(Utility.BALANCE).replaceAll(",", ""));
                 el.set(current - Double.parseDouble(args[2]));
-                me.msg(me.staffMoneyTaken().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
+                me.msg(StringLibrary.staffMoneyTaken(args[1], args[2]));
                 return true;
             }
             if (args[0].equalsIgnoreCase("set")) {
@@ -684,7 +688,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     }
                 }
                 if (!isDouble(args[2])) {
-                    me.msg(me.invalidDouble());
+                    me.msg(StringLibrary.invalidDouble());
                     return true;
                 }
                 // this might be an account type
@@ -697,7 +701,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         worldName = GoldEconomy.getBankWorld(args[1]);
                         BankListener bl = new BankListener(p, args[1], worldName);
                         bl.set(Double.parseDouble(args[2]));
-                        me.msg(me.staffAccountSet().replaceAll("%account%", args[1]).replaceAll("%amount%", args[2]));
+                        me.msg(StringLibrary.staffAccountSet(args[1], args[2]));
                     } else {
                         try {
                             OfflinePlayer pl = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
@@ -710,7 +714,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
 
                                 PlayerListener el = new PlayerListener(pl);
                                 el.set(Double.parseDouble(args[2]));
-                                me.msg(me.staffMoneySet().replaceAll("%player%", args[1]).replaceAll("%amount%", args[2]));
+                                me.msg(StringLibrary.staffMoneySet(args[1], args[2]));
                                 return true;
                             } else
                                 me.msg("&c&oInvalid response. Expected:&r [&7playerName &ror &7accountID&r].");
@@ -726,21 +730,21 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     return true;
                 }
                 if (!ItemManager.getShopContents().contains(args[1])) {
-                    me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
+                    me.msg(StringLibrary.nameUnknown(args[1]));
                     return true;
                 }
                 try {
                     Material item = Items.getMaterial(args[1]);
                     if (item == null) {
                         // item not found
-                        me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
+                        me.msg(StringLibrary.nameUnknown(args[1]));
                         return true;
                     }
                     PlayerListener el = new PlayerListener(p);
                     el.buy(args[1], Integer.parseInt(args[2]));
                     return true;
                 } catch (NumberFormatException e) {
-                    me.msg(me.amountTooLarge());
+                    me.msg(StringLibrary.amountTooLarge());
                 }
             }
             if (args[0].equalsIgnoreCase("sell")) {
@@ -749,21 +753,21 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     return true;
                 }
                 if (!ItemManager.getShopContents().contains(args[1])) {
-                    me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
+                    me.msg(StringLibrary.nameUnknown(args[1]));
                     return true;
                 }
                 try {
                 Material item = Items.getMaterial(args[1]);
                 if (item == null) {
                     // item not found
-                    me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
+                    me.msg(StringLibrary.nameUnknown(args[1]));
                     return true;
                 }
                 PlayerListener el = new PlayerListener(p);
                 el.sell(args[1], Integer.parseInt(args[2]));
                 return true;
                 } catch (NumberFormatException e) {
-                    me.msg(me.amountTooLarge());
+                    me.msg(StringLibrary.amountTooLarge());
                 }
             }
             if (args[0].equalsIgnoreCase("withdraw")) {
@@ -773,11 +777,11 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     PlayerListener el = new PlayerListener(p);
 //                    ItemManager im = GoldEconomy.getItemManager();
                    if (amount > Double.valueOf(el.get(Utility.BALANCE))) {
-                       me.msg(me.notEnoughMoney().replaceAll("%world%", p.getWorld().getName()));
+                       me.msg(StringLibrary.notEnoughMoney(p.getWorld().getName()));
                        return true;
                    }
                     if (amount > 640) {
-                        me.msg(me.maxWithdrawReached());
+                        me.msg(StringLibrary.maxWithdrawReached());
                         return true;
                     }
                     el.remove(amount);
@@ -799,11 +803,11 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                     PlayerListener el = new PlayerListener(p);
 //                    ItemManager im = GoldEconomy.getItemManager();
                     if (amount > Double.valueOf(el.get(Utility.BALANCE))) {
-                        me.msg(me.notEnoughMoney().replaceAll("%world%", p.getWorld().getName()));
+                        me.msg(StringLibrary.notEnoughMoney(p.getWorld().getName()));
                         return true;
                     }
                     if (amount > 640) {
-                        me.msg(me.maxWithdrawReached());
+                        me.msg(StringLibrary.maxWithdrawReached());
                         return true;
                     }
                     el.remove(amount);
@@ -894,7 +898,7 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                         if (!bl.has(Utility.BANK_ACCOUNT)) {
                             bl.create();
                         } else {
-                            me.msg(me.accountAlreadyMade());
+                            me.msg(StringLibrary.accountAlreadyMade());
                             return true;
                         }
                     }

@@ -69,7 +69,7 @@ public class PayCommand extends GoldEconomyCommandBase {
         if (length == 2) {
             Player tar = Bukkit.getPlayer(args[0]);
             if (tar == null) {
-                me.msg(me.playerNotFound());
+                me.msg(StringLibrary.playerNotFound());
                 return true;
             }
             if (tar.getName().equals(p.getName())) {
@@ -77,7 +77,7 @@ public class PayCommand extends GoldEconomyCommandBase {
                 return true;
             }
             if (!isDouble(args[1])) {
-                me.msg(me.invalidDouble());
+                me.msg(StringLibrary.invalidDouble());
                 return true;
             }
             PlayerListener player = new PlayerListener(p);
@@ -85,14 +85,14 @@ public class PayCommand extends GoldEconomyCommandBase {
             double pCurrent = Double.parseDouble(player.get(Utility.BALANCE).replaceAll(",", ""));
             double tCurrent = Double.parseDouble(target.get(Utility.BALANCE).replaceAll(",", ""));
             if (pCurrent < Double.parseDouble(args[1])) {
-                me.msg(me.invalidDouble());
+                me.msg(StringLibrary.invalidDouble());
                 return true;
             }
             player.set(pCurrent - Double.parseDouble(args[1]));
             target.set(tCurrent + Double.parseDouble(args[1]));
-            me.msg(me.moneySent().replaceAll("%amount%", args[1]).replaceAll("%player%", tar.getName()));
+            me.msg(StringLibrary.moneySent(args[1], tar.getName()));
             StringLibrary them = new StringLibrary(tar);
-            them.msg(them.moneyReceived().replaceAll("%amount%", args[1]).replaceAll("%player%", p.getName()));
+            them.msg(StringLibrary.moneyReceived(args[1], p.getName()));
             return true;
         }
 

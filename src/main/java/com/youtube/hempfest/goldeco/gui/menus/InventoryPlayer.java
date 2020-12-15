@@ -117,7 +117,7 @@ public class InventoryPlayer extends EcoMenu {
                     double cost = fc.getDouble("Economy.currency-worth." + items.get(1)) * 1;
 
                     if (cost > Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", ""))) {
-                        me.msg(me.notEnoughMoney().replaceAll("%world%", p.getWorld().getName()));
+                        me.msg(StringLibrary.notEnoughMoney(p.getWorld().getName()));
                         return;
                     }
                     el.remove(cost);
@@ -137,7 +137,7 @@ public class InventoryPlayer extends EcoMenu {
                     StringLibrary me = new StringLibrary(p);
                     double amount = fc.getDouble("Economy.currency-worth." + items.get(1)) * 32;
                     if (amount > Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", ""))) {
-                        me.msg(me.notEnoughMoney().replaceAll("%world%", p.getWorld().getName()));
+                        me.msg(StringLibrary.notEnoughMoney(p.getWorld().getName()));
                         return;
                     }
                     el.remove(amount);
@@ -157,7 +157,7 @@ public class InventoryPlayer extends EcoMenu {
                     StringLibrary me = new StringLibrary(p);
                     double amount = fc.getDouble("Economy.currency-worth." + items.get(1)) * 64;
                     if (amount > Double.valueOf(el.get(Utility.BALANCE).replaceAll(",", ""))) {
-                        me.msg(me.notEnoughMoney().replaceAll("%world%", p.getWorld().getName()));
+                        me.msg(StringLibrary.notEnoughMoney(p.getWorld().getName()));
                         return;
                     }
                     el.remove(amount);

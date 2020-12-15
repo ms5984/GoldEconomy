@@ -5,30 +5,36 @@ import com.youtube.hempfest.goldeco.data.independant.Config;
 import com.youtube.hempfest.goldeco.util.HighestValue;
 import com.youtube.hempfest.goldeco.util.versions.ComponentR1_16;
 import com.youtube.hempfest.goldeco.util.versions.ComponentR1_8_1;
-import net.md_5.bungee.api.chat.BaseComponent;
+import com.youtube.hempfest.hempcore.formatting.string.ColoredString;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
 public class StringLibrary {
-    Player p;
-    String text;
-    public String prefix = "&7[&6&lEconomy&7]&r -";
-    private Config lang = Config.get("shop_messages");
-    private FileConfiguration fc = lang.getConfig();
+    private final CommandSender p;
+    private static final String PREFIX = "&7[&6&lEconomy&7]&r -"; // TODO: localization
+    private static final Config SHOP_MESSAGES = Config.get("shop_messages");
+    private static FileConfiguration fc = SHOP_MESSAGES.getConfig();
 
-    public StringLibrary(Player p) {
-        this.p = p;
+    static {
+        if (!SHOP_MESSAGES.exists()) {
+            InputStream i = GoldEconomy.getInstance().getResource("shop_messages.yml");
+            SHOP_MESSAGES.copyFromResource(i);
+        }
     }
 
-    public StringLibrary(Player p, String text) {
-        this.p = p;
-        this.text = text;
+    public StringLibrary(@NotNull CommandSender p) {
+        this.p = Objects.requireNonNull(p);
     }
 
     public String color(String text) {
@@ -36,167 +42,155 @@ public class StringLibrary {
     }
 
     public void msg(String text) {
-        p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + " " + text));
+        p.sendMessage(new ColoredString(PREFIX + " " + text, ColoredString.ColorType.MC).toString());
     }
 
     public void text(String text) {
-        p.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
+        p.sendMessage(new ColoredString(text, ColoredString.ColorType.MC).toString());
     }
 
-    public void sendMessage(Player player, String s) {
-        player.sendMessage(color(s));
+    private static void sendMessage(Player player, String s) {
+        player.sendMessage(new ColoredString(s, ColoredString.ColorType.MC).toString());
     }
 
-    public void sendComponent(Player player, TextComponent text) {
-        player.spigot().sendMessage((BaseComponent) text);
+    private static void sendComponent(Player player, TextComponent text) {
+        player.spigot().sendMessage(text);
     }
 
-    public String invalidDouble() {
-    run(lang);
-    return fc.getString("invalid-double");
+    public static String invalidDouble() {
+        return fc.getString("invalid-double");
     }
 
-    public String invalidInteger() {
-        run(lang);
+    public static String invalidInteger() {
         return fc.getString("invalid-integer");
     }
 
-    public String notEnoughMoney() {
-        run(lang);
-        return fc.getString("not-enough-money");
+    public static String notEnoughMoney(String world) {
+        return Objects.requireNonNull(fc.getString("not-enough-money")).replaceAll("%world%", world);
     }
 
-    public String notEnoughSpace() {
-        run(lang);
+    public static String notEnoughSpace() {
         return fc.getString("not-enough-space");
     }
 
-    public String amountTooLarge() {
-        run(lang);
+    public static String amountTooLarge() {
         return fc.getString("amount-too-large");
     }
 
-    public String nameNeeded() {
-        run(lang);
+    public static String nameUnknown(String replacement) {
+        return Objects.requireNonNull(fc.getString("name-unknown")).replaceAll("%args%", replacement);
+    }
+
+    public static String nameNeeded() {
         return fc.getString("name-needed");
     }
 
-    public String nameUnknown() {
-        run(lang);
-        return fc.getString("name-unknown");
+    public static String money(String world, String amount, String currency) {
+        return Objects.requireNonNull(fc.getString("money"))
+                .replaceAll("%world%", world)
+                .replaceAll("%amount%", amount)
+                .replaceAll("%currency%", currency);
     }
 
-    public String money() {
-        run(lang);
-        return fc.getString("money");
+    public static String moneySent(String amount, String recipientName) {
+        return Objects.requireNonNull(fc.getString("money-sent"))
+                .replaceAll("%amount%", amount).replaceAll("%player%", recipientName);
     }
 
-    public String moneySent() {
-        run(lang);
-        return fc.getString("money-sent");
+    public static String moneySet(String amount) {
+        return Objects.requireNonNull(fc.getString("money-set")).replaceAll("%amount%", amount);
     }
 
-    public String moneySet() {
-        run(lang);
-        return fc.getString("money-set");
+    public static String moneyReceived(String senderName, String amount) {
+        return Objects.requireNonNull(fc.getString("money-received"))
+                .replaceAll("%player%", senderName).replaceAll("%amount%", amount);
     }
 
-    public String moneyReceived() {
-        run(lang);
-        return fc.getString("money-received");
+    public static String moneyTaken(String amount, String balance) {
+        return Objects.requireNonNull(fc.getString("money-taken"))
+                .replaceAll("%amount%", amount).replaceAll("%balance%", balance);
     }
 
-    public String moneyGiven() {
-        run(lang);
+    public static String moneyGiven(String amount, String balance) {
         return fc.getString("money-given");
     }
 
-    public String moneyTaken() {
-        run(lang);
-        return fc.getString("money-taken");
-    }
-
-    public String moneyDeposited() {
-        run(lang);
+    public static String moneyDeposited(String amount) {
         return fc.getString("money-deposited");
     }
 
-    public String moneyWithdrawn() {
-        run(lang);
+    public static String moneyWithdrawn(String amount) {
         return fc.getString("money-withdrawn");
     }
 
-    public String playerNotFound() {
-        run(lang);
+    public static String playerNotFound() {
         return fc.getString("player-not-found");
     }
 
-    public String maxWithdrawReached() {
-        run(lang);
+    public static String maxWithdrawReached() {
         return fc.getString("max-withdraw-reached");
     }
 
-    public String accountMade() {
-        run(lang);
-        return fc.getString("account-made");
+    public static String accountMade(String account, String accountWorld) {
+        return Objects.requireNonNull(fc.getString("account-made"))
+                .replaceAll("%account%", account)
+                .replaceAll("%account_world%", accountWorld);
     }
 
-    public String accountDeposit() {
-        run(lang);
-        return fc.getString("account-deposit");
+    public static String accountDeposit(String amount, String account) {
+        return Objects.requireNonNull(fc.getString("account-deposit"))
+                .replaceAll("%amount%", amount)
+                .replaceAll("%account%", account);
     }
 
-    public String accountWithdraw() {
-        run(lang);
-        return fc.getString("account-withdraw");
+    public static String accountWithdraw(String amount, String account) {
+        return Objects.requireNonNull(fc.getString("account-withdraw"))
+                .replaceAll("%amount%", amount)
+                .replaceAll("%account%", account);
     }
 
-    public String accountAlreadyMade() {
-        run(lang);
+    public static String accountAlreadyMade() {
         return fc.getString("account-already-made");
     }
 
-    public String accountNotAllowed() {
-        run(lang);
+    public static String accountNotAllowed() {
         return fc.getString("account-not-allowed");
     }
 
-    public String accountBalanceSet() {
-        run(lang);
-        return fc.getString("account-balance-set");
+    public static String accountBalanceSet(String account, String newBalance) {
+        return Objects.requireNonNull(fc.getString("account-balance-set"))
+                .replaceAll("%account%", account)
+                .replaceAll("%balance%", newBalance);
     }
 
-    public String staffMoneySet() {
-        run(lang);
-        return fc.getString("staff-money-set");
+    public static String staffAccountSet(String account, String amount) {
+        return Objects.requireNonNull(fc.getString("staff-account-set"))
+                .replaceAll("%account%", account)
+                .replaceAll("%amount%", amount);
     }
 
-    public String staffAccountSet() {
-        run(lang);
-        return fc.getString("staff-account-set");
+    public static String staffMoneySet(String player, String amount) {
+        return Objects.requireNonNull(fc.getString("staff-money-set"))
+                .replaceAll("%player%", player)
+                .replaceAll("%amount%", amount);
     }
 
-    public String staffMoneyGiven() {
-        run(lang);
-        return fc.getString("staff-money-given");
+    public static String staffMoneyGiven(String amount, String player) {
+        return Objects.requireNonNull(fc.getString("staff-money-given"))
+                .replaceAll("%amount%", amount)
+                .replaceAll("%player%", player);
     }
 
-    public String staffMoneyTaken() {
-        run(lang);
-        return fc.getString("staff-money-taken");
+    public static String staffMoneyTaken(String amount, String player) {
+        return Objects.requireNonNull(fc.getString("staff-money-taken"))
+                .replaceAll("%amount%", amount)
+                .replaceAll("%player%", player);
     }
 
-    public void run(Config c) {
-        if (!c.exists()) {
-            InputStream i = GoldEconomy.getInstance().getResource("shop_messages.yml");
-            lang.copyFromResource(i);
-        }
-    }
-
-    public void getBuyList(Player p, int page) {
+    public static void getBuyList(Player p, int page) {
         int o = 10;
 
-        HashMap<String, Double> players = new HashMap<String, Double>();
+        HashMap<String, Double> players = new HashMap<>();
 
         // Filling the hashMap
         for (String itemName : ItemManager.getShopContents()) {
@@ -288,10 +282,9 @@ public class StringLibrary {
             p.sendMessage(ChatColor.DARK_AQUA + "There are only " + ChatColor.GRAY + totalPageCount + ChatColor.DARK_AQUA + " pages!");
 
         }
-        return;
     }
 
-    public void getSellList(Player p, int page) {
+    public static void getSellList(Player p, int page) {
         int o = 10;
 
         HashMap<String, Double> players = new HashMap<String, Double>();
@@ -386,7 +379,6 @@ public class StringLibrary {
             p.sendMessage(ChatColor.DARK_AQUA + "There are only " + ChatColor.GRAY + totalPageCount + ChatColor.DARK_AQUA + " pages!");
 
         }
-        return;
     }
 
 

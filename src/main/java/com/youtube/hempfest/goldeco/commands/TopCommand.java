@@ -176,7 +176,7 @@ public class TopCommand extends GoldEconomyCommandBase {
                 return true;
             }
             if (!isInt(args[0])) {
-                me.msg(me.invalidInteger());
+                me.msg(StringLibrary.invalidInteger());
                 return true;
             }
             getLeaderboard(p, Integer.parseInt(args[0]));

@@ -62,7 +62,7 @@ public class SellCommand extends GoldEconomyCommandBase {
             }
             String item = args[0];
             if (isInt(item)) {
-                me.msg(me.nameUnknown().replaceAll("%args%", args[1]));
+                me.msg(StringLibrary.nameUnknown(args[1]));
                 return true;
             }
             Bukkit.dispatchCommand(p, "eco sell " + item);
