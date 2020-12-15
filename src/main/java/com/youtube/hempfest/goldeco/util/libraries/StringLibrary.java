@@ -109,15 +109,19 @@ public class StringLibrary {
     }
 
     public static String moneyGiven(String amount, String balance) {
-        return fc.getString("money-given");
+        return Objects.requireNonNull(fc.getString("money-given"))
+                .replaceAll("%amount%", amount)
+                .replaceAll("%balance%", balance);
     }
 
     public static String moneyDeposited(String amount) {
-        return fc.getString("money-deposited");
+        return Objects.requireNonNull(fc.getString("money-deposited"))
+                .replaceAll("%amount%", amount);
     }
 
     public static String moneyWithdrawn(String amount) {
-        return fc.getString("money-withdrawn");
+        return Objects.requireNonNull(fc.getString("money-withdrawn"))
+                .replaceAll("%amount%", amount);
     }
 
     public static String playerNotFound() {
