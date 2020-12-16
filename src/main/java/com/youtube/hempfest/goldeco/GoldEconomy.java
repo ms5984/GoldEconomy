@@ -54,7 +54,6 @@ public class GoldEconomy extends JavaPlugin {
 		registerMetrics(9063);
 		new EventBuilder(this).compileFields("com.youtube.hempfest.goldeco.listeners.bukkit");
 		setInstance(this);
-		loadConfiguration();
 		loadDefaults();
 		registerVault();
 	}
@@ -175,14 +174,6 @@ public class GoldEconomy extends JavaPlugin {
 			return true;
 		}
 		return false;
-	}
-
-	private void loadConfiguration() {
-		Config main = Config.get("shop_messages");
-		if (!main.exists()) {
-			InputStream m1 = getResource("shop_messages.yml");
-			main.copyFromResource(m1);
-		}
 	}
 
 	private void loadDefaults() {

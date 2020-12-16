@@ -430,9 +430,9 @@ public class EconomyCommand extends GoldEconomyCommandBase {
                 }
                 Config message = Config.get("shop_messages");
                 InputStream m1 = GoldEconomy.getInstance().getResource("shop_config_ru.yml");
-                InputStream m2 = GoldEconomy.getInstance().getResource("shop_messages_ru.yml");
+//                InputStream m2 = GoldEconomy.getInstance().getResource("shop_messages_ru.yml");
                 main.copyFromResource(m1);
-                message.copyFromResource(m2);
+//                message.copyFromResource(m2);
                 me.msg("&3&oЯзык был изменён на &b&o" + '"' + "русский" + '"');
                 return true;
             }
