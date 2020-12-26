@@ -1,10 +1,11 @@
 name: GoldEconomy
-version: 1.1.1
+version: ${project.version}
 api-version: 1.13
 authors: [Hempfest, Illuminatiiiiii, ms5984]
+load: STARTUP
 depend:
   - HempCore
 soft-depend:
   - Vault
-description: A customizable economy plugin
+description: ${project.description}
 main: com.youtube.hempfest.goldeco.GoldEconomy

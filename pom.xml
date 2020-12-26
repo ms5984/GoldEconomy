@@ -5,17 +5,37 @@
 
 	<groupId>com.youtube.hempfest.goldeco</groupId>
 	<artifactId>GoldEconomy</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 	<packaging>jar</packaging>
 
 	<name>GoldEconomy</name>
-	<url>http://maven.apache.org</url>
 
+	<description>A customizable economy plugin</description>
 	<properties>
+		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
+	<url>http://github.com/Hempfest/GoldEconomy</url>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
 
 	<repositories>
 		<repository>
@@ -44,7 +64,7 @@
 		<dependency>
 			<groupId>com.github.Hempfest</groupId>
 			<artifactId>HempCore</artifactId>
-			<version>1.0.6</version>
+			<version>1.0.6-R2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
