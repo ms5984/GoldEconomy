@@ -34,10 +34,12 @@ import java.util.stream.Collectors;
 
 public class GoldEconomy extends JavaPlugin {
 
+	private static final int STATS_ID = 9063;
+
 	//Instance
 	private static GoldEconomy instance;
 	private final Logger log = Logger.getLogger("Minecraft");
-	private static final HashMap<Player, MenuManager> GuiMap = new HashMap<Player, MenuManager>();
+	private final HashMap<Player, MenuManager> guiMap = new HashMap<>();
 	public VaultEconomy eco;
 	private final PluginManager pm = getServer().getPluginManager();
 
@@ -46,7 +48,7 @@ public class GoldEconomy extends JavaPlugin {
 		log.info(String.format("[%s] - Loading economy files.", getDescription().getName()));
 //		registerCommands();
 		new CommandBuilder(this).compileFields("com.youtube.hempfest.goldeco.commands");
-		registerMetrics(9063);
+		registerMetrics();
 		new EventBuilder(this).compileFields("com.youtube.hempfest.goldeco.listeners.bukkit");
 		setInstance(this);
 		loadConfiguration();
@@ -60,7 +62,7 @@ public class GoldEconomy extends JavaPlugin {
 			VaultListener listener = new VaultListener(this);
 			listener.unhook();
 		}
-		GuiMap.clear();
+		guiMap.clear();
 	}
 
 	public static GoldEconomy getInstance() {
@@ -84,8 +86,8 @@ public class GoldEconomy extends JavaPlugin {
 		}
 	}
 
-	private void registerMetrics(int ID) {
-		Metrics metrics = new Metrics(this, ID);
+	private void registerMetrics() {
+		Metrics metrics = new Metrics(this, STATS_ID);
 		metrics.addCustomChart(new Metrics.SingleLineChart("bank_accounts_made", () -> GoldEconomy.getBankAccounts().size()));
 		metrics.addCustomChart(new Metrics.SingleLineChart("total_logged_players", () -> PlayerListener.getAllPlayers().size()));
 		metrics.addCustomChart(new Metrics.SingleLineChart("starting_balance", () -> {
@@ -105,16 +107,7 @@ public class GoldEconomy extends JavaPlugin {
 	}
 
 	public static MenuManager menuViewer(Player p) {
-		MenuManager manager;
-		if (!(GuiMap.containsKey(p))) {
-
-			manager = new MenuManager(p);
-			GuiMap.put(p, manager);
-
-			return manager;
-		} else {
-			return GuiMap.get(p);
-		}
+		return instance.guiMap.computeIfAbsent(p, MenuManager::new);
 	}
 
 	private double purchaseDefault(String item) {
@@ -150,10 +143,7 @@ public class GoldEconomy extends JavaPlugin {
 			main.copyFromResource(m1);
 		}
 		FileConfiguration fc = main.getConfig();
-		if (fc.getBoolean("Economy.check-for-vault") == Boolean.valueOf(true)) {
-			return true;
-		}
-		return false;
+		return fc.getBoolean("Economy.check-for-vault");
 	}
 
 	private void loadConfiguration() {
